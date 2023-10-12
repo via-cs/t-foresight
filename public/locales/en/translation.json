@@ -1,0 +1,15 @@
+{
+  "Game": {
+    "Dire": "Dire",
+    "Radiant": "Radiant"
+  },
+  "System": {
+    "Actions": {
+      "import": "import"
+    },
+    "ContextView": "Context View",
+    "MapView": "Map View",
+    "StrategyView": "Strategy View",
+    "SystemName": "RoadSign for DOTA 2"
+  }
+}

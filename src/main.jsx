@@ -7,6 +7,7 @@ import {defaultTheme} from "./utils/theme.js";
 import {Provider} from "mobx-react";
 import Store from "./store/store.js";
 import 'setimmediate'
+import './i18n'
 
 const store = new Store();
 

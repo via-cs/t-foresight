@@ -2,6 +2,7 @@ import {inject, observer} from "mobx-react";
 import {styled} from "@mui/material/styles";
 import {Tooltip, Typography} from "@mui/material";
 import {playerColors, teamNames, teamShapes} from "../../utils/game.js";
+import {useTranslation} from "react-i18next";
 
 /**
  * @param {0 | 1} team
@@ -16,9 +17,10 @@ function PlayerSelection({
                          }) {
     const playerLifeState = store.playerLifeStates[team];
     const players = store.playerNames[team];
+    const {t} = useTranslation();
 
     return <Root>
-        <Typography sx={{mr: 1}}>{teamNames[team]}</Typography>
+        <Typography sx={{mr: 1}}>{t(`Game.${teamNames[team]}`)}</Typography>
         {[0, 1, 2, 3, 4].map(playerIndex => (
             <Tooltip key={playerIndex}
                      title={players[playerIndex]}>

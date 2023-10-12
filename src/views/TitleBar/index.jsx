@@ -8,6 +8,8 @@ import {styled} from "@mui/material/styles";
 import {viewSize} from "../../utils/layout.js";
 import {inject, observer} from "mobx-react";
 import {readJSONFile, selectFile} from "../../utils/file.js";
+import {useTranslation} from "react-i18next";
+import {Translate} from "@mui/icons-material";
 
 /**
  * @param {number} width
@@ -16,6 +18,12 @@ import {readJSONFile, selectFile} from "../../utils/file.js";
  * @constructor
  */
 function TitleBar({width, store}) {
+    const {t, i18n} = useTranslation();
+    const toggleLanguage = () => i18n.changeLanguage(
+        i18n.language === 'en'
+            ? 'cn'
+            : 'en'
+    );
     const handleImport = () => {
         selectFile()
             .then(file => {
@@ -27,9 +35,15 @@ function TitleBar({width, store}) {
             .finally(() => store.setWaiting(false));
     }
     return <Bar style={{width}}>
-        <Title variant={'h5'}>RoadSign for DOTA 2</Title>
-        <Button variant={'contained'}
-                onClick={handleImport}>import</Button>
+        <Title variant={'h5'}>{t('System.SystemName')}</Title>
+        <div>
+            <Button variant={'contained'}
+                    onClick={handleImport}>{t('System.Actions.import')}</Button>
+            <Button variant={'contained'}
+                    onClick={toggleLanguage}>
+                <Translate fontSize={'small'}/>
+            </Button>
+        </div>
     </Bar>
 }
 

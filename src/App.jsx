@@ -9,6 +9,7 @@ import MapRenderer from "./views/MapView/MapRenderer.jsx";
 import {inject, observer} from "mobx-react";
 import Waiting from "./components/Waiting.jsx";
 import PlayerLayer from "./views/MapView/PlayerLayer.jsx";
+import {useTranslation} from "react-i18next";
 
 /**
  * @param {import('src/store/store').Store} store
@@ -23,10 +24,11 @@ function App({store}) {
         strategyViewPos,
         contextViewPos,
     } = useLayout();
+    const {t} = useTranslation();
 
     return <Root>
         <TitleBar width={appTitleBarWidth}/>
-        <View title={'Map View'} {...mapViewPos}
+        <View title={t('System.MapView')} {...mapViewPos}
               tools={[
                   <PlayerSelection team={0}/>,
                   <PlayerSelection team={1}/>
@@ -38,8 +40,8 @@ function App({store}) {
             <Divider sx={{m: .5}}/>
             <Timeline/>
         </View>
-        <View title={'Strategy View'} {...strategyViewPos}/>
-        <View title={'Context View'} {...contextViewPos}/>
+        <View title={t('System.StrategyView')} {...strategyViewPos}/>
+        <View title={t('System.ContextView')} {...contextViewPos}/>
         <Waiting open={store.waiting}/>
     </Root>
 }
