@@ -18,11 +18,11 @@
 
 ## Project structures
 
-`src/components` is for some common and reusable UI elements
-`src/model` declares the data structure
-`src/store` declares the data center
-`src/utils` consists of some tool functions
-`src/views` contains the main UI designs
+- `src/components` is for some common and reusable UI elements
+- `src/model` declares the data structure
+- `src/store` declares the data center
+- `src/utils` consists of some tool functions
+- `src/views` contains the main UI designs
 
 ## Example files
 
