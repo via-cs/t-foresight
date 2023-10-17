@@ -2,7 +2,7 @@ import {Backdrop, CircularProgress} from "@mui/material";
 
 /**
  * @param {boolean} open
- * @param {Function} onClose
+ * @param {MouseEventHandler<HTMLElement> | undefined} onClose
  * @returns {JSX.Element}
  * @constructor
  */

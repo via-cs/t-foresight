@@ -23,3 +23,11 @@
 `src/store` declares the data center
 `src/utils` consists of some tool functions
 `src/views` contains the main UI designs
+
+## Example files
+
+Here are some example files with detailed comments, which demonstrate how the code works.
+
+- `src/store/store.js` demonstrates how we manage the data
+- `src/store/App.jsx` demonstrates how we render the views based on data
+- `src/model/D2Data.d.ts` demonstrates how we define data types
