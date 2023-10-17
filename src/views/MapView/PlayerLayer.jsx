@@ -1,5 +1,5 @@
 import {inject, observer} from "mobx-react";
-import {Circle, Group, Rect} from "react-konva";
+import {Circle, Layer, Rect} from "react-konva";
 import {mapProject, playerColors, teamShapes} from "../../utils/game.js";
 
 /**
@@ -14,7 +14,7 @@ function PlayerLayer({store, mapSize, scaleBalance}) {
     const playerPositions = store.playerPositions;
     const modelSize = mapSize * 0.007;
     const iconSize = Math.max(mapSize * 0.02 * scaleBalance, modelSize);
-    return <Group>
+    return <Layer>
         {[0, 1].map(teamIdx =>
             [0, 1, 2, 3, 4].map(playerIdx => (
                 playerLifeStates[teamIdx][playerIdx] &&
@@ -25,7 +25,7 @@ function PlayerLayer({store, mapSize, scaleBalance}) {
                             selected={store.focusedTeam === teamIdx && store.focusedPlayer === playerIdx}/>
             ))
         )}
-    </Group>
+    </Layer>
 }
 
 export default inject('store')(observer(PlayerLayer))

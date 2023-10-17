@@ -41,10 +41,7 @@ function App({store}) {
                   <PlayerSelection team={0}/>,
                   <PlayerSelection team={1}/>
               ]}>
-            <MapRenderer size={mapSize}
-                         layers={[
-                             ({scaleBalance}) => <PlayerLayer mapSize={mapSize} scaleBalance={scaleBalance}/>
-                         ]}/>
+            <MapRenderer size={mapSize}/>
             <Divider sx={{m: .5}}/>
             <Timeline/>
         </View>
