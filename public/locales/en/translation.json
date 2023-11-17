@@ -9,7 +9,11 @@
     },
     "ContextView": "Context View",
     "MapView": "Map View",
-    "StrategyView": "Strategy View",
+    "StrategyView": {
+      "PredNum": "{{num}} pred.",
+      "SID": "Strat. {{sId}}",
+      "ViewName": "Strategy View"
+    },
     "SystemName": "RoadSign for DOTA 2"
   }
 }

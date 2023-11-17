@@ -9,7 +9,11 @@
     },
     "ContextView": "环境视图",
     "MapView": "地图视图",
-    "StrategyView": "策略视图",
+    "StrategyView": {
+      "PredNum": "{{num}}条路",
+      "SID": "策略{{sId}}",
+      "ViewName": "策略视图"
+    },
     "SystemName": "DOTA 2 玩家轨迹预测分析系统"
   }
 }

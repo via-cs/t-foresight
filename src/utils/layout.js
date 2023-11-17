@@ -1,4 +1,4 @@
-import {useLayoutEffect, useState} from "react";
+import {useEffect, useLayoutEffect, useState} from "react";
 
 export const viewSize = {
     timelineHeight: 100,
@@ -18,10 +18,15 @@ export const viewSize = {
  */
 export function useLayout() {
     const [layout, setLayout] = useState([1920, 1080]);
-    useLayoutEffect(() => {
-        if (window.innerWidth !== layout[0] || window.innerHeight !== layout[1])
-            setLayout([window.innerWidth, window.innerHeight]);
-    }, [layout]);
+    useEffect(() => {
+        const resize = () => {
+            if (window.innerWidth !== layout[0] || window.innerHeight !== layout[1])
+                setLayout([window.innerWidth, window.innerHeight]);
+        }
+        resize();
+        window.addEventListener('resize', resize);
+        return () => window.removeEventListener('resize', resize);
+    }, []);
 
     const mapSize = layout[1]
         - viewSize.spacing * 5

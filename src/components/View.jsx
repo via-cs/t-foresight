@@ -76,4 +76,6 @@ const Tool = styled('div')(({theme}) => ({
 
 const Content = styled('div')(({theme}) => ({
     padding: theme.spacing(1),
+    height: `calc(100% - ${viewSize.viewTitleBarHeight}px)`,
+    overflow: 'hidden',
 }));

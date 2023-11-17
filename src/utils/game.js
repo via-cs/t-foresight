@@ -4,8 +4,8 @@ export const playerColors = [
     ['#3476FF', '#67FFC0', '#C000C0', '#F3F00C', '#FF6C00'],
     ['#FE87C3', '#A2B548', '#66D9F7', '#008422', '#A56A00'],
 ]
-const MIN_X = 8240, MAX_X = 24510;
-const MIN_Y = 8220, MAX_Y = 24450;
+export const MIN_X = 8240, MAX_X = 24510;
+export const MIN_Y = 8220, MAX_Y = 24450;
 const x = v => (v - MIN_X) / (MAX_X - MIN_X);
 const y = v => (MAX_Y - v) / (MAX_Y - MIN_Y);
 const rx = v => v * (MAX_X - MIN_X) + MIN_X;
@@ -64,4 +64,8 @@ export const updateGameData = (compressedGameData) => {
             return JSON.parse(JSON.stringify(preRecord));
         })
     };
+}
+
+export function mapDis(pos1, pos2) {
+    return Math.sqrt((pos1[0] - pos2[0]) * (pos1[0] - pos2[0]) + (pos1[1] - pos2[1]) * (pos1[1] - pos2[1]))
 }
