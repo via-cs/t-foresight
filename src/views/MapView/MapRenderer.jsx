@@ -30,8 +30,8 @@ function MapRenderer({
         </Layer>
 
         {store.focusedPlayer !== -1 &&
-            <RealTrajectoryLayer mapSize={mapSize} scaleBalance={scaleBalance}/>}
-        <PlayerLayer mapSize={mapSize} scaleBalance={scaleBalance}/>
+            <RealTrajectoryLayer mapSize={size} scaleBalance={scaleBalance}/>}
+        <PlayerLayer mapSize={size} scaleBalance={scaleBalance}/>
     </Stage>
 }
 

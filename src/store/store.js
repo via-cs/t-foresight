@@ -1,5 +1,6 @@
 import {makeAutoObservable, observable} from "mobx";
 import {updateGameData} from "../utils/game.js";
+import {genContext, genRandomStrategies, genRandomStrategy} from "../utils/fakeData.js";
 
 class Store {
     constructor() {
@@ -12,6 +13,8 @@ class Store {
         // 1. observable会监听整个hierarchical的结构，observable.shallow只会监听根部引用的改变，提高效率
         // 2. gameData导入后是不变的，因此没必要监听其内部元素变化
         makeAutoObservable(this, {gameData: observable.shallow});
+
+        this.setStrategies(genRandomStrategies());
     }
 
     /**
@@ -132,6 +135,46 @@ class Store {
         if (!this.gameData) return 0;
         const curFrame = this.gameData.gameRecords[this.frame];
         return curFrame.game_time;
+    }
+
+    /**
+     * Strategies
+     * @type {import('src/model/Strategy.d.ts').StrategyList}
+     */
+    strategies = []
+    setStrategies = s => this.strategies = s;
+    expandedStrategy = -1
+    expandStrategy = sId => this.expandedStrategy = (this.expandedStrategy === sId) ? -1 : sId;
+    viewedStrategy = -1
+    viewStrategy = sId => {
+        if (this.viewedPrediction === -1) {
+            const targetSId = (this.viewedStrategy === sId) ? -1 : sId;
+            this.viewedStrategy = targetSId;
+            this.expandedStrategy = targetSId;
+        } else {
+            this.viewedStrategy = sId;
+            this.expandedStrategy = sId;
+            this.viewedPrediction = -1;
+        }
+    }
+    viewedPrediction = -1
+    viewPrediction = (sId, pId) => {
+        if (this.viewedStrategy === sId && this.viewedPrediction === pId) {
+            this.expandedStrategy = -1;
+            this.viewedStrategy = -1;
+            this.viewedPrediction = -1;
+        } else {
+            this.expandedStrategy = sId;
+            this.viewedStrategy = sId;
+            this.viewedPrediction = pId;
+        }
+    }
+
+    /**
+     * @return {{[groupName: string]: {[itemName: string]: number | string | boolean}}}
+     */
+    get curContext() {
+        return genContext(this.frame);
     }
 }
 

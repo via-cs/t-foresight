@@ -8,8 +8,9 @@ import Timeline from "./views/MapView/Timeline.jsx";
 import MapRenderer from "./views/MapView/MapRenderer.jsx";
 import {inject, observer} from "mobx-react";
 import Waiting from "./components/Waiting.jsx";
-import PlayerLayer from "./views/MapView/PlayerLayer.jsx";
 import {useTranslation} from "react-i18next";
+import StrategyView from "./views/StrategyView/index.jsx";
+import ContextView from "./views/ContextView/index.jsx";
 
 // React本质上就是用函数表达从数据到视图的映射，每一个不同的映射称为一个组件。
 // 当数据发生变化时，React会自动处理视图的变化，并刷新组件的渲染。
@@ -45,8 +46,12 @@ function App({store}) {
             <Divider sx={{m: .5}}/>
             <Timeline/>
         </View>
-        <View title={t('System.StrategyView')} {...strategyViewPos}/>
-        <View title={t('System.ContextView')} {...contextViewPos}/>
+        <View title={t('System.StrategyView.ViewName')} {...strategyViewPos}>
+            <StrategyView/>
+        </View>
+        <View title={t('System.ContextView')} {...contextViewPos}>
+            <ContextView/>
+        </View>
         <Waiting open={store.waiting}/>
     </Root>
 }
