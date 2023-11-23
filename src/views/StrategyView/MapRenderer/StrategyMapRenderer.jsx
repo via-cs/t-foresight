@@ -11,15 +11,15 @@ import useHeatmap from "./useHeatmap.js";
  * @return {JSX.Element}
  * @constructor
  */
-function StrategyMapRenderer({sId, store}) {
-    const data = store.strategies[sId];
-    const centerPos = data.predictors[0].trajectory[0];
-    const radius = Math.max(...data.predictors.map(p =>
+function StrategyMapRenderer({sId, store, strat}) {
+    if (strat === null) strat = store.strategies[sId];
+    const centerPos = strat.predictors[0].trajectory[0];
+    const radius = Math.max(...strat.predictors.map(p =>
         Math.max(...p.trajectory.map(pos =>
             mapDis(pos, centerPos)
         ))
     ))
-    const heatmap = useHeatmap(500, data.predictors.map(p => {
+    const heatmap = useHeatmap(500, strat.predictors.map(p => {
         const pos = mapProject(p.trajectory[p.trajectory.length - 1], 500);
         return {
             x: pos[0],

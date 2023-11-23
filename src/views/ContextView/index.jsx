@@ -2,11 +2,8 @@ import {inject, observer} from "mobx-react";
 import ContextGroup from "./ContextGroup.jsx";
 import {styled} from "@mui/material/styles";
 import {playerColors, teamNames, teamShapes} from "../../utils/game.js";
-
-const defaultAttention = Object.fromEntries(['p00', 'p01', 'p02', 'p03', 'p04', 'p10', 'p11', 'p12', 'p13', 'p14', 'g'].map(g => [
-    g,
-    {}
-]))
+import {contextFactory} from "../../utils/fakeData.js";
+import {Box} from "@mui/material";
 
 /**
  *
@@ -15,10 +12,12 @@ const defaultAttention = Object.fromEntries(['p00', 'p01', 'p02', 'p03', 'p04', 
  * @constructor
  */
 function ContextView({store}) {
-    const strat = store.strategies[store.viewedStrategy];
-    const attention = strat ? strat.attention : defaultAttention;
+    const strat = store.selectedPredictorsAsAStrategy;
+    const attention = strat ? strat.attention : contextFactory(() => ({}));
+    const pred = strat ? strat.predictors[store.viewedPrediction] : undefined;
+    const predAtt = pred ? pred.attention : contextFactory(() => undefined);
 
-    return <div>
+    return <Box width={'100%'} height={'100%'} overflow={'hidden auto'}>
         {[0, 1].map(teamId => [0, 1, 2, 3, 4].map(playerId => (
             <ContextGroup key={`${teamId}${playerId}`}
                           colorLabel={<PlayerIcon shape={teamShapes[teamId]}
@@ -26,11 +25,15 @@ function ContextView({store}) {
                                                   lifeState={store.playerLifeStates[teamId][playerId]}
                                                   selected={store.focusedTeam === teamId && store.focusedPlayer === playerId}/>}
                           groupName={store.playerNames[teamId][playerId] || `${teamNames[teamId]} Pos ${playerId + 1}`}
-                          attention={attention[`p${teamId}${playerId}`]}/>
+                          context={store.curContext[`p${teamId}${playerId}`]}
+                          attention={attention[`p${teamId}${playerId}`]}
+                          curAtt={predAtt[`p${teamId}${playerId}`]} />
         )))}
         <ContextGroup informalGroup
-                      attention={attention['g']}/>
-    </div>
+                      context={store.curContext['g']}
+                      attention={attention['g']}
+                      curAtt={predAtt['g']}/>
+    </Box>
 }
 
 export default inject('store')(observer(ContextView));

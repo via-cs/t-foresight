@@ -33,7 +33,7 @@ export function useLayout() {
         - viewSize.appTitleBarHeight
         - viewSize.viewTitleBarHeight
         - viewSize.timelineHeight;
-    const strategyViewWidth = layout[0] / 2 - mapSize / 2 - viewSize.spacing * 3;
+    const strategyViewWidth = (layout[0] - mapSize - viewSize.spacing * 6) / 2.5;
 
     return {
         mapSize,
@@ -53,7 +53,7 @@ export function useLayout() {
         contextViewPos: {
             x: mapSize + strategyViewWidth + viewSize.spacing * 5,
             y: viewSize.spacing,
-            w: strategyViewWidth,
+            w: layout[0] - mapSize - strategyViewWidth - viewSize.spacing * 6,
             h: layout[1] - viewSize.spacing * 2,
         },
     }

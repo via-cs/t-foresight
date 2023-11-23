@@ -18,12 +18,3 @@ export default function useFocusMapArea(centerPos, radius, mapSize) {
         ],
     }
 }
-
-console.log(useFocusMapArea(
-    [
-        (MAX_X + MIN_X) / 2,
-        (MAX_Y + MIN_Y) / 2,
-    ],
-    (MAX_Y - MIN_Y) / 2,
-    100
-))

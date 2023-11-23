@@ -1,6 +1,12 @@
 import {makeAutoObservable, observable} from "mobx";
 import {updateGameData} from "../utils/game.js";
-import {genRandomStrategies, genRandomStrategy} from "../utils/fakeData.js";
+import {
+    contextFactory,
+    genContext,
+    genRandomStrategies,
+    genRandomStrategy,
+    getStratAttention
+} from "../utils/fakeData.js";
 
 class Store {
     constructor() {
@@ -168,6 +174,42 @@ class Store {
             this.viewedStrategy = sId;
             this.viewedPrediction = pId;
         }
+    }
+    /**
+     * @type {[number, number][]}
+     */
+    selectedPredictors = [];
+    selectPredictors = ps => this.selectedPredictors = ps;
+
+    get selectedPredictorsAsAStrategy() {
+        const selectedPredictors = this.selectedPredictors.map(([sId, pId]) => this.strategies[sId].predictors[pId]);
+        if (selectedPredictors.length === 0)
+            this.strategies.forEach(strat =>
+                strat.predictors.forEach(pred =>
+                    selectedPredictors.push(pred)
+                )
+            )
+        selectedPredictors.sort((a, b) => b.probability - a.probability);
+        return {
+            predictors: selectedPredictors,
+            attention: contextFactory((g, i) => getStratAttention(selectedPredictors, g, i))
+        };
+    }
+    get allPredictors() {
+        const predictors = []
+        this.strategies.forEach((strat, sId) =>
+            strat.predictors.forEach((pred, pId) =>
+                predictors.push({sId, pId, pred})
+            )
+        )
+        return predictors;
+    }
+
+    /**
+     * @return {{[groupName: string]: {[itemName: string]: number | string | boolean}}}
+     */
+    get curContext() {
+        return genContext(this.frame);
     }
 }
 

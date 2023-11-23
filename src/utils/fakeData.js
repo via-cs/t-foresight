@@ -2,13 +2,27 @@ import {MAX_X, MAX_Y, MIN_X, MIN_Y} from "./game.js";
 
 const DIS = 175;
 
-function getStratAttention(predictors, groupName, itemName) {
+export function getStratAttention(predictors, groupName, itemName) {
     const values = predictors.map(p => p.attention[groupName][itemName]);
     return {
         avg: values.reduce((p, c) => p + c, 0) / values.length,
         min: Math.min(...values),
         max: Math.max(...values),
     }
+}
+
+export function contextFactory(factory) {
+    return Object.fromEntries(['p00', 'p01', 'p02', 'p03', 'p04', 'p10', 'p11', 'p12', 'p13', 'p14', 'g'].map(g => [
+        g,
+        {
+            [g + 'a']: factory(g, g+'a'),
+            [g + 'b']: factory(g, g+'b'),
+            [g + 'c']: factory(g, g+'c'),
+            [g + 'd']: factory(g, g+'d'),
+            [g + 'e']: factory(g, g+'e'),
+            [g + 'f']: factory(g, g+'f'),
+        }
+    ]))
 }
 
 /**
@@ -27,14 +41,7 @@ function genRandomPrediction(startPos, startDir) {
     return {
         trajectory,
         probability: Math.random(),
-        attention: Object.fromEntries(['p00', 'p01', 'p02', 'p03', 'p04', 'p10', 'p11', 'p12', 'p13', 'p14', 'g'].map(g => [
-            g,
-            {
-                [g + 'a']: Math.random(),
-                [g + 'b']: Math.random(),
-                [g + 'c']: Math.random(),
-            }
-        ]))
+        attention: contextFactory(() => Math.random())
     }
 }
 
@@ -48,15 +55,19 @@ export function genRandomStrategy(startPos) {
         .sort((a, b) => b.probability - a.probability);
     return {
         predictors,
-        attention: Object.fromEntries(['p00', 'p01', 'p02', 'p03', 'p04', 'p10', 'p11', 'p12', 'p13', 'p14', 'g'].map(g => [
-            g,
-            {
-                [g + 'a']: getStratAttention(predictors, g, g+'a'),
-                [g + 'b']: getStratAttention(predictors, g, g+'b'),
-                [g + 'c']: getStratAttention(predictors, g, g+'c'),
-            }
-        ]))
+        attention: contextFactory((g, i) => getStratAttention(predictors, g, i)),
     }
+}
+
+export function genContext(frame) {
+    return contextFactory((g, i) => {
+        if (i.endsWith('a') || i.endsWith('b')) return Math.random() * 100
+        if (i.endsWith('c') || i.endsWith('d')) return Math.random() > 0.5
+        return String.fromCharCode(...new Array(7)
+            .fill(0)
+            .map(() => Math.floor(Math.random() * 26) + 97)
+        );
+    })
 }
 
 function stratProb(strat) {
