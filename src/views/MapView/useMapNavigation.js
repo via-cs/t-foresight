@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {MAX_Y, MIN_X, MIN_Y} from "../../utils/game.js";
 
 const ensureSize = (x, scale, mapSize) => {
@@ -8,7 +8,7 @@ const ensureSize = (x, scale, mapSize) => {
 export default function useMapNavigation(mapSize, ref) {
     const [scale, setScale] = useState(1);
     const [offset, setOffset] = useState([0, 0]);
-    const setNav = (scale, offset, anim=false) => {
+    const setNav = (scale, offset, anim = false) => {
         setScale(scale);
         setOffset(offset);
         if (!ref.current) return;

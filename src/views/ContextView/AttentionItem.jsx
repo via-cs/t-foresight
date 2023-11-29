@@ -27,12 +27,12 @@ function AttentionItem({colorLabel, label, value, attention, curAtt}) {
 
 export default AttentionItem;
 
-const Container = styled('div')(({theme}) => ({
+const Container = styled('div')({
     display: 'flex',
     height: 40,
     width: '100%',
     alignItems: 'center',
-}))
+})
 
 const Slider = styled(MuiSlider)(({theme}) => ({
     color: theme.palette.primary.main,

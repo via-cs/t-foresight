@@ -5,9 +5,8 @@ import KonvaImage from "../../components/KonvaImage.jsx";
 import PlayerLayer from "./PlayerLayer.jsx";
 import RealTrajectoryLayer from "./RealTrajectoryLayer.jsx";
 import StrategyRenderer from "./StrategyRenderer.jsx";
-import {useEffect, useRef} from "react";
+import {useRef} from "react";
 import PredictedTrajectoryLayer from "./PredictedTrajectoryLayer.jsx";
-import {playerColors} from "../../utils/game.js";
 
 /**
  * @param {import('src/store/store.js').Store} store

@@ -10,6 +10,7 @@ import {useTranslation} from "react-i18next";
  *
  * @param {number} sId the index of the strategy
  * @param {import('src/store/store.js').Store} store
+ * @param {import('src/model/Strategy.js').Strategy | null} strat
  * @returns {JSX.Element}
  * @constructor
  */

@@ -24,11 +24,9 @@ export default function View({
         <TitleBar>
             <Title>{title}</Title>
             <Toolbar>
-                {tools && tools.map((tool, tId) => (
-                    <Tool key={tId}>
-                        {tool}
-                    </Tool>
-                ))}
+                {tools && tools.map((tool, tId) => <Tool key={tId}>
+                    {tool}
+                </Tool>)}
             </Toolbar>
         </TitleBar>
         <Content>

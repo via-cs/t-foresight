@@ -1,5 +1,3 @@
-import {MAX_X, MAX_Y, MIN_X, MIN_Y} from "./game.js";
-
 const DIS = 175;
 
 export function getStratAttention(predictors, groupName, itemName) {

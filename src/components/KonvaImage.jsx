@@ -1,57 +1,24 @@
-import {Component} from "react";
-import { Image } from 'react-konva';
+import {useCallback, useEffect, useRef} from "react";
+import {Image} from 'react-konva';
 
-class KonvaImage extends Component {
-    state = {
-        image: null,
-    };
+function useImage(src, onLoad) {
+    const image = useRef(new window.Image());
+    useEffect(() => {
+        image.current.src = src;
+        image.current.addEventListener('load', onLoad);
+    }, [src]);
+    return image.current;
+}
 
-    componentDidMount() {
-        this.loadImage();
-    }
+function KonvaImage({x, y, w, h, src}) {
+    const imageNode = useRef(null);
+    const redraw = useCallback(() => imageNode.current && imageNode.current.getLayer().batchDraw(), []);
+    const image = useImage(src, redraw);
 
-    componentDidUpdate(oldProps) {
-        if (oldProps.src !== this.props.src) {
-            this.loadImage();
-        }
-    }
-
-    componentWillUnmount() {
-        this.image.removeEventListener('load', this.handleLoad);
-    }
-
-    loadImage() {
-        // save to "this" to remove "load" handler on unmount
-        this.image = new window.Image();
-        this.image.src = this.props.src;
-        this.image.addEventListener('load', this.handleLoad);
-    }
-
-    handleLoad = () => {
-        // after setState react-konva will update canvas and redraw the layer
-        // because "image" property is changed
-        this.setState({
-            image: this.image,
-        });
-        // if you keep same image object during source updates
-        // you will have to update layer manually:
-        this.imageNode.getLayer().batchDraw();
-    };
-
-    render() {
-        return (
-            <Image
-                x={this.props.x}
-                y={this.props.y}
-                width={this.props.w}
-                height={this.props.h}
-                image={this.state.image}
-                ref={(node) => {
-                    this.imageNode = node;
-                }}
-            />
-        );
-    }
+    return <Image x={x} y={y}
+                  width={w} height={h}
+                  image={image}
+                  ref={node => imageNode.current = node}/>
 }
 
 export default KonvaImage;

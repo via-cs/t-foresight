@@ -1,4 +1,4 @@
-import {useCallback, useRef, useState} from "react";
+import {useCallback, useState} from "react";
 
 export default function useLasso() {
     const [lasso, setLasso] = useState([]);
@@ -20,7 +20,7 @@ export default function useLasso() {
         const cursor = getCursorPos(e);
         setLasso(l => [...l, cursor]);
     }, [isDrawing]);
-    const handleMouseUp = useCallback(e => {
+    const handleMouseUp = useCallback(() => {
         if (!isDrawing) return;
         setDrawing(false);
         setLasso([]);

@@ -13,7 +13,6 @@ import StrategyView from "./views/StrategyView/index.jsx";
 import ContextView from "./views/ContextView/index.jsx";
 import {defaultTheme} from "./utils/theme.js";
 import React from "react";
-import {playerColors} from "./utils/game.js";
 
 // React本质上就是用函数表达从数据到视图的映射，每一个不同的映射称为一个组件。
 // 当数据发生变化时，React会自动处理视图的变化，并刷新组件的渲染。

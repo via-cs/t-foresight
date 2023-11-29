@@ -1,19 +1,14 @@
 import MapSliceRenderer from "./MapSliceRenderer.jsx";
-import {Arrow, Circle, Group} from "react-konva";
+import {Arrow, Group} from "react-konva";
 import {mapDis, mapProject} from "../../../utils/game.js";
-import {inject, observer} from "mobx-react";
 
 /**
- *
- * @param {import('src/store/store.js').Store} store
- * @param {number} sId
- * @param {number} pId
  * @param {import('src/model/Strategy.js').Strategy} strat
  * @param {import('src/model/Strategy.js').Prediction} pred
  * @return {JSX.Element}
  * @constructor
  */
-function PredictionMapRenderer({store, sId, pId, strat, pred}) {
+function PredictionMapRenderer({strat, pred}) {
     const centerPos = pred.trajectory[0];
     const radius = Math.max(...strat.predictors.map(p => Math.max(...p.trajectory.map(pos => mapDis(pos, centerPos)))))
     return <MapSliceRenderer centerPos={centerPos} radius={radius}>
@@ -29,4 +24,4 @@ function PredictionMapRenderer({store, sId, pId, strat, pred}) {
     </MapSliceRenderer>
 }
 
-export default inject('store')(observer(PredictionMapRenderer));
+export default PredictionMapRenderer;

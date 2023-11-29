@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useState} from "react";
+import {useMemo} from "react";
 
 function pointInLasso(point, lasso) {
     const [x, y] = point;

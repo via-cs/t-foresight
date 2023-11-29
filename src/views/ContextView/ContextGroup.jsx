@@ -1,5 +1,5 @@
 import {styled} from "@mui/material/styles";
-import {ButtonBase, Card, Collapse, darken, Divider, Paper} from "@mui/material";
+import {ButtonBase, Collapse, darken, Divider} from "@mui/material";
 import {useState} from "react";
 import AttentionItem from "./AttentionItem.jsx";
 

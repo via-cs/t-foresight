@@ -1,11 +1,11 @@
-import {MAX_X, MAX_Y, MIN_X, MIN_Y} from "../../../utils/game.js";
+import {MAX_Y, MIN_X, MIN_Y} from "../../../utils/game.js";
 
-const WW = MAX_X - MIN_X;
 const WH = MAX_Y - MIN_Y;
 /**
  *
  * @param {[number, number]} centerPos
  * @param {number} radius
+ * @param {number} mapSize
  * @return {{scale: number, offset: [number, number]}}
  */
 export default function useFocusMapArea(centerPos, radius, mapSize) {

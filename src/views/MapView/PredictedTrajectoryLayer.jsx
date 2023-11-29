@@ -1,4 +1,4 @@
-import {Arrow, Group, Layer} from "react-konva";
+import {Arrow, Layer} from "react-konva";
 import {mapProject} from "../../utils/game.js";
 
 function PredictedTrajectoryLayer({mapSize, scaleBalance, prediction, color}) {

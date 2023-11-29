@@ -1,4 +1,3 @@
-import {Layer, Stage} from "react-konva";
 import useProjection from "./useProjection.js";
 import usePointLassoSelection from "./usePointLassoSelection.js";
 import useLasso from "./useLasso.js";
@@ -29,6 +28,7 @@ const Groups = memo(function ({predictorGroups, points, onSelectGroup}) {
  * @param {number[][]} predictorGroups
  * @param {number[]} selectedPredictors
  * @param {(predIds: number[]) => void} onSelectGroup
+ * @param {(predId: number) => void} onViewPredictor
  * @constructor
  */
 function PredictorsProjection({allPredictors, predictorGroups, selectedPredictors, onSelectGroup, onViewPredictor}) {

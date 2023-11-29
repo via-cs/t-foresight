@@ -8,6 +8,7 @@ import PredictionMapRenderer from "./MapRenderer/PredictionMapRenderer.jsx";
  * @param {number} sId
  * @param {number} pId
  * @param {import('src/store/store.js').Store} store
+ * @param {import('src/model/Strategy.d.ts').Strategy} strat
  * @param {import('src/model/Strategy.d.ts').Prediction} pred
  * @returns {JSX.Element}
  * @constructor

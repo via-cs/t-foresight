@@ -1,6 +1,5 @@
 import {inject, observer} from "mobx-react";
-import {Box, Divider, List} from "@mui/material";
-import StrategyItem from "./StrategyItem.jsx";
+import {Divider} from "@mui/material";
 import {styled} from "@mui/material/styles";
 import PredictorsProjection from "./Projection/index.jsx";
 

@@ -1,7 +1,7 @@
 import {parseAsync} from "yieldable-json";
 
 export function selectFile() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
         fileInput.onchange = () =>

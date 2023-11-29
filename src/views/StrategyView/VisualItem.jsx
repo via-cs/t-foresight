@@ -1,9 +1,4 @@
-import {
-    Button,
-    ListItem,
-    ListItemSecondaryAction,
-    Typography
-} from "@mui/material";
+import {Button, ListItem, ListItemSecondaryAction, Typography} from "@mui/material";
 import {ExpandLess, ExpandMore} from "@mui/icons-material";
 import {styled} from "@mui/material/styles";
 import {useCallback, useRef} from "react";
@@ -72,7 +67,7 @@ function VisualItem({
                     sx={{width: 64, textTransform: 'none'}}>
                 {expanded ? <ExpandLess/>
                     : hover ? <ExpandMore/>
-                    : expandLabel}
+                        : expandLabel}
             </Button>
         </SecondaryAction>}
     </ListItem>
@@ -91,12 +86,12 @@ const Title = styled(Typography, {shouldForwardProp: propName => propName !== 'l
         transform: 'translateX(15px)'
     })
 }))
-const SecondaryAction = styled(ListItemSecondaryAction)(({theme}) => ({
+const SecondaryAction = styled(ListItemSecondaryAction)({
     left: 0,
     width: 65,
     textAlign: 'center',
     top: 'calc(50% + 16px)'
-}))
+})
 const MapSlice = styled('div', {shouldForwardProp: propName => propName !== 'size'})
 (({theme, size}) => ({
     marginLeft: theme.spacing(1),
