@@ -41,7 +41,9 @@ class Store {
      */
     setData = gameData => {
         this.gameData = updateGameData(gameData);
-        console.log(this.gameData);
+        this.focusOnPlayer(-1, -1);
+        this.setFrame(0);
+        this.clearPredictions();
     }
     /**
      * 从gameData中提取玩家名
@@ -107,8 +109,8 @@ class Store {
     focusedPlayer = -1
     /**
      * 选中一名玩家，预测他的行为
-     * @param {0 | 1} teamIndex
-     * @param {0 | 1 | 2 | 3 | 4} playerIndex
+     * @param {-1 | 0 | 1} teamIndex
+     * @param {-1 | 0 | 1 | 2 | 3 | 4} playerIndex
      */
     focusOnPlayer = (teamIndex, playerIndex) => {
         if (teamIndex === this.focusedTeam && playerIndex === this.focusedPlayer) {
@@ -118,6 +120,7 @@ class Store {
             this.focusedTeam = teamIndex;
             this.focusedPlayer = playerIndex;
         }
+        this.clearPredictions();
     }
     get focusedPlayerColor() {
         if (this.focusedTeam === -1 || this.focusedPlayer === -1) return undefined;
@@ -129,7 +132,10 @@ class Store {
      * @type {number}
      */
     frame = 0;
-    setFrame = f => this.frame = f;
+    setFrame = f => {
+        this.frame = f;
+        this.clearPredictions();
+    }
     /**
      * 从gameData中提取第frame帧的游戏中时间（单位：秒）
      * @return {number}：从-90~0为比赛正式开始前的准备时间，0~+∞是比赛正式进行的时间。
@@ -175,7 +181,6 @@ class Store {
      */
     predictionGroups = []
     setPredGroups = predG => this.predictionGroups = predG;
-    selectPredGroup = predG => this.selectPredictors(this.predictionGroups[predG]);
     /**
      * @type {number[]}
      */
@@ -191,6 +196,12 @@ class Store {
             predictors: selectedPredictors,
             attention: contextFactory((g, i) => getStratAttention(selectedPredictors, g, i))
         };
+    }
+    clearPredictions = () => {
+        this.setPredictions([]);
+        this.viewPrediction(-1);
+        this.setPredGroups([]);
+        this.selectPredictors([]);
     }
     //endregion
 }

@@ -6,6 +6,8 @@ import PlayerLayer from "./PlayerLayer.jsx";
 import RealTrajectoryLayer from "./RealTrajectoryLayer.jsx";
 import StrategyRenderer from "./StrategyRenderer.jsx";
 import {useEffect, useRef} from "react";
+import PredictedTrajectoryLayer from "./PredictedTrajectoryLayer.jsx";
+import {playerColors} from "../../utils/game.js";
 
 /**
  * @param {import('src/store/store.js').Store} store
@@ -34,6 +36,11 @@ function MapRenderer({
             <StrategyRenderer mapSize={size}
                               strat={store.selectedPredictorsAsAStrategy}
                               onAutoFocus={autoFocus}/>}
+        {store.viewedPrediction !== -1 &&
+            <PredictedTrajectoryLayer mapSize={size}
+                                      scaleBalance={scaleBalance}
+                                      prediction={store.predictions[store.viewedPrediction].trajectory}
+                                      color={store.focusedPlayerColor}/>}
         {store.focusedPlayer !== -1 &&
             <RealTrajectoryLayer mapSize={size} scaleBalance={scaleBalance}/>}
         <PlayerLayer mapSize={size} scaleBalance={scaleBalance}/>

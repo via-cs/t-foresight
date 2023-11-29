@@ -12,7 +12,7 @@ function StrategyRenderer({mapSize, strat, onAutoFocus, resolution = 500}) {
             Math.max(...p.trajectory.map(pos =>
                 mapDis(pos, centerPos)
             ))
-        ));
+        )) * 1.5;
         onAutoFocus && onAutoFocus(centerPos, radius);
     }, []);
 
