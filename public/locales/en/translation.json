@@ -11,6 +11,7 @@
     "MapView": "Map View",
     "StrategyView": {
       "PredNum": "{{num}} pred.",
+      "Predict": "Predict",
       "SID": "Strat. {{sId}}",
       "ViewName": "Strategy View"
     },

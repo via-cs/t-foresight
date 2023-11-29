@@ -11,6 +11,7 @@
     "MapView": "地图视图",
     "StrategyView": {
       "PredNum": "{{num}}条路",
+      "Predict": "预测",
       "SID": "策略{{sId}}",
       "ViewName": "策略视图"
     },

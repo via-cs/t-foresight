@@ -4,11 +4,14 @@ import {alpha, darken, lighten} from "@mui/material";
  * @type {import('@mui/material').ThemeOptions}
  */
 const scrollColor = '#364041'
-export const defaultTheme = {
+export const defaultTheme = secondary => ({
     palette: {
         primary: {
             main: '#271c1c',
         },
+        ...(secondary && {secondary: {
+            main: secondary,
+        }}),
         background: {
             default: '#f0f0f0',
             paper: '#ffffff',
@@ -57,4 +60,4 @@ export const defaultTheme = {
 
         }
     }
-}
+})

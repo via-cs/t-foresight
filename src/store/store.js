@@ -1,6 +1,11 @@
 import {makeAutoObservable, observable} from "mobx";
-import {updateGameData} from "../utils/game.js";
-import {genContext, genRandomStrategies, genRandomStrategy} from "../utils/fakeData.js";
+import {playerColors, updateGameData} from "../utils/game.js";
+import {
+    contextFactory,
+    genContext,
+    genRandomStrategies,
+    getStratAttention
+} from "../utils/fakeData.js";
 
 class Store {
     constructor() {
@@ -13,44 +18,18 @@ class Store {
         // 1. observable会监听整个hierarchical的结构，observable.shallow只会监听根部引用的改变，提高效率
         // 2. gameData导入后是不变的，因此没必要监听其内部元素变化
         makeAutoObservable(this, {gameData: observable.shallow});
-
-        this.setStrategies(genRandomStrategies());
     }
 
+    //region system
     /**
      * 系统状态，在执行一些费时的操作时，如果不希望用户在此期间和系统交互，可以设置waiting为true
      * @type {boolean}
      */
     waiting = false
     setWaiting = state => this.waiting = state;
+    //endregion
 
-    /**
-     * 当前选中的队伍
-     * @type {-1 | 0 | 1} : -1 for none, 0 for team radiant, 1 for team dire
-     */
-    focusedTeam = -1
-
-    /**
-     * 当前选中的玩家
-     * @type {-1 | 0 | 1 | 2 | 3 | 4} : -1 for none, 0~4 for five playerNames
-     */
-    focusedPlayer = -1
-
-    /**
-     * 选中一名玩家，预测他的行为
-     * @param {0 | 1} teamIndex
-     * @param {0 | 1 | 2 | 3 | 4} playerIndex
-     */
-    focusOnPlayer = (teamIndex, playerIndex) => {
-        if (teamIndex === this.focusedTeam && playerIndex === this.focusedPlayer) {
-            this.focusedTeam = -1;
-            this.focusedPlayer = -1;
-        } else {
-            this.focusedTeam = teamIndex;
-            this.focusedPlayer = playerIndex;
-        }
-    }
-
+    //region game context
     /**
      * Game gameData instance
      * @type {import('src/model/D2Data.d.ts').D2Data | null}
@@ -64,14 +43,6 @@ class Store {
         this.gameData = updateGameData(gameData);
         console.log(this.gameData);
     }
-
-    /**
-     * 当前帧
-     * @type {number}
-     */
-    frame = 0;
-    setFrame = f => this.frame = f;
-
     /**
      * 从gameData中提取玩家名
      * @returns {string[][]}
@@ -83,7 +54,6 @@ class Store {
             this.gameData.gameInfo.dire.players.map(p => p.hero),
         ]
     }
-
     /**
      * 从gameData中提取总的数据帧数
      * @returns {number}
@@ -92,7 +62,6 @@ class Store {
         if (this.gameData === null) return 0;
         return this.gameData.gameRecords.length;
     }
-
     /**
      * 从gameData中提取第frame帧的玩家位置
      * @return {[number, number][][]} : the positions of 2*5 players
@@ -109,7 +78,6 @@ class Store {
             )
         )
     }
-
     /**
      * 从gameData中提取第frame帧的玩家存活状态
      * @return {boolean[][]}: life state of 2*5 players
@@ -128,6 +96,41 @@ class Store {
     }
 
     /**
+     * 当前选中的队伍
+     * @type {-1 | 0 | 1} : -1 for none, 0 for team radiant, 1 for team dire
+     */
+    focusedTeam = -1
+    /**
+     * 当前选中的玩家
+     * @type {-1 | 0 | 1 | 2 | 3 | 4} : -1 for none, 0~4 for five playerNames
+     */
+    focusedPlayer = -1
+    /**
+     * 选中一名玩家，预测他的行为
+     * @param {0 | 1} teamIndex
+     * @param {0 | 1 | 2 | 3 | 4} playerIndex
+     */
+    focusOnPlayer = (teamIndex, playerIndex) => {
+        if (teamIndex === this.focusedTeam && playerIndex === this.focusedPlayer) {
+            this.focusedTeam = -1;
+            this.focusedPlayer = -1;
+        } else {
+            this.focusedTeam = teamIndex;
+            this.focusedPlayer = playerIndex;
+        }
+    }
+    get focusedPlayerColor() {
+        if (this.focusedTeam === -1 || this.focusedPlayer === -1) return undefined;
+        return playerColors[this.focusedTeam][this.focusedPlayer];
+    }
+
+    /**
+     * 当前帧
+     * @type {number}
+     */
+    frame = 0;
+    setFrame = f => this.frame = f;
+    /**
      * 从gameData中提取第frame帧的游戏中时间（单位：秒）
      * @return {number}：从-90~0为比赛正式开始前的准备时间，0~+∞是比赛正式进行的时间。
      */
@@ -138,44 +141,58 @@ class Store {
     }
 
     /**
-     * Strategies
-     * @type {import('src/model/Strategy.d.ts').StrategyList}
-     */
-    strategies = []
-    setStrategies = s => this.strategies = s;
-    expandedStrategy = -1
-    expandStrategy = sId => this.expandedStrategy = (this.expandedStrategy === sId) ? -1 : sId;
-    viewedStrategy = -1
-    viewStrategy = sId => {
-        if (this.viewedPrediction === -1) {
-            const targetSId = (this.viewedStrategy === sId) ? -1 : sId;
-            this.viewedStrategy = targetSId;
-            this.expandedStrategy = targetSId;
-        } else {
-            this.viewedStrategy = sId;
-            this.expandedStrategy = sId;
-            this.viewedPrediction = -1;
-        }
-    }
-    viewedPrediction = -1
-    viewPrediction = (sId, pId) => {
-        if (this.viewedStrategy === sId && this.viewedPrediction === pId) {
-            this.expandedStrategy = -1;
-            this.viewedStrategy = -1;
-            this.viewedPrediction = -1;
-        } else {
-            this.expandedStrategy = sId;
-            this.viewedStrategy = sId;
-            this.viewedPrediction = pId;
-        }
-    }
-
-    /**
      * @return {{[groupName: string]: {[itemName: string]: number | string | boolean}}}
      */
     get curContext() {
         return genContext(this.frame);
     }
+    //endregion
+
+    //region prediction
+    predict = () => {
+        this.setWaiting(true);
+        setTimeout(() => {
+            const startPos = this.playerPositions[this.focusedTeam][this.focusedPlayer];
+            const strategies = genRandomStrategies(startPos);
+            this.setPredictions(strategies.map(strat => strat.predictors).flat());
+            let i = 0;
+            this.setPredGroups(strategies.map(strat => strat.predictors.map(() => i++)));
+            this.setWaiting(false);
+        }, 1000);
+    }
+
+    /**
+     * Predictions
+     * @type {import('src/model/Strategy.d.ts').Prediction[]}
+     */
+    predictions = []
+    setPredictions = pred => this.predictions = pred;
+    viewedPrediction = -1;
+    viewPrediction = p => this.viewedPrediction = (p === this.viewedPrediction ? -1 : p);
+    /**
+     * prediction groups
+     * @type {number[][]}
+     */
+    predictionGroups = []
+    setPredGroups = predG => this.predictionGroups = predG;
+    selectPredGroup = predG => this.selectPredictors(this.predictionGroups[predG]);
+    /**
+     * @type {number[]}
+     */
+    selectedPredictors = [];
+    selectPredictors = ps => this.selectedPredictors = ps;
+    /**
+     * @return {import('src/model/Strategy.d.ts').Strategy | null}
+     */
+    get selectedPredictorsAsAStrategy() {
+        const selectedPredictors = this.selectedPredictors.map(i => this.predictions[i]);
+        if (selectedPredictors.length === 0) return null;
+        return {
+            predictors: selectedPredictors,
+            attention: contextFactory((g, i) => getStratAttention(selectedPredictors, g, i))
+        };
+    }
+    //endregion
 }
 
 export default Store;

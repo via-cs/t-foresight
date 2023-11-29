@@ -2,7 +2,7 @@ import {MAX_X, MAX_Y, MIN_X, MIN_Y} from "./game.js";
 
 const DIS = 175;
 
-function getStratAttention(predictors, groupName, itemName) {
+export function getStratAttention(predictors, groupName, itemName) {
     const values = predictors.map(p => p.attention[groupName][itemName]);
     return {
         avg: values.reduce((p, c) => p + c, 0) / values.length,
@@ -74,11 +74,7 @@ function stratProb(strat) {
     return strat.predictors.reduce((p, c) => p + c.probability, 0);
 }
 
-export function genRandomStrategies() {
-    const startPos = [
-        (Math.random() + 0.5) * (MAX_X - MIN_X) / 2 + MIN_X,
-        (Math.random() + 0.5) * (MAX_Y - MIN_Y) / 2 + MIN_Y
-    ];
+export function genRandomStrategies(startPos) {
     const res = new Array(Math.floor(Math.random() * 3 + 4)).fill(0)
         .map(() => genRandomStrategy(startPos))
     const sumProb = res.reduce((p, c) => p + stratProb(c), 0);

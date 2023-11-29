@@ -61,10 +61,11 @@ const Anchor = styled('div')(({theme}) => ({
     position: 'absolute',
     width: 0,
     height: 21,
+    transition: 'left .3s ease',
     transform: 'translateX(-50%)',
     top: 10,
-    borderTop: `3px solid red`,
-    borderBottom: `3px solid red`,
+    borderTop: `3px solid ${theme.palette.secondary.main}`,
+    borderBottom: `3px solid ${theme.palette.secondary.main}`,
     borderLeft: `3px solid white`,
     borderRight: `3px solid white`,
 }))

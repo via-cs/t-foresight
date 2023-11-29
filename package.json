@@ -16,6 +16,7 @@
     "@mui/icons-material": "^5.14.13",
     "@mui/material": "^5.14.13",
     "heatmap.js": "^2.0.5",
+    "hull.js": "^1.0.4",
     "i18next": "^23.5.1",
     "i18next-fetch-backend": "^5.0.2",
     "konva": "^9.2.2",

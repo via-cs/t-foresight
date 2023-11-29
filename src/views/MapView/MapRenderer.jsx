@@ -4,6 +4,8 @@ import useMapNavigation from "./useMapNavigation.js";
 import KonvaImage from "../../components/KonvaImage.jsx";
 import PlayerLayer from "./PlayerLayer.jsx";
 import RealTrajectoryLayer from "./RealTrajectoryLayer.jsx";
+import StrategyRenderer from "./StrategyRenderer.jsx";
+import {useEffect, useRef} from "react";
 
 /**
  * @param {import('src/store/store.js').Store} store
@@ -14,12 +16,12 @@ function MapRenderer({
                          store,
                          size,
                      }) {
-    const {scale, offset, handleWheel, handleRecover, dragBoundFunc} = useMapNavigation(size);
+    const ref = useRef(null);
+    const {scale, autoFocus, handleWheel, handleRecover, dragBoundFunc} = useMapNavigation(size, ref);
     const scaleBalance = 2 / (scale + 1);
 
     return <Stage width={size} height={size}
-                  scaleX={scale} scaleY={scale}
-                  x={offset[0]} y={offset[1]}
+                  ref={n => ref.current = n}
                   onWheel={handleWheel}
                   onDblClick={handleRecover}
                   fill={'black'}
@@ -28,7 +30,10 @@ function MapRenderer({
         <Layer>
             <KonvaImage src={'./map.jpeg'} w={size} h={size}/>
         </Layer>
-
+        {store.selectedPredictorsAsAStrategy &&
+            <StrategyRenderer mapSize={size}
+                              strat={store.selectedPredictorsAsAStrategy}
+                              onAutoFocus={autoFocus}/>}
         {store.focusedPlayer !== -1 &&
             <RealTrajectoryLayer mapSize={size} scaleBalance={scaleBalance}/>}
         <PlayerLayer mapSize={size} scaleBalance={scaleBalance}/>

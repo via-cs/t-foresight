@@ -13,12 +13,12 @@ import {useTranslation} from "react-i18next";
  * @returns {JSX.Element}
  * @constructor
  */
-function StrategyItem({sId, store}) {
+function StrategyItem({sId, store, strat = null}) {
     const open = sId === store.expandedStrategy;
     const handleView = useCallback(() => store.viewStrategy(sId), [sId]);
     const handleOpen = useCallback(() => store.expandStrategy(sId), [sId]);
-    const {t} = useTranslation();
-    const strat = store.strategies[sId];
+    const {t} = useTranslation()
+    if (strat === null) strat = store.strategies[sId];
 
     return <Fragment>
         <VisualItem name={t('translation:System.StrategyView.SID', {sId: sId + 1})}
@@ -28,14 +28,16 @@ function StrategyItem({sId, store}) {
                     expandLabel={t('translation:System.StrategyView.PredNum', {num: strat.predictors.length})}
                     onExpand={handleOpen}
                     shallow={store.expandedStrategy !== -1 && store.expandedStrategy !== sId}
-                    mapSlice={<StrategyMapRenderer sId={sId}/>}
+                    mapSlice={<StrategyMapRenderer sId={sId} strat={strat}/>}
                     prob={strat.predictors.reduce((p, c) => p + c.probability, 0)}/>
         <Collapse in={open} timeout={'auto'} unmountOnExit>
             <List component={'div'} disablePadding>
-                {store.strategies[sId].predictors.map((_, pId) => (
+                {strat.predictors.map((pred, pId) => (
                     <PredictionItem key={pId}
                                     sId={sId}
-                                    pId={pId}/>
+                                    pId={pId}
+                                    strat={strat}
+                                    pred={pred}/>
                 ))}
             </List>
         </Collapse>

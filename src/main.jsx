@@ -14,10 +14,7 @@ const store = new Store();
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
         <Provider store={store}>
-            <ThemeProvider theme={createTheme(defaultTheme)}>
-                <CssBaseline/>
-                <App/>
-            </ThemeProvider>
+            <App/>
         </Provider>
     </React.StrictMode>,
 )

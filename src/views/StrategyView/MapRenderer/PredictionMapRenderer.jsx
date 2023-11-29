@@ -8,17 +8,17 @@ import {inject, observer} from "mobx-react";
  * @param {import('src/store/store.js').Store} store
  * @param {number} sId
  * @param {number} pId
+ * @param {import('src/model/Strategy.js').Strategy} strat
+ * @param {import('src/model/Strategy.js').Prediction} pred
  * @return {JSX.Element}
  * @constructor
  */
-function PredictionMapRenderer({store, sId, pId}) {
-    const strat = store.strategies[sId];
-    const data = strat.predictors[pId];
-    const centerPos = data.trajectory[0];
+function PredictionMapRenderer({store, sId, pId, strat, pred}) {
+    const centerPos = pred.trajectory[0];
     const radius = Math.max(...strat.predictors.map(p => Math.max(...p.trajectory.map(pos => mapDis(pos, centerPos)))))
     return <MapSliceRenderer centerPos={centerPos} radius={radius}>
         {(mapSize, scale) => {
-            const traj = data.trajectory.map(p => mapProject(p, mapSize));
+            const traj = pred.trajectory.map(p => mapProject(p, mapSize));
             return <Group>
                 <Arrow points={traj.flat()}
                        stroke={'red'} strokeWidth={3 / scale}

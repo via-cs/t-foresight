@@ -3,11 +3,7 @@ import ContextGroup from "./ContextGroup.jsx";
 import {styled} from "@mui/material/styles";
 import {playerColors, teamNames, teamShapes} from "../../utils/game.js";
 import {contextFactory} from "../../utils/fakeData.js";
-
-const defaultAttention = Object.fromEntries(['p00', 'p01', 'p02', 'p03', 'p04', 'p10', 'p11', 'p12', 'p13', 'p14', 'g'].map(g => [
-    g,
-    {}
-]))
+import {Box} from "@mui/material";
 
 /**
  *
@@ -16,12 +12,12 @@ const defaultAttention = Object.fromEntries(['p00', 'p01', 'p02', 'p03', 'p04', 
  * @constructor
  */
 function ContextView({store}) {
-    const strat = store.strategies[store.viewedStrategy];
+    const strat = store.selectedPredictorsAsAStrategy;
     const attention = strat ? strat.attention : contextFactory(() => ({}));
-    const pred = strat ? strat.predictors[store.viewedPrediction] : undefined;
+    const pred = store.predictions[store.viewedPrediction];
     const predAtt = pred ? pred.attention : contextFactory(() => undefined);
 
-    return <div>
+    return <Box width={'100%'} height={'100%'} overflow={'hidden auto'}>
         {[0, 1].map(teamId => [0, 1, 2, 3, 4].map(playerId => (
             <ContextGroup key={`${teamId}${playerId}`}
                           colorLabel={<PlayerIcon shape={teamShapes[teamId]}
@@ -37,7 +33,7 @@ function ContextView({store}) {
                       context={store.curContext['g']}
                       attention={attention['g']}
                       curAtt={predAtt['g']}/>
-    </div>
+    </Box>
 }
 
 export default inject('store')(observer(ContextView));

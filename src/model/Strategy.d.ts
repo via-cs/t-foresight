@@ -20,5 +20,3 @@ export interface Strategy {
     predictors: Prediction[]
     attention: StratAttention
 }
-
-export type StrategyList = Strategy[];

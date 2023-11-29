@@ -1567,6 +1567,11 @@ html-parse-stringify@^3.0.1:
   dependencies:
     void-elements "3.1.0"
 
+hull.js@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.npmmirror.com/hull.js/-/hull.js-1.0.4.tgz#3266cb6180cceae101723f539b2c020a37d4038a"
+  integrity sha512-p7oV4LVNo8wokDXRAF/20WN0Nd02eRLWJI6KlEC5Ih/vBiy3fGtGeeRQIVUANIpu0AXLTDOsy0naJiNZpDL5OQ==
+
 i18next-fetch-backend@^5.0.2:
   version "5.0.2"
   resolved "https://registry.npmmirror.com/i18next-fetch-backend/-/i18next-fetch-backend-5.0.2.tgz#aad4032bf8bb2dfaca9847c84a2bb1a2f59e3174"
