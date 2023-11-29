@@ -3,7 +3,7 @@ import TitleBar from "./views/TitleBar";
 import {useLayout} from "./utils/layout";
 import {styled} from "@mui/material/styles";
 import PlayerSelection from "./views/MapView/PlayerSelection";
-import {Divider} from "@mui/material";
+import {Button, createTheme, CssBaseline, Divider, ThemeProvider} from "@mui/material";
 import Timeline from "./views/MapView/Timeline.jsx";
 import MapRenderer from "./views/MapView/MapRenderer.jsx";
 import {inject, observer} from "mobx-react";
@@ -11,6 +11,9 @@ import Waiting from "./components/Waiting.jsx";
 import {useTranslation} from "react-i18next";
 import StrategyView from "./views/StrategyView/index.jsx";
 import ContextView from "./views/ContextView/index.jsx";
+import {defaultTheme} from "./utils/theme.js";
+import React from "react";
+import {playerColors} from "./utils/game.js";
 
 // React本质上就是用函数表达从数据到视图的映射，每一个不同的映射称为一个组件。
 // 当数据发生变化时，React会自动处理视图的变化，并刷新组件的渲染。
@@ -35,25 +38,35 @@ function App({store}) {
 
     // 使用类似HTML的方式（即JSX的方式），形象地返回结果（和D3相比，更容易看懂了）
     // Root是下方定义的styled component，TitleBar/View/Waiting都是其他文件定义的组件
-    return <Root>
-        <TitleBar width={appTitleBarWidth}/>
-        <View title={t('System.MapView')} {...mapViewPos}
-              tools={[
-                  <PlayerSelection team={0}/>,
-                  <PlayerSelection team={1}/>
-              ]}>
-            <MapRenderer size={mapSize}/>
-            <Divider sx={{m: .5}}/>
-            <Timeline/>
-        </View>
-        <View title={t('System.StrategyView.ViewName')} {...strategyViewPos}>
-            <StrategyView/>
-        </View>
-        <View title={t('System.ContextView')} {...contextViewPos}>
-            <ContextView/>
-        </View>
-        <Waiting open={store.waiting}/>
-    </Root>
+    return <ThemeProvider theme={createTheme(defaultTheme(store.focusedPlayerColor))}>
+        <CssBaseline/>
+        <Root>
+            <TitleBar width={appTitleBarWidth}/>
+            <View title={t('System.MapView')} {...mapViewPos}
+                  tools={[
+                      <PlayerSelection team={0}/>,
+                      <PlayerSelection team={1}/>
+                  ]}>
+                <MapRenderer size={mapSize}/>
+                <Divider sx={{m: .5}}/>
+                <Timeline/>
+            </View>
+            <View title={t('System.StrategyView.ViewName')} {...strategyViewPos}
+                  tools={[
+                      <Button variant={'text'}
+                              disabled={store.focusedPlayer === -1 || store.focusedTeam === -1 || store.gameData === null || !store.playerLifeStates[store.focusedTeam][store.focusedPlayer]}
+                              onClick={store.predict}>
+                          {t('System.StrategyView.Predict')}
+                      </Button>
+                  ]}>
+                <StrategyView/>
+            </View>
+            <View title={t('System.ContextView')} {...contextViewPos}>
+                <ContextView/>
+            </View>
+            <Waiting open={store.waiting}/>
+        </Root>
+    </ThemeProvider>
 }
 
 // inject用于将数据中心store和组件绑定，我们在组件中就可以访问到store中的数据。

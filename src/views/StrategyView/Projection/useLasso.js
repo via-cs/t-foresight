@@ -10,6 +10,7 @@ export default function useLasso() {
     }, [])
     const handleMouseDown = useCallback(e => {
         if (isDrawing) return;
+        if (e.button !== 0) return;
         setDrawing(true);
         const cursor = getCursorPos(e);
         setLasso([cursor]);

@@ -11,13 +11,15 @@ function ContextGroup({colorLabel, groupName, informalGroup, context, attention,
                                           label={groupName}/>}
         {!informalGroup && open && <Divider dir={'horizontal'} sx={{m: 0.5}}/>}
         <Collapse in={open || informalGroup}>
-            {Object.keys(context).map(key => (
-                <AttentionItem key={key}
-                               label={key}
-                               value={context[key]}
-                               attention={attention[key]}
-                               curAtt={curAtt[key]}/>
-            ))}
+            {(open || informalGroup)
+                ? Object.keys(context).map(key => (
+                    <AttentionItem key={key}
+                                   label={key}
+                                   value={context[key]}
+                                   attention={attention[key]}
+                                   curAtt={curAtt[key]}/>
+                ))
+                : <div style={{height: Object.keys(context).length * 40}}/>}
         </Collapse>
     </Container>
 }

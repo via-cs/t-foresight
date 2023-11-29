@@ -15,15 +15,17 @@ function StrategyView({store}) {
     return <Container>
         <Projection>
             <Wrapper>
-                <PredictorsProjection allPredictors={store.allPredictors}
+                <PredictorsProjection allPredictors={store.predictions}
+                                      predictorGroups={store.predictionGroups}
                                       selectedPredictors={store.selectedPredictors}
-                                      onSelect={store.selectPredictors}/>
+                                      onSelectGroup={store.selectPredictors}
+                                      onViewPredictor={store.viewPrediction}/>
             </Wrapper>
         </Projection>
         <Divider sx={{m: 1}}/>
-        <List sx={{overflowY: 'auto'}}>
-            <StrategyItem sId={-1} strat={store.selectedPredictorsAsAStrategy}/>
-        </List>
+        {/*<List sx={{overflowY: 'auto'}}>*/}
+        {/*    <StrategyItem sId={-1} strat={store.selectedPredictorsAsAStrategy}/>*/}
+        {/*</List>*/}
     </Container>
 }
 

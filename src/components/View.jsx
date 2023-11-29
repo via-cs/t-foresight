@@ -68,6 +68,7 @@ const Toolbar = styled('div')(({theme}) => ({
     height: viewSize.viewTitleBarHeight,
     flexWrap: 'nowrap',
     overflow: 'auto hidden',
+    alignItems: 'center',
 }));
 
 const Tool = styled('div')(({theme}) => ({

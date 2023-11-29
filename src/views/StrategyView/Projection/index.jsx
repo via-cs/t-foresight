@@ -4,26 +4,41 @@ import usePointLassoSelection from "./usePointLassoSelection.js";
 import useLasso from "./useLasso.js";
 import {styled, useTheme} from "@mui/material/styles";
 import {alpha, lighten} from "@mui/material";
-import {useCallback} from "react";
+import {memo, useCallback} from "react";
+import createConvexHull from "./createConvexHull.js";
 
 const W = 1000, H = 1000;
 
+const Groups = memo(function ({predictorGroups, points, onSelectGroup}) {
+    return <g>
+        {predictorGroups.map((g, gId) => (
+            <Group key={gId}
+                   d={createConvexHull(g.map(i => [
+                       points[i][0] * W,
+                       points[i][1] * H,
+                       points[i][2] * W / 20
+                   ]))}
+                   onClick={() => onSelectGroup(g)}/>
+        ))}
+    </g>
+})
+
 /**
  *
- * @param {{sId: number, pId: number, pred: import('src/model/Strategy.js').Prediction}[]} allPredictors
- * @param {[number, number][]} selectedPredictors
- * @param {(predIds: [number, number][]) => void} onSelect
+ * @param {import('src/model/Strategy.js').Prediction[]} allPredictors
+ * @param {number[][]} predictorGroups
+ * @param {number[]} selectedPredictors
+ * @param {(predIds: number[]) => void} onSelectGroup
  * @constructor
  */
-function PredictorsProjection({allPredictors, selectedPredictors, onSelect}) {
-    const selectedPredictorsIdx = selectedPredictors.map(([s, p]) => `${s},${p}`);
-    const points = useProjection(allPredictors);
+function PredictorsProjection({allPredictors, predictorGroups, selectedPredictors, onSelectGroup, onViewPredictor}) {
+    const points = useProjection(allPredictors, predictorGroups);
     const {lasso, isDrawing, handleMouseDown, handleMouseUp, handleMouseMove} = useLasso();
     const preSelectedPointsIdx = usePointLassoSelection(points, lasso);
     const handleClear = useCallback(e => {
         e.preventDefault();
         e.stopPropagation();
-        onSelect([]);
+        onSelectGroup([]);
     }, []);
 
     const theme = useTheme();
@@ -32,19 +47,26 @@ function PredictorsProjection({allPredictors, selectedPredictors, onSelect}) {
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={e => {
-                    onSelect(preSelectedPointsIdx.map(i => [allPredictors[i].sId, allPredictors[i].pId]));
+                    onSelectGroup(preSelectedPointsIdx);
                     handleMouseUp(e);
                 }}>
+        <Groups predictorGroups={predictorGroups} points={points}
+                onSelectGroup={onSelectGroup}/>
         <g>
             {allPredictors.map((p, pId) => {
-                const opacity = Math.min(p.pred.probability * 5, 1);
+                const opacity = Math.min(p.probability * 5, 1);
                 return <g key={pId}
                           transform={`translate(${points[pId][0] * W}, ${points[pId][1] * H})`}>
                     <Point fillOpacity={opacity}
-                           selected={selectedPredictorsIdx.includes(`${p.sId},${p.pId}`)}/>
+                           selected={selectedPredictors.includes(pId)}
+                           isDrawing={isDrawing}
+                           r={points[pId][2] * W / 20}
+                           onMouseEnter={() => onViewPredictor(pId)}
+                           onMouseLeave={() => onViewPredictor(-1)}/>
                     {isDrawing
                         ? <PointAnchor preSelected={preSelectedPointsIdx.includes(pId)}/>
-                        : <PointIdx fill={theme.palette.getContrastText(lighten(theme.palette.primary.main, 1 - opacity))}>{pId + 1}</PointIdx>}
+                        : <PointIdx
+                            fill={theme.palette.getContrastText(lighten(theme.palette.primary.main, 1 - opacity))}>{pId + 1}</PointIdx>}
                 </g>
             })}
         </g>
@@ -54,10 +76,18 @@ function PredictorsProjection({allPredictors, selectedPredictors, onSelect}) {
 
 export default PredictorsProjection;
 const Point = styled('circle', {
-    shouldForwardProp: propName => !['selected'].includes(propName)
-})(({theme, selected}) => ({
+    shouldForwardProp: propName => !['selected', 'isDrawing'].includes(propName)
+})(({theme, selected, isDrawing}) => ({
     fill: theme.palette.primary.main,
-    r: W / 20,
+    ...(isDrawing && {
+        pointerEvents: 'none',
+    }),
+    ...(!isDrawing && {
+        '&:hover': {
+            stroke: theme.palette.secondary.main,
+            strokeWidth: W / 200,
+        }
+    }),
     ...(selected && {
         stroke: theme.palette.success.main,
         strokeWidth: W / 200,
@@ -67,6 +97,7 @@ const PointIdx = styled('text')({
     textAnchor: 'middle',
     dominantBaseline: 'central',
     fontSize: W / 20,
+    pointerEvents: 'none',
 })
 const PointAnchor = styled('circle', {
     shouldForwardProp: propName => !['preSelected'].includes(propName)
@@ -79,4 +110,13 @@ const Lasso = styled('path')(({theme}) => ({
     strokeWidth: W / 100,
     fill: alpha(theme.palette.success.main, 0.1),
     pointerEvents: 'none',
+}))
+const Group = styled('path')(({theme}) => ({
+    fill: alpha(theme.palette.success.main, 0.1),
+    cursor: 'pointer',
+    '&:hover': {
+        stroke: theme.palette.primary.main,
+        strokeWidth: W / 100,
+        fill: alpha(theme.palette.success.main, 0.2),
+    }
 }))

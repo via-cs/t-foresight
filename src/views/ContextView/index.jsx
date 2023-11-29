@@ -14,7 +14,7 @@ import {Box} from "@mui/material";
 function ContextView({store}) {
     const strat = store.selectedPredictorsAsAStrategy;
     const attention = strat ? strat.attention : contextFactory(() => ({}));
-    const pred = strat ? strat.predictors[store.viewedPrediction] : undefined;
+    const pred = store.predictions[store.viewedPrediction];
     const predAtt = pred ? pred.attention : contextFactory(() => undefined);
 
     return <Box width={'100%'} height={'100%'} overflow={'hidden auto'}>
