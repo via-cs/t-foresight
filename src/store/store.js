@@ -1,11 +1,7 @@
 import {makeAutoObservable, observable} from "mobx";
 import {playerColors, updateGameData} from "../utils/game.js";
-import {
-    contextFactory,
-    genContext,
-    genRandomStrategies,
-    getStratAttention
-} from "../utils/fakeData.js";
+import {contextFactory, genContext, genRandomStrategies, getStratAttention} from "../utils/fakeData.js";
+import api from "../api/api.js";
 
 class Store {
     constructor() {
@@ -35,16 +31,21 @@ class Store {
      * @type {import('src/model/D2Data.d.ts').D2Data | null}
      */
     gameData = null;
+    gameName = '';
     /**
      * Import gameData
+     * @param {string} filename
      * @param {import('src/model/D2Data.d.ts').D2Data} gameData
      */
-    setData = gameData => {
+    setData = (filename, gameData) => {
+        this.gameName = filename;
         this.gameData = updateGameData(gameData);
         this.focusOnPlayer(-1, -1);
         this.setFrame(0);
         this.clearPredictions();
+        this.clearContextLimit();
     }
+
     /**
      * 从gameData中提取玩家名
      * @returns {string[][]}
@@ -56,6 +57,7 @@ class Store {
             this.gameData.gameInfo.dire.players.map(p => p.hero),
         ]
     }
+
     /**
      * 从gameData中提取总的数据帧数
      * @returns {number}
@@ -64,6 +66,7 @@ class Store {
         if (this.gameData === null) return 0;
         return this.gameData.gameRecords.length;
     }
+
     /**
      * 从gameData中提取第frame帧的玩家位置
      * @return {[number, number][][]} : the positions of 2*5 players
@@ -80,6 +83,7 @@ class Store {
             )
         )
     }
+
     /**
      * 从gameData中提取第frame帧的玩家存活状态
      * @return {boolean[][]}: life state of 2*5 players
@@ -121,7 +125,9 @@ class Store {
             this.focusedPlayer = playerIndex;
         }
         this.clearPredictions();
+        this.clearContextLimit();
     }
+
     get focusedPlayerColor() {
         if (this.focusedTeam === -1 || this.focusedPlayer === -1) return undefined;
         return playerColors[this.focusedTeam][this.focusedPlayer];
@@ -135,7 +141,9 @@ class Store {
     setFrame = f => {
         this.frame = f;
         this.clearPredictions();
+        this.clearContextLimit();
     }
+
     /**
      * 从gameData中提取第frame帧的游戏中时间（单位：秒）
      * @return {number}：从-90~0为比赛正式开始前的准备时间，0~+∞是比赛正式进行的时间。
@@ -152,19 +160,38 @@ class Store {
     get curContext() {
         return genContext(this.frame);
     }
+
+    contextLimit = new Set()
+    addContextLimit = (ctxGroup, ctxItem) => this.contextLimit.add(`${ctxGroup}|||${ctxItem}`);
+    rmContextLimit = (ctxGroup, ctxItem) => this.contextLimit.delete(`${ctxGroup}|||${ctxItem}`);
+    clearContextLimit = () => this.contextLimit.clear();
     //endregion
 
     //region prediction
     predict = () => {
         this.setWaiting(true);
-        setTimeout(() => {
-            const startPos = this.playerPositions[this.focusedTeam][this.focusedPlayer];
-            const strategies = genRandomStrategies(startPos);
-            this.setPredictions(strategies.map(strat => strat.predictors).flat());
-            let i = 0;
-            this.setPredGroups(strategies.map(strat => strat.predictors.map(() => i++)));
-            this.setWaiting(false);
-        }, 1000);
+        api.predict({
+            gameName: this.gameName,
+            teamId: this.focusedTeam,
+            playerId: this.focusedPlayer,
+            frame: this.frame,
+            contextLimit: this.contextLimit,
+        })
+            .catch(() => {
+                console.warn('Failed to connect to the backend. Using fake data instead.');
+                const startPos = this.playerPositions[this.focusedTeam][this.focusedPlayer];
+                const strategies = genRandomStrategies(startPos);
+                let i = 0;
+                return {
+                    predictions: strategies.map(strat => strat.predictors).flat(),
+                    predGroups: strategies.map(strat => strat.predictors.map(() => i++)),
+                }
+            })
+            .then(res => {
+                this.setPredictions(res.predictions);
+                this.setPredGroups(res.predGroups);
+            })
+            .finally(() => this.setWaiting(false));
     }
 
     /**
@@ -186,6 +213,7 @@ class Store {
      */
     selectedPredictors = [];
     selectPredictors = ps => this.selectedPredictors = ps;
+
     /**
      * @return {import('src/model/Strategy.d.ts').Strategy | null}
      */
@@ -197,6 +225,7 @@ class Store {
             attention: contextFactory((g, i) => getStratAttention(selectedPredictors, g, i))
         };
     }
+
     clearPredictions = () => {
         this.setPredictions([]);
         this.viewPrediction(-1);

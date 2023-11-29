@@ -63,8 +63,8 @@ export default function useMapNavigation(mapSize, ref) {
         const WH = MAX_Y - MIN_Y;
         const scale = WH / 2 / radius;
         setNav(scale, [
-            mapSize * scale * (radius + MIN_X - centerPos[0]) / WH,
-            mapSize * scale * (centerPos[1] - MIN_X + radius - WH) / WH,
+            ensureSize(mapSize * scale * (radius + MIN_X - centerPos[0]) / WH, scale, mapSize),
+            ensureSize(mapSize * scale * (centerPos[1] - MIN_X + radius - WH) / WH, scale, mapSize),
         ], true);
     }
 

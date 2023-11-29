@@ -24,8 +24,8 @@ function StrategyRenderer({mapSize, strat, onAutoFocus, resolution = 500}) {
             value: Math.floor(p.probability * 200),
         }
     }), {
-        radius: resolution / 25,
-        blur: resolution / 25,
+        radius: resolution / 28,
+        blur: resolution / 20,
     });
     return <Layer>
         <KonvaImage x={0} y={0} w={mapSize} h={mapSize}

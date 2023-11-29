@@ -31,7 +31,7 @@ function TitleBar({width, store}) {
                 return readJSONFile(file);
             })
             .catch(err => window.alert(err))
-            .then(data => store.setData(data))
+            .then(data => store.setData(data.filename, data.data))
             .finally(() => store.setWaiting(false));
     }
     return <Bar style={{width}}>

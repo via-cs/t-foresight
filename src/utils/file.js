@@ -16,7 +16,7 @@ export function readJSONFile(file) {
         fileReader.onload = () => {
             try {
                 parseAsync(fileReader.result, (err, data) => {
-                    if (!err) resolve(data);
+                    if (!err) resolve({filename: file.name, data});
                     else reject(err);
                 })
             } catch (e) {
