@@ -9,7 +9,7 @@ import {viewSize} from "../../utils/layout.js";
 import {inject, observer} from "mobx-react";
 import {readJSONFile, selectFile} from "../../utils/file.js";
 import {useTranslation} from "react-i18next";
-import {Translate} from "@mui/icons-material";
+import {Settings, Translate} from "@mui/icons-material";
 
 /**
  * @param {number} width
@@ -19,11 +19,7 @@ import {Translate} from "@mui/icons-material";
  */
 function TitleBar({width, store}) {
     const {t, i18n} = useTranslation();
-    const toggleLanguage = () => i18n.changeLanguage(
-        i18n.language === 'en'
-            ? 'cn'
-            : 'en'
-    );
+    const toggleLanguage = () => i18n.changeLanguage(i18n.language === 'en' ? 'cn' : 'en');
     const handleImport = () => {
         selectFile()
             .then(file => {
@@ -36,14 +32,21 @@ function TitleBar({width, store}) {
     }
     return <Bar style={{width}}>
         <Title variant={'h5'}>{t('System.SystemName')}</Title>
-        <div>
-            <Button variant={'contained'}
-                    onClick={handleImport}>{t('System.Actions.import')}</Button>
-            <Button variant={'contained'}
-                    onClick={toggleLanguage}>
-                <Translate fontSize={'small'}/>
-            </Button>
-        </div>
+        <div style={{flex: 1}}/>
+        <Button variant={'contained'}
+                sx={{mr: 1}}
+                onClick={handleImport}>{t('System.Actions.import')}</Button>
+        <Button variant={'contained'}
+                sx={{mr: 1}}
+                onClick={toggleLanguage}>
+            <Translate fontSize={'small'}/>
+        </Button>
+        <Button variant={'contained'}
+                color={store.devMode ? 'secondary' : 'primary'}
+                sx={{mr: 1}}
+                onClick={() => store.setDevMode(!store.devMode)}>
+            <Settings/>
+        </Button>
     </Bar>
 }
 

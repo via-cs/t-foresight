@@ -7,7 +7,11 @@
     "Actions": {
       "import": "import"
     },
-    "ContextView": "Context View",
+    "ContextView": {
+      "GameContext": "Game Context",
+      "More": "show more",
+      "ViewName": "Context View"
+    },
     "MapView": "Map View",
     "StrategyView": {
       "PredNum": "{{num}} pred.",

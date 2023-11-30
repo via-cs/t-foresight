@@ -7,7 +7,11 @@
     "Actions": {
       "import": "导入"
     },
-    "ContextView": "环境视图",
+    "ContextView": {
+      "GameContext": "游戏环境",
+      "More": "显示更多",
+      "ViewName": "环境视图"
+    },
     "MapView": "地图视图",
     "StrategyView": {
       "PredNum": "{{num}}条路",

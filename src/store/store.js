@@ -1,4 +1,4 @@
-import {makeAutoObservable, observable} from "mobx";
+import {computed, makeAutoObservable, observable} from "mobx";
 import {playerColors, updateGameData} from "../utils/game.js";
 import {contextFactory, genContext, genRandomStrategies, getStratAttention} from "../utils/fakeData.js";
 import api from "../api/api.js";
@@ -14,6 +14,8 @@ class Store {
         // 1. observable会监听整个hierarchical的结构，observable.shallow只会监听根部引用的改变，提高效率
         // 2. gameData导入后是不变的，因此没必要监听其内部元素变化
         makeAutoObservable(this, {gameData: observable.shallow});
+
+        this.setDevMode(window.localStorage.getItem('dev') === 'true');
     }
 
     //region system
@@ -23,6 +25,12 @@ class Store {
      */
     waiting = false
     setWaiting = state => this.waiting = state;
+
+    devMode = false
+    setDevMode = dev => {
+        this.devMode = dev;
+        window.localStorage.setItem('dev', dev.toString());
+    }
     //endregion
 
     //region game context
@@ -162,13 +170,33 @@ class Store {
     }
 
     contextLimit = new Set()
+    hasContextLimit = (ctxGroup, ctxItem) => computed(() =>
+        this.contextLimit.has(`${ctxGroup}|||${ctxItem}`)
+    ).get();
     addContextLimit = (ctxGroup, ctxItem) => this.contextLimit.add(`${ctxGroup}|||${ctxItem}`);
     rmContextLimit = (ctxGroup, ctxItem) => this.contextLimit.delete(`${ctxGroup}|||${ctxItem}`);
     clearContextLimit = () => this.contextLimit.clear();
     //endregion
 
     //region prediction
+    fakePredict = () => {
+        console.warn('Failed to connect to the backend. Using fake data instead.');
+        const startPos = this.playerPositions[this.focusedTeam][this.focusedPlayer];
+        const strategies = genRandomStrategies(startPos);
+        let i = 0;
+        return {
+            predictions: strategies.map(strat => strat.predictors).flat(),
+            predGroups: strategies.map(strat => strat.predictors.map(() => i++)),
+        }
+    }
     predict = () => {
+        if (this.devMode) {
+            const {predictions, predGroups} = this.fakePredict();
+            this.setPredictions(predictions);
+            this.setPredGroups(predGroups);
+            return;
+        }
+
         this.setWaiting(true);
         api.predict({
             gameName: this.gameName,
@@ -176,22 +204,11 @@ class Store {
             playerId: this.focusedPlayer,
             frame: this.frame,
             contextLimit: this.contextLimit,
-        })
-            .catch(() => {
-                console.warn('Failed to connect to the backend. Using fake data instead.');
-                const startPos = this.playerPositions[this.focusedTeam][this.focusedPlayer];
-                const strategies = genRandomStrategies(startPos);
-                let i = 0;
-                return {
-                    predictions: strategies.map(strat => strat.predictors).flat(),
-                    predGroups: strategies.map(strat => strat.predictors.map(() => i++)),
-                }
-            })
+        }).catch(this.fakePredict)
             .then(res => {
                 this.setPredictions(res.predictions);
                 this.setPredGroups(res.predGroups);
-            })
-            .finally(() => this.setWaiting(false));
+            }).finally(() => this.setWaiting(false));
     }
 
     /**

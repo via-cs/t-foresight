@@ -2,32 +2,33 @@ import {useCallback, useState} from "react";
 
 export default function useLasso() {
     const [lasso, setLasso] = useState([]);
-    const [isDrawing, setDrawing] = useState(false);
+    const [drawingState, setDrawingState] = useState('off');
     const getCursorPos = useCallback(e => {
         const {left, top, width, height} = e.currentTarget.getBoundingClientRect();
         const {clientX, clientY} = e;
         return [(clientX - left) / width, (clientY - top) / height];
-    }, [])
+    }, []);
     const handleMouseDown = useCallback(e => {
-        if (isDrawing) return;
+        if (drawingState !== 'off') return;
         if (e.button !== 0) return;
-        setDrawing(true);
+        setDrawingState('ready');
         const cursor = getCursorPos(e);
         setLasso([cursor]);
-    }, [isDrawing]);
+    }, [drawingState]);
     const handleMouseMove = useCallback(e => {
-        if (!isDrawing) return;
+        if (drawingState === 'off') return;
+        if (drawingState === 'ready') setDrawingState('drawing');
         const cursor = getCursorPos(e);
         setLasso(l => [...l, cursor]);
-    }, [isDrawing]);
+    }, [drawingState]);
     const handleMouseUp = useCallback(() => {
-        if (!isDrawing) return;
-        setDrawing(false);
+        if (drawingState === 'off') return;
+        setDrawingState('off');
         setLasso([]);
-    }, [isDrawing]);
+    }, [drawingState]);
     return {
         lasso,
-        isDrawing,
+        isDrawing: drawingState === 'drawing',
         handleMouseMove,
         handleMouseDown,
         handleMouseUp,

@@ -2,25 +2,12 @@ import useProjection from "./useProjection.js";
 import usePointLassoSelection from "./usePointLassoSelection.js";
 import useLasso from "./useLasso.js";
 import {styled, useTheme} from "@mui/material/styles";
-import {alpha, lighten} from "@mui/material";
-import {memo, useCallback} from "react";
-import createConvexHull from "./createConvexHull.js";
+import {lighten} from "@mui/material";
+import {useCallback} from "react";
+import ConvexHull from "./ConvexHull.jsx";
+import LassoGroup from "./Group.js";
 
 const W = 1000, H = 1000;
-
-const Groups = memo(function ({predictorGroups, points, onSelectGroup}) {
-    return <g>
-        {predictorGroups.map((g, gId) => (
-            <Group key={gId}
-                   d={createConvexHull(g.map(i => [
-                       points[i][0] * W,
-                       points[i][1] * H,
-                       points[i][2] * W / 20
-                   ]))}
-                   onClick={() => onSelectGroup(g)}/>
-        ))}
-    </g>
-})
 
 /**
  *
@@ -47,11 +34,18 @@ function PredictorsProjection({allPredictors, predictorGroups, selectedPredictor
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={e => {
-                    onSelectGroup(preSelectedPointsIdx);
+                    if (isDrawing) onSelectGroup(preSelectedPointsIdx);
                     handleMouseUp(e);
                 }}>
-        <Groups predictorGroups={predictorGroups} points={points}
-                onSelectGroup={onSelectGroup}/>
+        <g>
+            {predictorGroups.map((g, gId) => (
+                <ConvexHull key={gId}
+                            predictorGroup={g}
+                            points={points}
+                            selected={selectedPredictors}
+                            onSelectGroup={onSelectGroup}/>
+            ))}
+        </g>
         <g>
             {allPredictors.map((p, pId) => {
                 const opacity = Math.min(p.probability * 5, 1);
@@ -70,7 +64,8 @@ function PredictorsProjection({allPredictors, predictorGroups, selectedPredictor
                 </g>
             })}
         </g>
-        {isDrawing && <Lasso d={'M' + lasso.map(p => `${p[0] * W} ${p[1] * H}`).join('L')}/>}
+        {isDrawing && <LassoGroup d={'M' + lasso.map(p => `${p[0] * W} ${p[1] * H}`).join('L')}
+                                  width={W / 200}/>}
     </svg>
 }
 
@@ -104,19 +99,4 @@ const PointAnchor = styled('circle', {
 })(({theme, preSelected}) => ({
     r: W / 100,
     fill: preSelected ? theme.palette.success.main : theme.palette.primary.main,
-}))
-const Lasso = styled('path')(({theme}) => ({
-    stroke: theme.palette.primary.main,
-    strokeWidth: W / 100,
-    fill: alpha(theme.palette.success.main, 0.1),
-    pointerEvents: 'none',
-}))
-const Group = styled('path')(({theme}) => ({
-    fill: alpha(theme.palette.success.main, 0.1),
-    cursor: 'pointer',
-    '&:hover': {
-        stroke: theme.palette.primary.main,
-        strokeWidth: W / 100,
-        fill: alpha(theme.palette.success.main, 0.2),
-    }
 }))

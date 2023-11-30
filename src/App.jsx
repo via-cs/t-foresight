@@ -60,7 +60,13 @@ function App({store}) {
                   ]}>
                 <StrategyView/>
             </View>
-            <View title={t('System.ContextView')} {...contextViewPos}>
+            <View title={t('System.ContextView.ViewName')} {...contextViewPos}
+                  tools={[
+                      <Button variant={'text'}
+                              onClick={store.clearContextLimit}>
+                          Clear Context Limit
+                      </Button>
+                  ]}>
                 <ContextView/>
             </View>
             <Waiting open={store.waiting}/>

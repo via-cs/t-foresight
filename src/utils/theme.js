@@ -27,6 +27,11 @@ export const defaultTheme = secondary => ({
                 }
             }
         },
+        MuiToggleButtonGroup: {
+            defaultProps: {
+                size: 'small'
+            }
+        },
         MuiIconButton: {
             defaultProps: {
                 size: "small",

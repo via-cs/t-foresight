@@ -4,6 +4,7 @@ import {styled} from "@mui/material/styles";
 import {playerColors, teamNames, teamShapes} from "../../utils/game.js";
 import {contextFactory} from "../../utils/fakeData.js";
 import {Box} from "@mui/material";
+import {useTranslation} from "react-i18next";
 
 /**
  *
@@ -16,6 +17,7 @@ function ContextView({store}) {
     const attention = strat ? strat.attention : contextFactory(() => ({}));
     const pred = store.predictions[store.viewedPrediction];
     const predAtt = pred ? pred.attention : contextFactory(() => undefined);
+    const {t} = useTranslation();
 
     return <Box width={'100%'} height={'100%'} overflow={'hidden auto'}>
         {[0, 1].map(teamId => [0, 1, 2, 3, 4].map(playerId => (
@@ -27,9 +29,9 @@ function ContextView({store}) {
                           groupName={store.playerNames[teamId][playerId] || `${teamNames[teamId]} Pos ${playerId + 1}`}
                           context={store.curContext[`p${teamId}${playerId}`]}
                           attention={attention[`p${teamId}${playerId}`]}
-                          curAtt={predAtt[`p${teamId}${playerId}`]} />
+                          curAtt={predAtt[`p${teamId}${playerId}`]}/>
         )))}
-        <ContextGroup informalGroup
+        <ContextGroup groupName={t('System.ContextView.GameContext')}
                       context={store.curContext['g']}
                       attention={attention['g']}
                       curAtt={predAtt['g']}/>
