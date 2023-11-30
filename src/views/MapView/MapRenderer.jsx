@@ -39,7 +39,7 @@ function MapRenderer({
             <PredictedTrajectoryLayer mapSize={size}
                                       scaleBalance={scaleBalance}
                                       prediction={store.predictions[store.viewedPrediction].trajectory}
-                                      color={store.focusedPlayerColor}/>}
+                                      color={store.curColor}/>}
         {store.focusedPlayer !== -1 &&
             <RealTrajectoryLayer mapSize={size} scaleBalance={scaleBalance}/>}
         <PlayerLayer mapSize={size} scaleBalance={scaleBalance}/>
