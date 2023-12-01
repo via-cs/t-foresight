@@ -1,6 +1,6 @@
 import {computed, makeAutoObservable, observable} from "mobx";
-import {playerColors, updateGameData} from "../utils/game.js";
-import {contextFactory, genContext, genRandomStrategies, getStratAttention} from "../utils/fakeData.js";
+import {genContext, playerColors, updateGameData} from "../utils/game.js";
+import {contextFactory, genRandomStrategies, getStratAttention} from "../utils/fakeData.js";
 import api from "../api/api.js";
 
 class Store {
@@ -163,10 +163,10 @@ class Store {
     }
 
     /**
-     * @return {{[groupName: string]: {[itemName: string]: number | string | boolean}}}
+     * @return {import('src/model/Context.js').Context}
      */
     get curContext() {
-        return genContext(this.frame);
+        return genContext(this.gameData, this.frame);
     }
 
     contextLimit = new Set()
@@ -225,7 +225,7 @@ class Store {
     fakePredict = () => {
         console.warn('Failed to connect to the backend. Using fake data instead.');
         const startPos = this.playerPositions[this.focusedTeam][this.focusedPlayer];
-        const strategies = genRandomStrategies(startPos);
+        const strategies = genRandomStrategies(startPos, this.curContext);
         let i = 0;
         return {
             predictions: strategies.map(strat => strat.predictors).flat(),
@@ -282,7 +282,7 @@ class Store {
         if (selectedPredictors.length === 0) return null;
         return {
             predictors: selectedPredictors,
-            attention: contextFactory((g, i) => getStratAttention(selectedPredictors, g, i))
+            attention: contextFactory(this.curContext, (g, i) => getStratAttention(selectedPredictors, g, i))
         };
     }
 

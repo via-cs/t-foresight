@@ -1,7 +1,31 @@
 {
   "Game": {
     "Dire": "Dire",
-    "Radiant": "Radiant"
+    "PlayerPos": "{{team}} Pos {{playerId}}",
+    "Radiant": "Radiant",
+    "gameTime": "Game Time",
+    "gold": "Gold",
+    "health": "Health",
+    "isAlive": "Is Alive",
+    "isNight": "Is Night",
+    "level": "Level",
+    "mana": "Mana",
+    "position": "Position",
+    "roshanHP": "Roshan‘s Health",
+    "towerTop1": "Top Tower Tier 1",
+    "towerTop2": "Top Tower Tier 2",
+    "towerTop3": "Top Tower Tier 3",
+    "towerMid1": "Middle Tower Tier 1",
+    "towerMid2": "Middle Tower Tier 2",
+    "towerMid3": "Middle Tower Tier 3",
+    "towerBot1": "Bottom Tower Tier 1",
+    "towerBot2": "Bottom Tower Tier 2",
+    "towerBot3": "Bottom Tower Tier 3",
+    "towerBase1": "Tier 4 Tower 1",
+    "towerBase2": "Tier 4 Tower 2",
+    "creepTop": "Top-Lane Creeps",
+    "creepMid": "Middle-Lane Creeps",
+    "creepBot": "Bottom-Lane Creeps"
   },
   "System": {
     "Actions": {

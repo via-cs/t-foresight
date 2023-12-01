@@ -69,3 +69,47 @@ export const updateGameData = (compressedGameData) => {
 export function mapDis(pos1, pos2) {
     return Math.sqrt((pos1[0] - pos2[0]) * (pos1[0] - pos2[0]) + (pos1[1] - pos2[1]) * (pos1[1] - pos2[1]))
 }
+
+/**
+ * @param {import('src/model/D2Data.js').D2Data | null} gameData
+ * @param {number} frame
+ * @return {import('src/model/Context.js').Context}
+ */
+export function genContext(gameData, frame) {
+    const gameRecord = gameData ? gameData.gameRecords[frame] : null;
+    const ctx = {};
+    [0, 1].forEach(tId => [0, 1, 2, 3, 4].forEach(pId => {
+        const playerRec = gameRecord ? gameRecord.heroStates[tId][pId] : {pos: []};
+        const playerCtx = ctx[`p${tId}${pId}`] = {};
+        playerCtx.health = playerRec.hp;
+        playerCtx.mana = playerRec.mp;
+        playerCtx.position = playerRec.pos.slice(0, 2);
+        playerCtx.level = playerRec.lvl;
+        playerCtx.isAlive = playerRec.life === 0;
+        playerCtx.gold = playerRec.gold;
+    }));
+    [0, 1].forEach(tId => {
+        const teamRec = gameRecord ? gameRecord.teamStates[tId] : {towers: [], creeps: []};
+        const teamCtx = ctx[`t${tId}`] = {};
+        teamCtx.towerTop1 = teamRec.towers[0];
+        teamCtx.towerTop2 = teamRec.towers[1];
+        teamCtx.towerTop3 = teamRec.towers[2];
+        teamCtx.towerMid1 = teamRec.towers[3];
+        teamCtx.towerMid2 = teamRec.towers[4];
+        teamCtx.towerMid3 = teamRec.towers[5];
+        teamCtx.towerBot1 = teamRec.towers[6];
+        teamCtx.towerBot2 = teamRec.towers[7];
+        teamCtx.towerBot3 = teamRec.towers[8];
+        teamCtx.towerBase1 = teamRec.towers[10];
+        teamCtx.towerBase2 = teamRec.towers[11];
+        teamCtx.creepTop = teamRec.creeps[0];
+        teamCtx.creepMid = teamRec.creeps[1];
+        teamCtx.creepBot = teamRec.creeps[2];
+    })
+    ctx.g = {
+        gameTime: gameRecord?.game_time,
+        isNight: gameRecord?.is_night,
+        roshanHP: gameRecord?.roshan_hp,
+    }
+    return ctx;
+}

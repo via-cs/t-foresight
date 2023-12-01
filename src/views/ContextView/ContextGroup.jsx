@@ -27,14 +27,14 @@ function calHeight(open, displayCnt, totalCnt) {
 function ContextGroup({store, colorLabel, groupName, context, attention, curAtt}) {
     const {open, displayCnt, expand, toggle} = useExpand(Object.keys(context).length);
     const {t} = useTranslation();
-    const sortedContextKeys = Object.keys(context).sort((a, b) => attention[b].avg - attention[a].avg);
+    const sortedContextKeys = Object.keys(context).sort((a, b) => attention[b]?.avg - attention[a]?.avg);
 
     return <Container disableRipple
                       onClick={toggle}
                       sx={{height: calHeight(open, displayCnt, Object.keys(context).length), mt: 1}}>
         <AttentionItem colorLabel={colorLabel}
                        label={groupName}
-                       attention={sortedContextKeys.slice(0, 3).map(key => attention[key].avg)}/>
+                       attention={sortedContextKeys.slice(0, 3).map(key => attention[key]?.avg)}/>
         {open && <Divider dir={'horizontal'} sx={{m: 0.5}}/>}
         <Collapse in={open}>
             {sortedContextKeys
@@ -47,7 +47,7 @@ function ContextGroup({store, colorLabel, groupName, context, attention, curAtt}
                                                              checked
                                                                  ? store.addContextLimit(groupName, key)
                                                                  : store.rmContextLimit(groupName, key)}/>}
-                                   label={key}
+                                   label={t(`Game.${key}`)}
                                    value={context[key]}
                                    attention={attention[key]}
                                    curAtt={curAtt[key]}/>

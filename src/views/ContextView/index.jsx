@@ -5,6 +5,7 @@ import {playerColors, teamNames, teamShapes} from "../../utils/game.js";
 import {contextFactory} from "../../utils/fakeData.js";
 import {Box} from "@mui/material";
 import {useTranslation} from "react-i18next";
+import {Fragment} from "react";
 
 /**
  *
@@ -14,23 +15,32 @@ import {useTranslation} from "react-i18next";
  */
 function ContextView({store}) {
     const strat = store.selectedPredictorsAsAStrategy;
-    const attention = strat ? strat.attention : contextFactory(() => ({}));
+    const attention = strat ? strat.attention : contextFactory(store.curContext, () => ({}));
     const pred = store.predictions[store.viewedPrediction];
-    const predAtt = pred ? pred.attention : contextFactory(() => undefined);
+    const predAtt = pred ? pred.attention : contextFactory(store.curContext, () => undefined);
     const {t} = useTranslation();
 
     return <Box width={'100%'} height={'100%'} overflow={'hidden auto'}>
-        {[0, 1].map(teamId => [0, 1, 2, 3, 4].map(playerId => (
-            <ContextGroup key={`${teamId}${playerId}`}
-                          colorLabel={<PlayerIcon shape={teamShapes[teamId]}
-                                                  color={playerColors[teamId][playerId]}
-                                                  lifeState={store.playerLifeStates[teamId][playerId]}
-                                                  selected={store.focusedTeam === teamId && store.focusedPlayer === playerId}/>}
-                          groupName={store.playerNames[teamId][playerId] || `${teamNames[teamId]} Pos ${playerId + 1}`}
-                          context={store.curContext[`p${teamId}${playerId}`]}
-                          attention={attention[`p${teamId}${playerId}`]}
-                          curAtt={predAtt[`p${teamId}${playerId}`]}/>
-        )))}
+        {[0, 1].map(teamId => <Fragment key={teamId}>
+            <ContextGroup groupName={t(`Game.${teamNames[teamId]}`)}
+                          context={store.curContext[`t${teamId}`]}
+                          attention={attention[`t${teamId}`]}
+                          curAtt={predAtt[`t${teamId}`]}/>
+            {[0, 1, 2, 3, 4].map(playerId => (
+                <ContextGroup key={`${teamId}${playerId}`}
+                              colorLabel={<PlayerIcon shape={teamShapes[teamId]}
+                                                      color={playerColors[teamId][playerId]}
+                                                      lifeState={store.playerLifeStates[teamId][playerId]}
+                                                      selected={store.focusedTeam === teamId && store.focusedPlayer === playerId}/>}
+                              groupName={store.playerNames[teamId][playerId] || t('Game.PlayerPos', {
+                                  team: t(`Game.${teamNames[teamId]}`),
+                                  playerId: playerId + 1,
+                              })}
+                              context={store.curContext[`p${teamId}${playerId}`]}
+                              attention={attention[`p${teamId}${playerId}`]}
+                              curAtt={predAtt[`p${teamId}${playerId}`]}/>
+            ))}
+        </Fragment>)}
         <ContextGroup groupName={t('System.ContextView.GameContext')}
                       context={store.curContext['g']}
                       attention={attention['g']}

@@ -1,7 +1,31 @@
 {
   "Game": {
     "Dire": "夜魇",
-    "Radiant": "天辉"
+    "PlayerPos": "{{team}}{{playerId}}号位",
+    "Radiant": "天辉",
+    "gameTime": "时间",
+    "gold": "金钱",
+    "health": "血量",
+    "isAlive": "存活",
+    "isNight": "夜晚时间",
+    "level": "等级",
+    "mana": "蓝量",
+    "position": "位置",
+    "roshanHP": "肉山血量",
+    "towerTop1": "上路一塔",
+    "towerTop2": "上路二塔",
+    "towerTop3": "上路三塔",
+    "towerMid1": "中路一塔",
+    "towerMid2": "中路二塔",
+    "towerMid3": "中路三塔",
+    "towerBot1": "下路一塔",
+    "towerBot2": "下路二塔",
+    "towerBot3": "下路三塔",
+    "towerBase1": "门牙塔1",
+    "towerBase2": "门牙塔2",
+    "creepTop": "上路兵线",
+    "creepMid": "中路兵线",
+    "creepBot": "下路兵线"
   },
   "System": {
     "Actions": {

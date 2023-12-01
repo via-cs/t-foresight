@@ -6,10 +6,12 @@ function AttentionItem({colorLabel, label, value, attention, curAtt}) {
     return <Container>
         <Box width={20} flex={'0 0 20px'}>{colorLabel}</Box>
         <Box width={150} flex={'0 0 150px'}><Typography align={'center'} noWrap>{label}</Typography></Box>
-        <Box width={100} flex={'0 0 100px'}>
+        <Box width={100} flex={'0 0 120px'}>
             {typeof value === 'number' && <Typography noWrap>{value.toFixed(0)}</Typography>}
             {typeof value === 'string' && <Typography noWrap>{value}</Typography>}
             {typeof value === 'boolean' && <Typography noWrap>{value ? <Check/> : <Close/>}</Typography>}
+            {typeof value === 'object' &&
+                <Typography noWrap>({parseInt(value[0] || 0)}, {parseInt(value[1] || 0)})</Typography>}
         </Box>
         <Box flex={1} position={'relative'}>
             {curAtt && <Anchor style={{left: `${curAtt * 100}%`}}/>}
