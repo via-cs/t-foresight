@@ -3,6 +3,9 @@
     "Dire": "Dire",
     "PlayerPos": "{{team}} Pos {{playerId}}",
     "Radiant": "Radiant",
+    "creepBot": "Bottom-Lane Creeps",
+    "creepMid": "Middle-Lane Creeps",
+    "creepTop": "Top-Lane Creeps",
     "gameTime": "Game Time",
     "gold": "Gold",
     "health": "Health",
@@ -12,31 +15,35 @@
     "mana": "Mana",
     "position": "Position",
     "roshanHP": "Roshan‘s Health",
-    "towerTop1": "Top Tower Tier 1",
-    "towerTop2": "Top Tower Tier 2",
-    "towerTop3": "Top Tower Tier 3",
-    "towerMid1": "Middle Tower Tier 1",
-    "towerMid2": "Middle Tower Tier 2",
-    "towerMid3": "Middle Tower Tier 3",
+    "towerBase1": "Tier 4 Tower 1",
+    "towerBase2": "Tier 4 Tower 2",
     "towerBot1": "Bottom Tower Tier 1",
     "towerBot2": "Bottom Tower Tier 2",
     "towerBot3": "Bottom Tower Tier 3",
-    "towerBase1": "Tier 4 Tower 1",
-    "towerBase2": "Tier 4 Tower 2",
-    "creepTop": "Top-Lane Creeps",
-    "creepMid": "Middle-Lane Creeps",
-    "creepBot": "Bottom-Lane Creeps"
+    "towerMid1": "Middle Tower Tier 1",
+    "towerMid2": "Middle Tower Tier 2",
+    "towerMid3": "Middle Tower Tier 3",
+    "towerTop1": "Top Tower Tier 1",
+    "towerTop2": "Top Tower Tier 2",
+    "towerTop3": "Top Tower Tier 3"
   },
   "System": {
     "Actions": {
       "import": "import"
     },
     "ContextView": {
-      "GameContext": "Game Context",
+      "GameContext": "Environment",
       "More": "show more",
       "ViewName": "Context View"
     },
-    "MapView": "Map View",
+    "MapView": {
+      "HighPossibility": "High Possibility",
+      "LowPossibility": "Low Possibility",
+      "PossibleDest": "Possible Destination",
+      "PredTraj": "Predicted Trajectory",
+      "RealTraj": "Real Trajectory",
+      "ViewName": "Map View"
+    },
     "StrategyView": {
       "PredNum": "{{num}} pred.",
       "Predict": "Predict",

@@ -5,11 +5,9 @@ export const defaultTheme = secondary => ({
         primary: {
             main: '#271c1c',
         },
-        ...(secondary && {
-            secondary: {
-                main: secondary,
-            }
-        }),
+        secondary: {
+            main: secondary || '#372c2c',
+        },
         background: {
             default: '#f0f0f0',
             paper: '#ffffff',
@@ -26,6 +24,11 @@ export const defaultTheme = secondary => ({
                     minWidth: 0,
                 }
             }
+        },
+        MuiCheckbox: {
+            defaultProps: {
+                size: "small",
+            },
         },
         MuiToggleButtonGroup: {
             defaultProps: {

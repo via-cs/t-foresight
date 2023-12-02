@@ -4,8 +4,9 @@ import {Check, Close} from "@mui/icons-material";
 
 function AttentionItem({colorLabel, label, value, attention, curAtt}) {
     return <Container>
-        <Box width={20} flex={'0 0 20px'}>{colorLabel}</Box>
-        <Box width={150} flex={'0 0 150px'}><Typography align={'center'} noWrap>{label}</Typography></Box>
+        <Box width={20} height={20} flex={'0 0 20px'} display={'flex'} alignItems={'center'}>{colorLabel}</Box>
+        <Box width={150} flex={'0 0 150px'}><Typography sx={{maxWidth: 150}} align={'center'}
+                                                        noWrap>{label}</Typography></Box>
         <Box width={100} flex={'0 0 120px'}>
             {typeof value === 'number' && <Typography noWrap>{value.toFixed(0)}</Typography>}
             {typeof value === 'string' && <Typography noWrap>{value}</Typography>}

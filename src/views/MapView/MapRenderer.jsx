@@ -7,6 +7,9 @@ import RealTrajectoryLayer from "./RealTrajectoryLayer.jsx";
 import StrategyRenderer from "./StrategyRenderer.jsx";
 import {useRef} from "react";
 import PredictedTrajectoryLayer from "./PredictedTrajectoryLayer.jsx";
+import {styled} from "@mui/material/styles";
+import Legend from "./Legend.jsx";
+import {alpha} from "@mui/material";
 
 /**
  * @param {import('src/store/store.js').Store} store
@@ -14,36 +17,50 @@ import PredictedTrajectoryLayer from "./PredictedTrajectoryLayer.jsx";
  * @constructor
  */
 function MapRenderer({
-                         store,
-                         size,
+                         store, size,
                      }) {
     const ref = useRef(null);
     const {scale, autoFocus, handleWheel, handleRecover, dragBoundFunc} = useMapNavigation(size, ref);
     const scaleBalance = 2 / (scale + 1);
 
-    return <Stage width={size} height={size}
-                  ref={n => ref.current = n}
-                  onWheel={handleWheel}
-                  onDblClick={handleRecover}
-                  fill={'black'}
-                  draggable
-                  dragBoundFunc={dragBoundFunc}>
-        <Layer>
-            <KonvaImage src={'./map.jpeg'} w={size} h={size}/>
-        </Layer>
-        {store.selectedPredictorsAsAStrategy &&
-            <StrategyRenderer mapSize={size}
-                              strat={store.selectedPredictorsAsAStrategy}
-                              onAutoFocus={autoFocus}/>}
-        {store.viewedPrediction !== -1 &&
-            <PredictedTrajectoryLayer mapSize={size}
-                                      scaleBalance={scaleBalance}
-                                      prediction={store.predictions[store.viewedPrediction].trajectory}
-                                      color={store.curColor}/>}
-        {store.focusedPlayer !== -1 &&
-            <RealTrajectoryLayer mapSize={size} scaleBalance={scaleBalance}/>}
-        <PlayerLayer mapSize={size} scaleBalance={scaleBalance}/>
-    </Stage>
+    return <Root>
+        <Stage width={size} height={size}
+               ref={n => ref.current = n}
+               onWheel={handleWheel}
+               onDblClick={handleRecover}
+               fill={'black'}
+               draggable
+               dragBoundFunc={dragBoundFunc}>
+            <Layer>
+                <KonvaImage src={'./map.jpeg'} w={size} h={size}/>
+            </Layer>
+            {store.selectedPredictorsAsAStrategy && <StrategyRenderer mapSize={size}
+                                                                      strat={store.selectedPredictorsAsAStrategy}
+                                                                      onAutoFocus={autoFocus}/>}
+            {store.viewedPrediction !== -1 && <PredictedTrajectoryLayer mapSize={size}
+                                                                        scaleBalance={scaleBalance}
+                                                                        prediction={store.predictions[store.viewedPrediction].trajectory}
+                                                                        color={store.curColor}/>}
+            {store.focusedPlayer !== -1 && <RealTrajectoryLayer mapSize={size} scaleBalance={scaleBalance}/>}
+            <PlayerLayer mapSize={size} scaleBalance={scaleBalance}/>
+        </Stage>
+        <LegendContainer>
+            <Legend/>
+        </LegendContainer>
+    </Root>
 }
 
 export default inject('store')(observer(MapRenderer))
+
+const Root = styled('div')({
+    position: 'relative',
+})
+
+const LegendContainer = styled('div')(({theme}) => ({
+    position: "absolute",
+    right: theme.spacing(1),
+    bottom: theme.spacing(1),
+    padding: theme.spacing(0, 1),
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: alpha(theme.palette.background.paper, 0.4),
+}))

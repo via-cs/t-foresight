@@ -41,7 +41,7 @@ function App({store}) {
         <CssBaseline/>
         <Root>
             <TitleBar width={appTitleBarWidth}/>
-            <View title={t('System.MapView')} {...mapViewPos}
+            <View title={t('System.MapView.ViewName')} {...mapViewPos}
                   tools={[
                       <PlayerSelection team={0}/>,
                       <PlayerSelection team={1}/>

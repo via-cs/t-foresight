@@ -3,6 +3,9 @@
     "Dire": "夜魇",
     "PlayerPos": "{{team}}{{playerId}}号位",
     "Radiant": "天辉",
+    "creepBot": "下路兵线",
+    "creepMid": "中路兵线",
+    "creepTop": "上路兵线",
     "gameTime": "时间",
     "gold": "金钱",
     "health": "血量",
@@ -12,20 +15,17 @@
     "mana": "蓝量",
     "position": "位置",
     "roshanHP": "肉山血量",
-    "towerTop1": "上路一塔",
-    "towerTop2": "上路二塔",
-    "towerTop3": "上路三塔",
-    "towerMid1": "中路一塔",
-    "towerMid2": "中路二塔",
-    "towerMid3": "中路三塔",
+    "towerBase1": "门牙塔1",
+    "towerBase2": "门牙塔2",
     "towerBot1": "下路一塔",
     "towerBot2": "下路二塔",
     "towerBot3": "下路三塔",
-    "towerBase1": "门牙塔1",
-    "towerBase2": "门牙塔2",
-    "creepTop": "上路兵线",
-    "creepMid": "中路兵线",
-    "creepBot": "下路兵线"
+    "towerMid1": "中路一塔",
+    "towerMid2": "中路二塔",
+    "towerMid3": "中路三塔",
+    "towerTop1": "上路一塔",
+    "towerTop2": "上路二塔",
+    "towerTop3": "上路三塔"
   },
   "System": {
     "Actions": {
@@ -36,7 +36,14 @@
       "More": "显示更多",
       "ViewName": "环境视图"
     },
-    "MapView": "地图视图",
+    "MapView": {
+      "HighPossibility": "高概率",
+      "LowPossibility": "低概率",
+      "PossibleDest": "可能的位置",
+      "PredTraj": "预测轨迹",
+      "RealTraj": "真实轨迹",
+      "ViewName": "地图视图"
+    },
     "StrategyView": {
       "PredNum": "{{num}}条路",
       "Predict": "预测",

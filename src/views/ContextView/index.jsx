@@ -22,7 +22,8 @@ function ContextView({store}) {
 
     return <Box width={'100%'} height={'100%'} overflow={'hidden auto'}>
         {[0, 1].map(teamId => <Fragment key={teamId}>
-            <ContextGroup groupName={t(`Game.${teamNames[teamId]}`)}
+            <ContextGroup colorLabel={<img style={{width: 20}} src={`./${teamNames[teamId]}.png`}/>}
+                          groupName={t(`Game.${teamNames[teamId]}`)}
                           context={store.curContext[`t${teamId}`]}
                           attention={attention[`t${teamId}`]}
                           curAtt={predAtt[`t${teamId}`]}/>
@@ -41,7 +42,8 @@ function ContextView({store}) {
                               curAtt={predAtt[`p${teamId}${playerId}`]}/>
             ))}
         </Fragment>)}
-        <ContextGroup groupName={t('System.ContextView.GameContext')}
+        <ContextGroup colorLabel={<img style={{width: 20}} src={`./Dota.png`}/>}
+                      groupName={t('System.ContextView.GameContext')}
                       context={store.curContext['g']}
                       attention={attention['g']}
                       curAtt={predAtt['g']}/>
@@ -54,7 +56,7 @@ const PlayerIcon = styled('div')(({theme, shape, color, selected, lifeState}) =>
     width: 20,
     height: 20,
     backgroundColor: color,
-    marginRight: theme.spacing(1),
+    // marginRight: theme.spacing(1),
     cursor: 'pointer',
     borderRadius: shape === 'circle' ? '50%' : theme.shape.borderRadius,
     border: 'none',

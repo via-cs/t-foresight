@@ -46,7 +46,8 @@ function ContextGroup({store, colorLabel, groupName, context, attention, curAtt}
                                                          onChange={(e, checked) =>
                                                              checked
                                                                  ? store.addContextLimit(groupName, key)
-                                                                 : store.rmContextLimit(groupName, key)}/>}
+                                                                 : store.rmContextLimit(groupName, key)}
+                                                         sx={{p: 0}}/>}
                                    label={t(`Game.${key}`)}
                                    value={context[key]}
                                    attention={attention[key]}

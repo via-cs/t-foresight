@@ -1,4 +1,5 @@
 import {useMemo} from "react";
+import {styled} from "@mui/material/styles";
 
 function colorize(pixels, gradient) {
     for (let i = 0; i < pixels.length; i += 4) {
@@ -13,7 +14,7 @@ function colorize(pixels, gradient) {
 
 const defaultOptions = {
     minOpacity: 0.05,
-    maxOpacity: 1,
+    maxOpacity: 0.7,
     maxValue: 20,
     radius: 5,
     blur: 3,
@@ -99,3 +100,12 @@ export default function useHeatmap(size, data, options = defaultOptions) {
         return canvas.toDataURL();
     }, [size, data, options])
 }
+
+export const HeatmapColorMap = styled('div')({
+    background: `linear-gradient(to right, rgba(255,255,255,0) 0%, ${
+        Object.entries(defaultOptions.gradient)
+            .sort((a, b) => a[0] - b[0])
+            .map(([stop, color]) => `${color} ${stop * 100}%`)
+            .join(', ')
+    })`,
+})
