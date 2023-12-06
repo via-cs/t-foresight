@@ -31,6 +31,9 @@ class Store {
         this.devMode = dev;
         window.localStorage.setItem('dev', dev.toString());
     }
+
+    strategyViewDesign = 'matrix'
+    changeStrategyDetailView = () => this.strategyViewDesign = (this.strategyViewDesign === 'matrix') ? 'storyline' : 'matrix';
     //endregion
 
     //region game context

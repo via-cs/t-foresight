@@ -2,6 +2,8 @@ import {inject, observer} from "mobx-react";
 import {Divider} from "@mui/material";
 import {styled} from "@mui/material/styles";
 import PredictorsProjection from "./Projection/index.jsx";
+import PredictorsMatrix from "./Matrix/index.jsx";
+import PredictorsStoryline from "./Storyline/index.jsx";
 
 /**
  *
@@ -22,9 +24,10 @@ function StrategyView({store}) {
             </Wrapper>
         </Projection>
         <Divider sx={{m: 1}}/>
-        {/*<List sx={{overflowY: 'auto'}}>*/}
-        {/*    <StrategyItem sId={-1} strat={store.selectedPredictorsAsAStrategy}/>*/}
-        {/*</List>*/}
+        <Detail>
+            {store.strategyViewDesign === 'storyline' && <PredictorsStoryline/>}
+            {store.strategyViewDesign === 'matrix' && <PredictorsMatrix/>}
+        </Detail>
     </Container>
 }
 
@@ -51,4 +54,11 @@ const Wrapper = styled('div')({
     top: 0,
     width: '100%',
     height: '100%',
+})
+
+const Detail = styled('div')({
+    position: 'relative',
+    flex: 1,
+    width: '100%',
+    overflow: 'hidden',
 })

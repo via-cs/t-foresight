@@ -17,7 +17,7 @@ export const viewSize = {
  * }}
  */
 export function useLayout() {
-    const [layout, setLayout] = useState([1920, 1080]);
+    const [layout, setLayout] = useState([window.innerWidth, window.innerHeight]);
     useEffect(() => {
         const resize = () => {
             if (window.innerWidth !== layout[0] || window.innerHeight !== layout[1])

@@ -22,7 +22,7 @@ function ContextView({store}) {
 
     return <Box width={'100%'} height={'100%'} overflow={'hidden auto'}>
         {[0, 1].map(teamId => <Fragment key={teamId}>
-            <ContextGroup colorLabel={<img style={{width: 20}} src={`./${teamNames[teamId]}.png`}/>}
+            <ContextGroup colorLabel={<LogoIcon src={`./${teamNames[teamId]}.png`}/>}
                           groupName={t(`Game.${teamNames[teamId]}`)}
                           context={store.curContext[`t${teamId}`]}
                           attention={attention[`t${teamId}`]}
@@ -42,7 +42,7 @@ function ContextView({store}) {
                               curAtt={predAtt[`p${teamId}${playerId}`]}/>
             ))}
         </Fragment>)}
-        <ContextGroup colorLabel={<img style={{width: 20}} src={`./Dota.png`}/>}
+        <ContextGroup colorLabel={<LogoIcon src={`./Dota.png`}/>}
                       groupName={t('System.ContextView.GameContext')}
                       context={store.curContext['g']}
                       attention={attention['g']}
@@ -69,4 +69,10 @@ const PlayerIcon = styled('div')(({theme, shape, color, selected, lifeState}) =>
     ...(!lifeState && {
         opacity: 0.1,
     })
+}))
+
+const LogoIcon = styled('img')(({theme}) => ({
+    width: 20,
+    height: 20,
+    borderRadius: theme.shape.borderRadius,
 }))
