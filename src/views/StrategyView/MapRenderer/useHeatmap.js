@@ -19,10 +19,10 @@ const defaultOptions = {
     blur: 3,
     gradient: {
         0.4: 'blue',
-        0.6: 'cyan',
-        0.7: 'lime',
-        0.8: 'yellow',
-        1.0: 'red'
+        0.6: 'blue',
+        0.7: 'blue',
+        0.8: 'blue',
+        1.0: 'blue'
     }
 };
 

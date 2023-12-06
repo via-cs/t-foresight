@@ -37,10 +37,12 @@ function RealTrajectoryLayer({store, mapSize, scaleBalance}) {
     return <Layer>
         <Arrow
                 points={points}
-                stroke = {store.curColor} // Line color
-                strokeWidth={2*scaleBalance} // Line width
+                stroke = {'white'} // Line color
+                strokeWidth={3*scaleBalance} // Line width
                 pointerAtEnding={true}
-                fill = 'red'
+                pointerLength={15 * scaleBalance} // Adjust for smaller arrowhead length
+                pointerWidth={15 * scaleBalance} // Adjust for smaller arrowhead width
+                fill = {store.curColor}
             />
     </Layer>
 }
