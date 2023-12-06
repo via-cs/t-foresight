@@ -45,6 +45,7 @@
       "ViewName": "Map View",
       "ColoredMap": "Colored",
       "SketchMap": "Sketch",
+      "GreyMap": "Grey",
       "MapStyle": "Map Style"
     },
     "StrategyView": {

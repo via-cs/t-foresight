@@ -2,7 +2,7 @@ import {inject, observer} from "mobx-react";
 import {Group, Layer, Stage, Text} from "react-konva";
 import {useRef} from "react";
 import useSize from "../../../utils/useSize.js";
-import {styled, useTheme} from "@mui/material/styles";
+import {styled} from "@mui/material/styles";
 import useMatrixData from "./useData.js";
 import useMatrixLayout from "./useLayout.js";
 import Cell from "./Cell.jsx";
@@ -37,7 +37,6 @@ function PredictorsMatrix({store}) {
         p.push(nextPos);
         return p;
     }, [pt]);
-    const theme = useTheme();
 
     return <Container ref={containerRef}>
         <Stage width={width} height={height}>

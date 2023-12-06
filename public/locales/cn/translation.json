@@ -45,6 +45,7 @@
       "ViewName": "地图视图",
       "ColoredMap": "真实",
       "SketchMap": "素描",
+      "GreyMap": "黑白",
       "MapStyle": "地图风格"
     },
     "StrategyView": {

@@ -29,16 +29,27 @@ function Legend({store}) {
 
         <LegendItem style={{justifyContent: 'space-between', flexWrap: 'wrap'}}>
             <Typography sx={{width: '100%'}} variant={'caption'}>{t('System.MapView.MapStyle')}:</Typography>
-            <Radio sx={{p: 0}}
-                   color={"default"}
-                   checked={store.mapStyle === 'colored'}
-                   onClick={() => store.setMapStyle('colored')}/>
-            <Typography variant={'caption'}>{t('System.MapView.ColoredMap')}:</Typography>
-            <Radio sx={{p: 0}}
-                   color={'default'}
-                   checked={store.mapStyle === 'sketch'}
-                   onClick={() => store.setMapStyle('sketch')}/>
-            <Typography variant={'caption'}>{t('System.MapView.SketchMap')}:</Typography>
+            <div>
+                <Radio sx={{p: 0}}
+                       color={"default"}
+                       checked={store.mapStyle === 'colored'}
+                       onClick={() => store.setMapStyle('colored')}/>
+                <Typography variant={'caption'}>{t('System.MapView.ColoredMap')}:</Typography>
+            </div>
+            <div>
+                <Radio sx={{p: 0}}
+                       color={'default'}
+                       checked={store.mapStyle === 'sketch'}
+                       onClick={() => store.setMapStyle('sketch')}/>
+                <Typography variant={'caption'}>{t('System.MapView.SketchMap')}:</Typography>
+            </div>
+            <div>
+                <Radio sx={{p: 0}}
+                       color={'default'}
+                       checked={store.mapStyle === 'grey'}
+                       onClick={() => store.setMapStyle('grey')}/>
+                <Typography variant={'caption'}>{t('System.MapView.GreyMap')}:</Typography>
+            </div>
         </LegendItem>
     </div>
 }

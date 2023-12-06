@@ -38,7 +38,8 @@ class Store {
     get mapImage() {
         return {
             'colored': './map.jpeg',
-            'sketch': './map_no_color.jpg'
+            'sketch': './map_no_color.jpg',
+            'grey': './map_grey.jpg'
         }[this.mapStyle] || './map.jpeg';
     }
 
