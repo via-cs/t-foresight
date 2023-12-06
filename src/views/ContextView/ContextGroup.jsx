@@ -1,5 +1,5 @@
 import {styled} from "@mui/material/styles";
-import {Button, Checkbox, Collapse, darken, Divider} from "@mui/material";
+import {Button, Checkbox, Collapse, Divider} from "@mui/material";
 import {useCallback, useEffect, useState} from "react";
 import AttentionItem from "./AttentionItem.jsx";
 import {inject, observer} from "mobx-react";
@@ -67,7 +67,7 @@ function ContextGroup({store, colorLabel, groupName, context, attention, curAtt}
 }
 
 const Container = styled('div')(({theme}) => ({
-    backgroundColor: theme.palette.background.default,
+    border: `1px solid ${theme.palette.background.default}`,
     borderRadius: theme.shape.borderRadius,
     transition: 'all .3s ease',
     display: 'block',
@@ -75,8 +75,9 @@ const Container = styled('div')(({theme}) => ({
     textAlign: 'center',
     width: '100%',
     overflow: 'hidden',
+    cursor: 'pointer',
     '&:hover': {
-        backgroundColor: darken(theme.palette.background.default, .02),
+        backgroundColor: theme.palette.background.default,
     },
     '& ~ &': {
         marginTop: theme.spacing(1),

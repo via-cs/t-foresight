@@ -14,11 +14,19 @@ const W = 1000, H = 1000;
  * @param {import('src/model/Strategy.js').Prediction[]} allPredictors
  * @param {number[][]} predictorGroups
  * @param {number[]} selectedPredictors
+ * @param {number} viewedPredictor
  * @param {(predIds: number[]) => void} onSelectGroup
  * @param {(predId: number) => void} onViewPredictor
  * @constructor
  */
-function PredictorsProjection({allPredictors, predictorGroups, selectedPredictors, onSelectGroup, onViewPredictor}) {
+function PredictorsProjection({
+                                  allPredictors,
+                                  predictorGroups,
+                                  selectedPredictors,
+                                  viewedPredictor,
+                                  onSelectGroup,
+                                  onViewPredictor
+                              }) {
     const points = useProjection(allPredictors, predictorGroups);
     const {lasso, isDrawing, handleMouseDown, handleMouseUp, handleMouseMove} = useLasso();
     const preSelectedPointsIdx = usePointLassoSelection(points, lasso);
@@ -53,6 +61,7 @@ function PredictorsProjection({allPredictors, predictorGroups, selectedPredictor
                           transform={`translate(${points[pId][0] * W}, ${points[pId][1] * H})`}>
                     <Point fillOpacity={opacity}
                            selected={selectedPredictors.includes(pId)}
+                           viewed={viewedPredictor === pId}
                            isDrawing={isDrawing}
                            r={points[pId][2] * W / 20}
                            onMouseEnter={() => onViewPredictor(pId)}
@@ -71,17 +80,15 @@ function PredictorsProjection({allPredictors, predictorGroups, selectedPredictor
 
 export default PredictorsProjection;
 const Point = styled('circle', {
-    shouldForwardProp: propName => !['selected', 'isDrawing'].includes(propName)
-})(({theme, selected, isDrawing}) => ({
+    shouldForwardProp: propName => !['selected', 'isDrawing', 'viewed'].includes(propName)
+})(({theme, selected, isDrawing, viewed}) => ({
     fill: theme.palette.primary.main,
     ...(isDrawing && {
         pointerEvents: 'none',
     }),
-    ...(!isDrawing && {
-        '&:hover': {
-            stroke: theme.palette.secondary.main,
-            strokeWidth: W / 200,
-        }
+    ...(!isDrawing && viewed && {
+        stroke: theme.palette.secondary.main,
+        strokeWidth: W / 200,
     }),
     ...(selected && {
         stroke: theme.palette.success.main,

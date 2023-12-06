@@ -1,10 +1,11 @@
 import {inject, observer} from "mobx-react";
-import {Group, Layer, Rect, Stage, Text} from "react-konva";
+import {Group, Layer, Stage, Text} from "react-konva";
 import {useRef} from "react";
 import useSize from "../../../utils/useSize.js";
 import {styled, useTheme} from "@mui/material/styles";
 import useMatrixData from "./useData.js";
 import useMatrixLayout from "./useLayout.js";
+import Cell from "./Cell.jsx";
 
 const config = {
     pl: 40, pt: 30, pb: 10, pr: 10,
@@ -37,32 +38,26 @@ function PredictorsMatrix({store}) {
         return p;
     }, [pt]);
     const theme = useTheme();
+
     return <Container ref={containerRef}>
         <Stage width={width} height={height}>
             <Layer>
                 <Group x={pl + (width - pl - pr) / 2 - matrixWidth / 2}>
                     {store.predictionGroups.map((group, gId) => <Group key={gId} y={groupY[gId]}>
-                        {group.map((p1, p1Id) => <Group key={p1Id} y={p1Id * (gridSize + gridGap)}>
+                        {group.map((p1, p1Id) => <Group key={p1Id} y={p1Id * (gridSize + gridGap)}
+                                                        onMouseEnter={() => store.viewPrediction(p1)}
+                                                        onMouseLeave={() => store.viewPrediction(-1)}>
                             {store.selectedPredictors.map((p2, p2Id) => <Group key={p2Id}
                                                                                x={p2Id * (gridSize + gridGap)}>
-                                <Rect width={gridSize} height={gridSize}
-                                      fill={theme.palette.background.default}
-                                      stroke={theme.palette.secondary.main}
-                                      strokeWidth={Number(p2 === store.viewedPrediction)}/>
-                                <Rect x={gridSize * (1 - data[p1][p2]) / 2} width={gridSize * data[p1][p2]}
-                                      y={gridSize * (1 - data[p1][p2]) / 2} height={gridSize * data[p1][p2]}
-                                      fill={theme.palette.text.primary}/>
+                                <Cell gridSize={gridSize}
+                                      data={data[p1][p2]}
+                                      viewed={p1 === store.viewedPrediction || p2 === store.viewedPrediction}/>
                             </Group>)}
                             {store.viewedPrediction !== -1 && !store.selectedPredictors.includes(store.viewedPrediction) &&
                                 <Group x={store.selectedPredictors.length * (gridSize + gridGap)}>
-                                    <Rect width={gridSize} height={gridSize}
-                                          fill={theme.palette.background.default}
-                                          stroke={theme.palette.secondary.main} strokeWidth={1}/>
-                                    <Rect x={gridSize * (1 - data[p1][store.viewedPrediction]) / 2}
-                                          width={gridSize * data[p1][store.viewedPrediction]}
-                                          y={gridSize * (1 - data[p1][store.viewedPrediction]) / 2}
-                                          height={gridSize * data[p1][store.viewedPrediction]}
-                                          fill={theme.palette.text.primary}/>
+                                    <Cell gridSize={gridSize}
+                                          data={data[p1][store.viewedPrediction]}
+                                          viewed/>
                                 </Group>}
                             <Text text={(p1 + 1).toFixed(0)}
                                   x={-pl} width={pl}

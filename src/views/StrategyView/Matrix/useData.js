@@ -14,5 +14,5 @@ export default function useMatrixData(predictions, predictionGroups) {
                 else if (i < j) res[i][j] = (Math.random() + Number(find(i) === find(j))) * 0.5;
                 else res[i][j] = res[j][i];
         return res
-    }, [])
+    }, [predictions, predictionGroups])
 }
