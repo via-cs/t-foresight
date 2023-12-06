@@ -2,9 +2,10 @@ import {Moving, MultipleStop} from "@mui/icons-material";
 import {styled} from "@mui/material/styles";
 import {useTranslation} from "react-i18next";
 import {HeatmapColorMap} from "./useHeatmap.js";
-import {Typography} from "@mui/material";
+import {Radio, Typography} from "@mui/material";
+import {inject, observer} from "mobx-react";
 
-function Legend({}) {
+function Legend({store}) {
     const {t} = useTranslation();
     return <div style={{width: 160}}>
         <LegendItem>
@@ -25,10 +26,24 @@ function Legend({}) {
             <Typography sx={{width: '50%', textAlign: 'right'}}
                         variant={'caption'}>{t('System.MapView.HighPossibility')}</Typography>
         </LegendItem>
+
+        <LegendItem style={{justifyContent: 'space-between', flexWrap: 'wrap'}}>
+            <Typography sx={{width: '100%'}} variant={'caption'}>{t('System.MapView.MapStyle')}:</Typography>
+            <Radio sx={{p: 0}}
+                   color={"default"}
+                   checked={store.mapStyle === 'colored'}
+                   onClick={() => store.setMapStyle('colored')}/>
+            <Typography variant={'caption'}>{t('System.MapView.ColoredMap')}:</Typography>
+            <Radio sx={{p: 0}}
+                   color={'default'}
+                   checked={store.mapStyle === 'sketch'}
+                   onClick={() => store.setMapStyle('sketch')}/>
+            <Typography variant={'caption'}>{t('System.MapView.SketchMap')}:</Typography>
+        </LegendItem>
     </div>
 }
 
-export default Legend;
+export default inject('store')(observer(Legend));
 
 const LegendItem = styled('div')(({theme}) => ({
     width: '100%',

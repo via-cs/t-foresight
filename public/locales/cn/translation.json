@@ -42,7 +42,10 @@
       "PossibleDest": "可能的位置",
       "PredTraj": "预测轨迹",
       "RealTraj": "真实轨迹",
-      "ViewName": "地图视图"
+      "ViewName": "地图视图",
+      "ColoredMap": "真实",
+      "SketchMap": "素描",
+      "MapStyle": "地图风格"
     },
     "StrategyView": {
       "PredNum": "{{num}}条路",

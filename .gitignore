@@ -1,5 +1,6 @@
 # Data
 *.json
+*.psd
 
 # Logs
 logs

@@ -32,6 +32,16 @@ class Store {
         window.localStorage.setItem('dev', dev.toString());
     }
 
+    mapStyle = 'colored'
+    setMapStyle = style => this.mapStyle = style;
+
+    get mapImage() {
+        return {
+            'colored': './map.jpeg',
+            'sketch': './map_no_color.jpg'
+        }[this.mapStyle] || './map.jpeg';
+    }
+
     strategyViewDesign = 'matrix'
     changeStrategyDetailView = () => this.strategyViewDesign = (this.strategyViewDesign === 'matrix') ? 'storyline' : 'matrix';
     //endregion

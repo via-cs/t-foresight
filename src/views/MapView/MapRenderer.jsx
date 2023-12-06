@@ -32,7 +32,7 @@ function MapRenderer({
                draggable
                dragBoundFunc={dragBoundFunc}>
             <Layer>
-                <KonvaImage src={'./map.jpeg'} w={size} h={size}/>
+                <KonvaImage src={store.mapImage} w={size} h={size}/>
             </Layer>
             {store.selectedPredictorsAsAStrategy && <StrategyRenderer mapSize={size}
                                                                       strat={store.selectedPredictorsAsAStrategy}
@@ -44,7 +44,7 @@ function MapRenderer({
             {store.focusedPlayer !== -1 && <RealTrajectoryLayer mapSize={size} scaleBalance={scaleBalance}/>}
             <PlayerLayer mapSize={size} scaleBalance={scaleBalance}/>
         </Stage>
-        <LegendContainer>
+        <LegendContainer darkMode={store.mapStyle === 'sketch'}>
             <Legend/>
         </LegendContainer>
     </Root>
@@ -56,11 +56,14 @@ const Root = styled('div')({
     position: 'relative',
 })
 
-const LegendContainer = styled('div')(({theme}) => ({
+const LegendContainer = styled('div', {
+    shouldForwardProp: propName => !['darkMode'].includes(propName),
+})(({theme, darkMode}) => ({
     position: "absolute",
     right: theme.spacing(1),
     bottom: theme.spacing(1),
     padding: theme.spacing(0, 1),
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.background.paper, 0.4),
+    backgroundColor: alpha(theme.palette.background.paper, darkMode ? 0.9 : 0.4),
+    border: darkMode ? `1px solid grey` : 'none',
 }))

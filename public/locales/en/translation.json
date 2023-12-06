@@ -42,7 +42,10 @@
       "PossibleDest": "Possible Destination",
       "PredTraj": "Predicted Trajectory",
       "RealTraj": "Real Trajectory",
-      "ViewName": "Map View"
+      "ViewName": "Map View",
+      "ColoredMap": "Colored",
+      "SketchMap": "Sketch",
+      "MapStyle": "Map Style"
     },
     "StrategyView": {
       "PredNum": "{{num}} pred.",

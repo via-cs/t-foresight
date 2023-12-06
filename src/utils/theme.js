@@ -25,6 +25,11 @@ export const defaultTheme = secondary => ({
                 }
             }
         },
+        MuiRadio: {
+            defaultProps: {
+                size: "small",
+            },
+        },
         MuiCheckbox: {
             defaultProps: {
                 size: "small",
