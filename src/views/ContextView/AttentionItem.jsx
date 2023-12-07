@@ -1,5 +1,5 @@
 import {styled} from "@mui/material/styles";
-import {alpha, Box, Slider as MuiSlider, Typography} from "@mui/material";
+import {Box, Slider as MuiSlider, Typography} from "@mui/material";
 import {Check, Close} from "@mui/icons-material";
 
 function AttentionItem({colorLabel, label, value, attention, curAtt}) {
@@ -25,7 +25,19 @@ function AttentionItem({colorLabel, label, value, attention, curAtt}) {
                                                    }]}
                                                    valueLabelFormat={v => v.toFixed(2)}/>}
             {attention && attention.length && <BarContainer>
-                {attention.map((v, vId) => <Bar key={vId} style={{width: `${v * 100}%`}}/>)}
+                <Bar style={{
+                    width: `${attention[0] * 100 / 3}%`,
+                    opacity: (attention[0] - 0.5) * 2
+                }}/>
+                <Bar style={{
+                    width: `${attention[1] * 100 / 3}%`,
+                    opacity: (attention[1] - 0.5) * 2
+                }}/>
+                <Bar style={{
+                    width: `${attention[2] * 100 / 3}%`,
+                    opacity: (attention[2] - 0.5) * 2,
+                    borderRadius: '0 4px 4px 0'
+                }}/>
             </BarContainer>}
         </Box>
     </Container>
@@ -81,13 +93,15 @@ const BarContainer = styled('div')(({theme}) => ({
     height: 15,
     width: '100%',
     backgroundColor: theme.palette.background.paper,
+    borderRadius: theme.shape.borderRadius,
+    display: 'flex',
+    flexWrap: 'nowrap',
+    overflow: 'hidden',
 }))
 
 const Bar = styled('div')(({theme}) => ({
-    position: 'absolute',
+    flex: '0 0 auto',
     height: '100%',
-    top: 0,
-    left: 0,
-    backgroundColor: alpha(theme.palette.primary.main, 0.4),
+    backgroundColor: theme.palette.primary.main,
     borderRight: `1px solid ${theme.palette.background.default}`,
 }))
