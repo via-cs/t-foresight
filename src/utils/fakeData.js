@@ -1,11 +1,18 @@
 const DIS = 175;
 
-function randint(min, max) {
+export function randint(min, max) {
     return Math.floor(Math.random() * (max + 1 - min)) + min;
 }
 
-function rand(min, max) {
+export function rand(min, max) {
     return Math.random() * (max - min) + min;
+}
+
+export function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = randint(0, i);
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
 }
 
 export function getStratAttention(predictors, groupName, itemName) {

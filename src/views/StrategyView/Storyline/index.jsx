@@ -39,9 +39,12 @@ const config = {
 function PredictorsStoryline({store}) {
     const containerRef = useRef(null);
     const {width, height} = useSize(containerRef);
-    const data = useStorylineData();
+    const data = useStorylineData(store.predictionGroups);
+    console.log('raw data', data);
     const layout = useStorylineLayout(data);
+    console.log('after sort', layout);
     const lines = useStorylineLines(layout, width, height, config);
+    console.log('lines', lines);
 
     const theme = useTheme();
 
@@ -49,11 +52,21 @@ function PredictorsStoryline({store}) {
         <Stage width={width} height={height}>
             <Layer>
                 {layout.stages.map((stage, sId) => (
-                    <Rect key={sId}
-                          x={config.pl - 5} width={width - config.pl - config.pr + 10}
-                          y={lines[0][sId * 2][1]}
-                          height={lines[0][sId * 2 + 1][1] - lines[0][sId * 2][1]}
-                          fill={theme.palette.background.default}/>
+                    <Group key={sId}
+                           x={config.pl - 5}
+                           y={lines[0][sId * 2][1]}>
+                        <Rect width={width - config.pl - config.pr + 10}
+                              height={lines[0][sId * 2 + 1][1] - lines[0][sId * 2][1]}
+                              fill={theme.palette.background.default}/>
+                        <Text text={stage.instances.toFixed(0)}
+                              rotation={-90}
+                              x={5 - config.pl} height={config.pl}
+                              y={(lines[0][sId * 2 + 1][1] - lines[0][sId * 2][1]) / 2 + 50}
+                              width={100}
+                              align={'center'}
+                              verticalAlign={'middle'}/>
+                    </Group>
+
                 ))}
                 {lines.map((line, lId) => <Group key={lId}>
                     <Text x={line[0][0] - 15} y={line[0][1] - 8}
