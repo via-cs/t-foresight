@@ -160,10 +160,15 @@ class Store {
      * @type {number}
      */
     frame = 0;
+    trajTimeWindow = [0, 150];
     setFrame = f => {
         this.frame = f;
         this.clearPredictions();
         this.clearContextLimit();
+    }
+    setTrajTimeWindow = w => {
+        if (this.frame + w[0] < 0 || this.frame + w[1] >= this.numFrames) return;
+        this.trajTimeWindow = w;
     }
 
     /**
@@ -175,6 +180,12 @@ class Store {
         const curFrame = this.gameData.gameRecords[this.frame];
         return curFrame.game_time;
     }
+
+    frameTime = f => computed(() => {
+        if (!this.gameData) return 0;
+        const frame = this.gameData.gameRecords[f];
+        return frame.game_time;
+    }).get();
 
     /**
      * @return {import('src/model/Context.js').Context}
@@ -286,7 +297,11 @@ class Store {
      * @type {number[]}
      */
     selectedPredictors = [];
-    selectPredictors = ps => this.selectedPredictors = ps;
+    selectPredictors = ps => {
+        if (ps.length) this.setMapStyle('grey');
+        else this.setMapStyle('colored');
+        this.selectedPredictors = ps;
+    }
 
     /**
      * @return {import('src/model/Strategy.d.ts').Strategy | null}

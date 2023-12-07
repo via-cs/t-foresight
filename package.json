@@ -26,6 +26,7 @@
     "react-dom": "^18.2.0",
     "react-i18next": "^13.2.2",
     "react-konva": "^18.2.10",
+    "react-range-slider-input": "^3.0.7",
     "setimmediate": "^1.0.5",
     "yieldable-json": "^2.0.1"
   },

@@ -30,6 +30,11 @@ export const defaultTheme = secondary => ({
                 size: "small",
             },
         },
+        MuiSlider: {
+            defaultProps: {
+                size: "small",
+            },
+        },
         MuiCheckbox: {
             defaultProps: {
                 size: "small",

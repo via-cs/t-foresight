@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 
 export const viewSize = {
-    timelineHeight: 100,
+    timelineHeight: 80,
     appTitleBarHeight: 40,
     viewTitleBarHeight: 40,
     spacing: 10,

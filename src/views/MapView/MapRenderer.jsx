@@ -41,7 +41,9 @@ function MapRenderer({
                                                                         scaleBalance={scaleBalance}
                                                                         prediction={store.predictions[store.viewedPrediction].trajectory}
                                                                         color={store.curColor}/>}
-            {store.focusedPlayer !== -1 && <RealTrajectoryLayer mapSize={size} scaleBalance={scaleBalance}/>}
+            {store.focusedPlayer !== -1 && <RealTrajectoryLayer mapSize={size}
+                                                                scaleBalance={scaleBalance}
+                                                                onAutoFocus={autoFocus}/>}
             <PlayerLayer mapSize={size} scaleBalance={scaleBalance}/>
         </Stage>
         <LegendContainer darkMode={store.mapStyle === 'sketch'}>

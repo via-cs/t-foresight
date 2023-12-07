@@ -1,6 +1,7 @@
 import {inject, observer} from "mobx-react";
-import {Layer, Line, Arrow} from "react-konva";
-import {mapProject, playerColors, teamShapes} from "../../utils/game.js";
+import {Arrow, Layer} from "react-konva";
+import {mapDis, mapProject} from "../../utils/game.js";
+import {useEffect} from "react";
 
 /**
  * @param {import('src/store/store').Store} store
@@ -9,15 +10,15 @@ import {mapProject, playerColors, teamShapes} from "../../utils/game.js";
  * @returns {JSX.Element}
  * @constructor
  */
-function RealTrajectoryLayer({store, mapSize, scaleBalance}) {
+function RealTrajectoryLayer({store, mapSize, scaleBalance, onAutoFocus}) {
     // 0. I have added some example files with some comments.
     //    You can find the file list in README.md.
-    
+
     // 1. You can get the trajectory of the selected player from store here.
     //    You can refer to store.playerPositions, where I get the current positions of all players.
     //    But you need to get several future positions of the selected player.
     //    e.g., const trajectory = store.selectedPlayerTrajectory;
-    
+
     //player current position
     const playerPositions = store.playerPositions;
     //current frame
@@ -25,7 +26,14 @@ function RealTrajectoryLayer({store, mapSize, scaleBalance}) {
     // selected player trajectory
     const tra = store.selectedPlayerTrajectory;
     const transformedTrajectory = tra.map(point => mapProject(point, mapSize));
-    const points = transformedTrajectory.flatMap(([x, y]) => [Math.max(x * 0.02 * scaleBalance,x), Math.max(y * 0.02 * scaleBalance,y)]);
+    const points = transformedTrajectory.flatMap(([x, y]) => [Math.max(x * 0.02 * scaleBalance, x), Math.max(y * 0.02 * scaleBalance, y)]);
+    const windowedPoints = points.slice(store.trajTimeWindow[0] * 2 + 900, store.trajTimeWindow[1] * 2 + 900);
+
+    useEffect(() => {
+        const centerPos = store.playerPositions[store.focusedTeam][store.focusedPlayer];
+        const radius = Math.max(...tra.map(pos => mapDis(pos, centerPos)));
+        onAutoFocus && onAutoFocus(centerPos, radius);
+    }, [store.selectedPlayerTrajectory]);
 
     // console.log(points);
     // 2. You can render the trajectory here.
@@ -36,15 +44,23 @@ function RealTrajectoryLayer({store, mapSize, scaleBalance}) {
     var alltra = store.allPlayerTrajectory;
     return <Layer>
         <Arrow
-                points={points}
-                stroke = {store.curColor} // Line color
-                strokeWidth={2*scaleBalance} // Line width
-                pointerAtEnding={true}
-                fill = 'red'
-            />
+            points={points}
+            stroke={store.curColor} // Line color
+            strokeWidth={2 * scaleBalance} // Line width
+            pointerWidth={7 * scaleBalance}
+            pointerLength={7 * scaleBalance}
+            fill={store.curColor}
+            opacity={0.4}
+        />
+        <Arrow points={windowedPoints}
+               stroke={store.curColor} // Line color
+               strokeWidth={2 * scaleBalance} // Line width
+               pointerWidth={7 * scaleBalance}
+               pointerLength={7 * scaleBalance}
+               fill={store.curColor}
+               pointerAtEnding={true}/>
     </Layer>
 }
-
 
 
 export default inject('store')(observer(RealTrajectoryLayer))
