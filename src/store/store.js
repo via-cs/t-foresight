@@ -43,6 +43,10 @@ class Store {
         }[this.mapStyle] || './map.jpeg';
     }
 
+    timeWindowEnabled = false
+    enableTimeWindow = () => this.timeWindowEnabled = true;
+    disableTimeWindow = () => this.timeWindowEnabled = false;
+
     strategyViewDesign = 'matrix'
     changeStrategyDetailView = () => this.strategyViewDesign = (this.strategyViewDesign === 'matrix') ? 'storyline' : 'matrix';
     //endregion
@@ -222,6 +226,17 @@ class Store {
             selectedPlayerTra.push(pos2d);
         }
         return selectedPlayerTra;
+    }
+
+    get selectedPlayerTrajectoryInTimeWindow() {
+        if (!this.timeWindowEnabled) return this.selectedPlayerTrajectory;
+        
+        // Check if a player is selected
+        if (this.focusedPlayer === -1 || !this.gameData) return [];
+
+        return this.gameData.gameRecords
+            .slice(Math.max(1, this.frame + this.trajTimeWindow[0]), this.frame + this.trajTimeWindow[1])
+            .map(gr => gr.heroStates[this.focusedTeam][this.focusedPlayer].pos.slice(0, 2));
     }
 
     get allPlayerTrajectory() {
