@@ -43,22 +43,22 @@ function RealTrajectoryLayer({store, mapSize, scaleBalance, onAutoFocus}) {
 
     var alltra = store.allPlayerTrajectory;
     return <Layer>
-        <Arrow
-            points={points}
-            stroke={store.curColor} // Line color
-            strokeWidth={2 * scaleBalance} // Line width
-            pointerWidth={7 * scaleBalance}
-            pointerLength={7 * scaleBalance}
-            fill={store.curColor}
-            opacity={0.4}
+        <Arrow points={points}
+               stroke={store.curColor} // Line color
+               strokeWidth={3 * scaleBalance} // Line width
+               pointerAtEnding={true}
+               fill='red'
+               pointerLength={15 * scaleBalance} // Adjust for smaller arrowhead length
+               pointerWidth={10 * scaleBalance} // Adjust for smaller arrowhead width
+               opacity={0.4}
         />
         <Arrow points={windowedPoints}
                stroke={store.curColor} // Line color
-               strokeWidth={2 * scaleBalance} // Line width
-               pointerWidth={7 * scaleBalance}
-               pointerLength={7 * scaleBalance}
-               fill={store.curColor}
-               pointerAtEnding={true}/>
+               strokeWidth={3 * scaleBalance} // Line width
+               pointerAtEnding={true}
+               fill={'red'}
+               pointerWidth={10 * scaleBalance}
+               pointerLength={15 * scaleBalance}/>
     </Layer>
 }
 

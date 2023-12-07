@@ -19,12 +19,16 @@ const defaultOptions = {
     radius: 5,
     blur: 3,
     gradient: {
-        0.4: 'blue',
-        0.6: 'cyan',
-        0.7: 'lime',
-        0.8: 'yellow',
-        1.0: 'red'
+        0.0: "#FFFF00", // Pure Yellow
+        0.2: "#FFD700", // Golden Yellow
+        0.4: "#FFA500", // Orange
+        0.6: "#FF8C00", // Dark Orange
+        0.8: "#FF4500", // Orange-Red
+        1.0: "#FF0000"  // Red
     }
+    
+    
+    
 };
 
 function createCircleBrushCanvas(radius, blur) {
