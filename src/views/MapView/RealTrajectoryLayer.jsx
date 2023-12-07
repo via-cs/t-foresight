@@ -32,15 +32,18 @@ function RealTrajectoryLayer({store, mapSize, scaleBalance}) {
     //    You may want to refer to:
     //    - how to draw a simple shape: https://konvajs.org/docs/react/Shapes.html and
     //    - the API documentation of an arrow shape: https://konvajs.org/api/Konva.Arrow.html
-
+    console.log(store.viewedPrediction);
     var alltra = store.allPlayerTrajectory;
     return <Layer>
         <Arrow
                 points={points}
                 stroke = {store.curColor} // Line color
-                strokeWidth={2*scaleBalance} // Line width
+                strokeWidth={3*scaleBalance} // Line width
                 pointerAtEnding={true}
                 fill = 'red'
+                pointerLength={15 * scaleBalance} // Adjust for smaller arrowhead length
+                pointerWidth={10 * scaleBalance} // Adjust for smaller arrowhead width
+                // fill = {store.curColor}
             />
     </Layer>
 }
