@@ -1,14 +1,14 @@
 import {inject, observer} from "mobx-react";
 import {Layer, Stage} from "react-konva";
-import useMapNavigation from "./useMapNavigation.js";
+import useMapNavigation from "./Map/useMapNavigation.js";
 import KonvaImage from "../../components/KonvaImage.jsx";
-import PlayerLayer from "./PlayerLayer.jsx";
-import RealTrajectoryLayer from "./RealTrajectoryLayer.jsx";
-import StrategyRenderer from "./StrategyRenderer.jsx";
+import PlayerLayer from "./GameItems/PlayerLayer.jsx";
+import RealTrajectoryLayer from "./Trajectories/RealTrajectoryLayer.jsx";
+import StrategyRenderer from "./Heatmap/StrategyRenderer.jsx";
 import {useRef} from "react";
-import PredictedTrajectoryLayer from "./PredictedTrajectoryLayer.jsx";
+import PredictedTrajectoryLayer from "./Trajectories/PredictedTrajectoryLayer.jsx";
 import {styled} from "@mui/material/styles";
-import Legend from "./Legend.jsx";
+import Legend from "./Map/Legend.jsx";
 import {alpha} from "@mui/material";
 
 /**

@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {MAX_Y, MIN_X, MIN_Y} from "../../utils/game.js";
+import {MAX_Y, MIN_X, MIN_Y} from "../../../utils/game.js";
 
 const ensureSize = (x, scale, mapSize) => {
     return Math.min(0, Math.max(mapSize - mapSize * scale, x));

@@ -1,12 +1,12 @@
 import {inject, observer} from "mobx-react";
 import {Slider, Typography} from "@mui/material";
 import {styled} from "@mui/material/styles";
-import {viewSize} from "../../utils/layout.js";
+import {viewSize} from "../../../utils/layout.js";
 import RangeSlider from 'react-range-slider-input';
 import "react-range-slider-input/dist/style.css";
 
 /**
- * @param {import('src/store/store').Store} store
+ * @param {import('src/store/store.js').Store} store
  * @constructor
  */
 function Timeline({
@@ -22,15 +22,19 @@ function Timeline({
                     valueLabelDisplay={'auto'}
                     valueLabelFormat={v => formatTime(store.frameTime(v))}/>
         </Row>
-        <Row>
+        <Row onMouseEnter={store.enableTimeWindow}
+             onMouseLeave={store.disableTimeWindow}>
             <Time>
-                {(store.trajTimeWindow[0] / 30).toFixed(1)} s to {(store.trajTimeWindow[1] / 30).toFixed(1)} s
+                {(store.trajTimeWindow[0] / 30).toFixed(1)} s
             </Time>
             <WindowSlider min={-450}
                           max={150}
                           step={1}
                           value={store.trajTimeWindow}
                           onInput={store.setTrajTimeWindow}/>
+            <Time>
+                {(store.trajTimeWindow[1] / 30).toFixed(1)} s
+            </Time>
         </Row>
     </Root>
 }
@@ -43,10 +47,9 @@ const Root = styled('div')(({theme}) => ({
 }))
 
 const Time = styled(Typography)({
-    width: 140,
+    width: 70,
     textAlign: 'center',
     flex: '0 0 auto',
-    marginRight: 20,
 })
 
 const Row = styled('div')({

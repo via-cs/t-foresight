@@ -1,6 +1,6 @@
 import {inject, observer} from "mobx-react";
-import KonvaImage from "../../components/KonvaImage.jsx";
-import {mapDis, mapProject} from "../../utils/game.js";
+import KonvaImage from "../../../components/KonvaImage.jsx";
+import {mapDis, mapProject} from "../../../utils/game.js";
 import useHeatmap from "./useHeatmap.js";
 import {useEffect} from "react";
 import {Layer} from "react-konva";

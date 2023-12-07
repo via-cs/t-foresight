@@ -1,7 +1,7 @@
 import {Moving, MultipleStop} from "@mui/icons-material";
 import {styled} from "@mui/material/styles";
 import {useTranslation} from "react-i18next";
-import {HeatmapColorMap} from "./useHeatmap.js";
+import {HeatmapColorMap} from "../Heatmap/useHeatmap.js";
 import {Radio, Typography} from "@mui/material";
 import {inject, observer} from "mobx-react";
 

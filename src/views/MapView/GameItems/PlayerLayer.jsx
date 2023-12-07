@@ -1,9 +1,9 @@
 import {inject, observer} from "mobx-react";
 import {Circle, Layer, Rect} from "react-konva";
-import {mapProject, playerColors, teamShapes} from "../../utils/game.js";
+import {mapProject, playerColors, teamShapes} from "../../../utils/game.js";
 
 /**
- * @param {import('src/store/store').Store} store
+ * @param {import('src/store/store.js').Store} store
  * @param {number} mapSize
  * @param {number} scaleBalance
  * @returns {JSX.Element}

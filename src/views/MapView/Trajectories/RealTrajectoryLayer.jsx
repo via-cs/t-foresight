@@ -1,6 +1,6 @@
 import {inject, observer} from "mobx-react";
 import {Arrow, Layer} from "react-konva";
-import {mapDis, mapProject} from "../../utils/game.js";
+import {mapDis, mapProject} from "../../../utils/game.js";
 import {useEffect} from "react";
 
 /**
@@ -25,15 +25,19 @@ function RealTrajectoryLayer({store, mapSize, scaleBalance, onAutoFocus}) {
     const curfra = store.curFrame;
     // selected player trajectory
     const tra = store.selectedPlayerTrajectory;
+    const windowedTra = store.selectedPlayerTrajectoryInTimeWindow;
     const transformedTrajectory = tra.map(point => mapProject(point, mapSize));
+    const windowedTransformedTrajectory = windowedTra.map(point => mapProject(point, mapSize));
     const points = transformedTrajectory.flatMap(([x, y]) => [Math.max(x * 0.02 * scaleBalance, x), Math.max(y * 0.02 * scaleBalance, y)]);
-    const windowedPoints = points.slice(store.trajTimeWindow[0] * 2 + 900, store.trajTimeWindow[1] * 2 + 900);
 
     useEffect(() => {
-        const centerPos = store.playerPositions[store.focusedTeam][store.focusedPlayer];
-        const radius = Math.max(...tra.map(pos => mapDis(pos, centerPos)));
+        const centerPos = windowedTra[0];
+        const radius = Math.max(...tra.map(pos => mapDis(
+            pos,
+            store.playerPositions[store.focusedTeam][store.focusedPlayer]
+        ))) * 1.2;
         onAutoFocus && onAutoFocus(centerPos, radius);
-    }, [store.selectedPlayerTrajectory]);
+    }, [windowedTra]);
 
     // console.log(points);
     // 2. You can render the trajectory here.
@@ -52,7 +56,7 @@ function RealTrajectoryLayer({store, mapSize, scaleBalance, onAutoFocus}) {
                pointerWidth={10 * scaleBalance} // Adjust for smaller arrowhead width
                opacity={0.4}
         />
-        <Arrow points={windowedPoints}
+        <Arrow points={windowedTransformedTrajectory.flat()}
                stroke={store.curColor} // Line color
                strokeWidth={3 * scaleBalance} // Line width
                pointerAtEnding={true}

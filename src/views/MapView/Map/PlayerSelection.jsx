@@ -1,7 +1,7 @@
 import {inject, observer} from "mobx-react";
 import {styled} from "@mui/material/styles";
 import {Tooltip, Typography} from "@mui/material";
-import {playerColors, teamNames, teamShapes} from "../../utils/game.js";
+import {playerColors, teamNames, teamShapes} from "../../../utils/game.js";
 import {useTranslation} from "react-i18next";
 
 /**
