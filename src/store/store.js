@@ -257,7 +257,7 @@ class Store {
                 }
             }
         }
-        console.log(allPlayerTra)
+        // console.log(allPlayerTra)
         return allPlayerTra;
     }
 
@@ -302,6 +302,8 @@ class Store {
     setPredictions = pred => this.predictions = pred;
     viewedPrediction = -1;
     viewPrediction = p => this.viewedPrediction = (p === this.viewedPrediction ? -1 : p);
+    
+    
     /**
      * prediction groups
      * @type {number[][]}
