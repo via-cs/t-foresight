@@ -4,22 +4,24 @@ import {mapProject} from "../../../utils/game.js";
 
 function PredictedTrajectoryLayer({store, mapSize, scaleBalance, prediction, color}) {
     const arrows = [];
-    const predLen = store.selectedPredictorsAsAStrategy.predictors.length;
-    for(var i = 0; i <= predLen-1; i++) {
+    if (store.selectedPredictorsAsAStrategy) {
+        const predLen = store.selectedPredictorsAsAStrategy.predictors.length;
+        for(var i = 0; i <= predLen-1; i++) {
 
-        const traj = store.selectedPredictorsAsAStrategy.predictors[i].trajectory.map(p => mapProject(p, mapSize));
-        var arrow = (
-            <Arrow 
-            key={i}
-            points={traj.flat()}
-            strokeWidth={3 * scaleBalance} // Line width
-            pointerWidth={7 * scaleBalance}
-            pointerLength={7 * scaleBalance}
-            stroke={color} dash={[5, 5]}
-            fill={color}
-            opacity={0.6}/>
-        );
-        arrows.push(arrow);
+            const traj = store.selectedPredictorsAsAStrategy.predictors[i].trajectory.map(p => mapProject(p, mapSize));
+            var arrow = (
+                <Arrow 
+                key={i}
+                points={traj.flat()}
+                strokeWidth={3 * scaleBalance} // Line width
+                pointerWidth={7 * scaleBalance}
+                pointerLength={7 * scaleBalance}
+                stroke={color} dash={[5, 5]}
+                fill={color}
+                opacity={0.5}/>
+            );
+            arrows.push(arrow);
+        }
     }
     const selectedTraj = prediction.map(p => mapProject(p, mapSize));
     return (
@@ -29,6 +31,8 @@ function PredictedTrajectoryLayer({store, mapSize, scaleBalance, prediction, col
                 strokeWidth={3 * scaleBalance} // Line width
                 pointerWidth={7 * scaleBalance}
                 pointerLength={7 * scaleBalance}
+                //stroke={color} dash={[5, 5]}
+                //fill={color}/>
                 stroke={'white'} dash={[5, 5]}
                 fill={'white'}/>
         </Layer>
