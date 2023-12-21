@@ -22,15 +22,19 @@ function Timeline({
                     valueLabelDisplay={'auto'}
                     valueLabelFormat={v => formatTime(store.frameTime(v))}/>
         </Row>
-        <Row onMouseEnter={store.enableTimeWindow}
-             onMouseLeave={store.disableTimeWindow}>
+        <Row>
             <Time>
                 {(store.trajTimeWindow[0] / 30).toFixed(1)} s
             </Time>
             <WindowSlider min={-450}
                           max={150}
                           step={1}
+                          disabled={!store.gameData}
                           value={store.trajTimeWindow}
+                          onThumbDragStart={store.enableTimeWindow}
+                          onThumbDragEnd={store.disableTimeWindow}
+                          onRangeDragStart={store.enableTimeWindow}
+                          onRangeDragEnd={store.disableTimeWindow}
                           onInput={store.setTrajTimeWindow}/>
             <Time>
                 {(store.trajTimeWindow[1] / 30).toFixed(1)} s
@@ -56,6 +60,9 @@ const Row = styled('div')({
     width: '100%',
     display: 'flex',
     alignItems: 'center',
+    '&:hover .range-slider__range': {
+        height: 6,
+    }
 })
 
 const WindowSlider = styled(RangeSlider)(({theme}) => ({
@@ -85,6 +92,26 @@ const WindowSlider = styled(RangeSlider)(({theme}) => ({
     "&.range-slider .range-slider__thumb[data-upper]": {
         transform: 'translate(0, -50%)',
     },
+    "&::before": {
+        content: '""',
+        position: 'absolute',
+        left: '75%',
+        height: '10px',
+        top: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 1,
+        backgroundColor: theme.palette.primary.main,
+    },
+    "&::after": {
+        content: '"current time"',
+        position: 'absolute',
+        left: '75%',
+        height: '10px',
+        top: '50%',
+        transform: 'translate(-50%, 10px)',
+        width: 200,
+        textAlign: 'center',
+    }
 }))
 
 function formatTime(t) {
