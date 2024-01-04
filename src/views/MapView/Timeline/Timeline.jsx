@@ -4,6 +4,7 @@ import {styled} from "@mui/material/styles";
 import {viewSize} from "../../../utils/layout.js";
 import RangeSlider from 'react-range-slider-input';
 import "react-range-slider-input/dist/style.css";
+import {t} from "i18next";
 
 /**
  * @param {import('src/store/store.js').Store} store
@@ -87,10 +88,10 @@ const WindowSlider = styled(RangeSlider)(({theme}) => ({
         transform: 'translate(-50%, -50%) scale(1.25)',
     },
     "&.range-slider .range-slider__thumb[data-lower]": {
-        transform: 'translate(-100%, -50%)',
+        transform: 'translate(-50%, -50%)',
     },
     "&.range-slider .range-slider__thumb[data-upper]": {
-        transform: 'translate(0, -50%)',
+        transform: 'translate(-50%, -50%)',
     },
     "&::before": {
         content: '""',
@@ -103,7 +104,7 @@ const WindowSlider = styled(RangeSlider)(({theme}) => ({
         backgroundColor: theme.palette.primary.main,
     },
     "&::after": {
-        content: '"current time"',
+        content: `"${t("System.MapView.CurrentTime")}"`,
         position: 'absolute',
         left: '75%',
         height: '10px',

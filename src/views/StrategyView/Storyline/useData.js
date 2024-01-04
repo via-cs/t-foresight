@@ -1,4 +1,3 @@
-import {useMemo} from "react";
 import {randint, shuffle} from "../../../utils/fakeData.js";
 
 function mergeGroup(groups) {
@@ -45,37 +44,44 @@ function changeGroup(groups) {
 /**
  * @return {import('src/model/Strategy.js').PredictorsStoryline}
  */
-export default function useStorylineData(initGroups) {
-    return useMemo(() => {
-        const totalInstances = randint(300, 700);
-        const numPredictors = initGroups.reduce((p, c) => p + c.length, 0);
+export default function genStorylineData(initGroups) {
+    const totalInstances = randint(300, 700);
+    const numPredictors = initGroups.reduce((p, c) => p + c.length, 0);
 
-        const instances = new Array(randint(5, 7)).fill(0)
-            .map(() => randint(0, totalInstances));
-        instances.sort((a, b) => a - b);
-        instances.push(totalInstances);
-        for (let i = instances.length - 1; i > 0; i--)
-            instances[i] -= instances[i - 1];
-        instances.sort((a, b) => b - a);
-        while (instances[instances.length - 1] === 0) instances.pop();
+    const instances = new Array(randint(5, 7)).fill(0)
+        .map(() => randint(0, totalInstances));
+    instances.sort((a, b) => a - b);
+    instances.push(totalInstances);
+    for (let i = instances.length - 1; i > 0; i--)
+        instances[i] -= instances[i - 1];
+    instances.sort((a, b) => b - a);
+    while (instances[instances.length - 1] === 0) instances.pop();
 
-        let curGroups = JSON.parse(JSON.stringify(initGroups));
-        /**
-         * @type {import('src/model/Strategy.js').StorylineStage[]}
-         */
-        const stages = [];
-        instances.forEach(instances => {
-            stages.push({
-                groups: curGroups,
-                instances
-            })
-            curGroups = changeGroup(curGroups);
+    let curGroups = JSON.parse(JSON.stringify(initGroups));
+    /**
+     * @type {import('src/model/Strategy.js').StorylineStage[]}
+     */
+    const stages = [];
+    instances.forEach(instances => {
+        stages.push({
+            groups: curGroups,
+            instances
         })
+        curGroups = changeGroup(curGroups);
+    })
 
-        return {
-            stages,
-            numPredictors,
-            totalInstances,
-        }
-    }, [initGroups]);
+    return {
+        stages,
+        numPredictors,
+        totalInstances,
+    }
+}
+
+export function initStorylineData() {
+    return {
+        stages: [{
+            groups: new Array(20).fill(0).map((_, i) => [i]),
+            instances: 0,
+        }], numPredictors: 20, totalInstances: 1
+    }
 }

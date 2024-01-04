@@ -3,7 +3,6 @@ import {useRef} from "react";
 import useSize from "../../../utils/useSize.js";
 import {Group, Layer, Path, Rect, Stage, Text} from "react-konva";
 import {styled, useTheme} from "@mui/material/styles";
-import useStorylineData from "./useData.js";
 import useStorylineLayout from "./useLayout.js";
 import useStorylineLines from "./useLines.js";
 
@@ -39,7 +38,7 @@ const config = {
 function PredictorsStoryline({store}) {
     const containerRef = useRef(null);
     const {width, height} = useSize(containerRef);
-    const data = useStorylineData(store.predictionGroups);
+    const data = store.instancesData;
     const layout = useStorylineLayout(data);
     const lines = useStorylineLines(layout, width, height, config);
 

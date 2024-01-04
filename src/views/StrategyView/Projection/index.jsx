@@ -1,4 +1,3 @@
-import useProjection from "./useProjection.js";
 import usePointLassoSelection from "./usePointLassoSelection.js";
 import useLasso from "./useLasso.js";
 import {styled, useTheme} from "@mui/material/styles";
@@ -31,7 +30,7 @@ function PredictorsProjection({
                                   onViewPredictor,
                                   store,
                               }) {
-    const points = useProjection(allPredictors, predictorGroups);
+    const points = store.predictionProjection;
     const {lasso, isDrawing, handleMouseDown, handleMouseUp, handleMouseMove} = useLasso();
     const preSelectedPointsIdx = usePointLassoSelection(points, lasso);
     const handleClear = useCallback(e => {

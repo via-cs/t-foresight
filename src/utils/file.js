@@ -26,3 +26,13 @@ export function readJSONFile(file) {
         fileReader.readAsText(file);
     })
 }
+
+export function hashFileName(prefix, content) {
+    let hash = 0;
+    for (let i = 0; i < content.length; i++) {
+        const chr = content.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return `${prefix}-${hash}`;
+}

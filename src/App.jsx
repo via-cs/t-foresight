@@ -3,7 +3,7 @@ import TitleBar from "./views/TitleBar";
 import {useLayout} from "./utils/layout";
 import {styled} from "@mui/material/styles";
 import PlayerSelection from "./views/MapView/Map/PlayerSelection.jsx";
-import {Button, createTheme, CssBaseline, Divider, IconButton, ThemeProvider} from "@mui/material";
+import {Button, createTheme, CssBaseline, Divider, ThemeProvider} from "@mui/material";
 import Timeline from "./views/MapView/Timeline/Timeline.jsx";
 import MapRenderer from "./views/MapView/index.jsx";
 import {inject, observer} from "mobx-react";
@@ -13,7 +13,6 @@ import StrategyView from "./views/StrategyView/index.jsx";
 import ContextView from "./views/ContextView/index.jsx";
 import {defaultTheme} from "./utils/theme.js";
 import React from "react";
-import {TableView} from "@mui/icons-material";
 
 // React本质上就是用函数表达从数据到视图的映射，每一个不同的映射称为一个组件。
 // 当数据发生变化时，React会自动处理视图的变化，并刷新组件的渲染。
@@ -53,9 +52,9 @@ function App({store}) {
             </View>
             <View title={t('System.StrategyView.ViewName')} {...strategyViewPos}
                   tools={[
-                      <IconButton onClick={store.changeStrategyDetailView}>
-                          <TableView/>
-                      </IconButton>,
+                      // <IconButton onClick={store.changeStrategyDetailView}>
+                      //     <TableView/>
+                      // </IconButton>,
                       <Button variant={'text'}
                               disabled={store.focusedPlayer === -1 || store.focusedTeam === -1 || store.gameData === null || !store.playerLifeStates[store.focusedTeam][store.focusedPlayer]}
                               onClick={store.predict}>
@@ -68,7 +67,7 @@ function App({store}) {
                   tools={[
                       <Button variant={'text'}
                               onClick={store.clearContextLimit}>
-                          Clear Context Limit
+                          {t('System.ContextView.ClearContextLimit')}
                       </Button>
                   ]}>
                 <ContextView/>

@@ -20,22 +20,47 @@ import {Settings, Translate} from "@mui/icons-material";
 function TitleBar({width, store}) {
     const {t, i18n} = useTranslation();
     const toggleLanguage = () => i18n.changeLanguage(i18n.language === 'en' ? 'cn' : 'en');
-    const handleImport = () => {
+    const handleImportData = () => {
         selectFile()
             .then(file => {
                 store.setWaiting(true);
                 return readJSONFile(file);
             })
-            .catch(err => window.alert(err))
+            .catch(window.alert)
             .then(data => store.setData(data.filename, data.data))
             .finally(() => store.setWaiting(false));
     }
+    const handleImportCase = () => {
+        selectFile()
+            .then(file => {
+                store.setWaiting(true);
+                return readJSONFile(file);
+            })
+            .catch(window.alert)
+            .then(data => {
+                if (data.data.match_id !== store.gameData.gameInfo.match_id)
+                    throw new Error("The case is not for this match!");
+                store.setCase(data.data);
+            })
+            .catch(window.alert)
+            .finally(() => store.setWaiting(false));
+    }
+    const handleSaveCase = () => store.saveCase();
+
     return <Bar style={{width}}>
         <Title variant={'h5'}>{t('System.SystemName')}</Title>
         <div style={{flex: 1}}/>
         <Button variant={'contained'}
                 sx={{mr: 1}}
-                onClick={handleImport}>{t('System.Actions.import')}</Button>
+                disabled={!store.gameData}
+                onClick={handleImportCase}>{t('System.Actions.importCase')}</Button>
+        <Button variant={'contained'}
+                disabled={!store.gameData}
+                sx={{mr: 1}}
+                onClick={handleSaveCase}>{t('System.Actions.saveCase')}</Button>
+        <Button variant={'contained'}
+                sx={{mr: 1}}
+                onClick={handleImportData}>{t('System.Actions.importData')}</Button>
         <Button variant={'contained'}
                 sx={{mr: 1}}
                 onClick={toggleLanguage}>

@@ -29,24 +29,28 @@
   },
   "System": {
     "Actions": {
-      "import": "import"
+      "importCase": "Import Case",
+      "importData": "import data",
+      "saveCase": "save case"
     },
     "ContextView": {
+      "ClearContextLimit": "Clear Context Limit",
       "GameContext": "Environment",
       "More": "show more",
       "ViewName": "Context View"
     },
     "MapView": {
+      "ColoredMap": "Colored",
+      "CurrentTime": "current time",
+      "GreyMap": "Grey",
       "HighPossibility": "High Possibility",
       "LowPossibility": "Low Possibility",
+      "MapStyle": "Map Style",
       "PossibleDest": "Possible Destination",
       "PredTraj": "Predicted Trajectory",
       "RealTraj": "Real Trajectory",
-      "ViewName": "Map View",
-      "ColoredMap": "Colored",
       "SketchMap": "Sketch",
-      "GreyMap": "Grey",
-      "MapStyle": "Map Style"
+      "ViewName": "Map View"
     },
     "StrategyView": {
       "PredNum": "{{num}} pred.",

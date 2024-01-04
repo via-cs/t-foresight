@@ -29,24 +29,28 @@
   },
   "System": {
     "Actions": {
-      "import": "导入"
+      "importCase": "导入案例",
+      "importData": "导入比赛",
+      "saveCase": "保存进度"
     },
     "ContextView": {
+      "ClearContextLimit": "清除选中环境因素",
       "GameContext": "游戏环境",
       "More": "显示更多",
       "ViewName": "环境视图"
     },
     "MapView": {
+      "ColoredMap": "真实",
+      "CurrentTime": "当前时间",
+      "GreyMap": "黑白",
       "HighPossibility": "高概率",
       "LowPossibility": "低概率",
+      "MapStyle": "地图风格",
       "PossibleDest": "可能的位置",
       "PredTraj": "预测轨迹",
       "RealTraj": "真实轨迹",
-      "ViewName": "地图视图",
-      "ColoredMap": "真实",
       "SketchMap": "素描",
-      "GreyMap": "黑白",
-      "MapStyle": "地图风格"
+      "ViewName": "地图视图"
     },
     "StrategyView": {
       "PredNum": "{{num}}条路",
