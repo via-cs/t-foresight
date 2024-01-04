@@ -20,8 +20,8 @@ function useExpand(length, initDisplayCnt = 3, expandDisplayCnt = 3) {
 
 function calHeight(open, displayCnt, totalCnt) {
     if (!open) return 60;
-    if (displayCnt === totalCnt) return 71 + displayCnt * 40;
-    return displayCnt * 40 + 101.75;
+    if (displayCnt === totalCnt) return 71 + displayCnt * 60;
+    return displayCnt * 60 + 101.75;
 }
 
 function ContextGroup({store, colorLabel, groupName, context, attention, curAtt}) {

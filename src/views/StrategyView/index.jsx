@@ -44,7 +44,7 @@ const Container = styled('div')({
 
 const Projection = styled('div')({
     position: 'relative',
-    paddingTop: '100%',
+    paddingTop: '75%',
     width: '100%',
     height: 0,
 })

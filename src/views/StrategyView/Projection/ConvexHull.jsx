@@ -1,6 +1,7 @@
 import {memo, useMemo} from "react";
 import hull from "hull.js";
 import LassoGroup from "./Group.js";
+import {Tooltip} from "@mui/material";
 
 const W = 1000, H = 1000;
 
@@ -29,13 +30,16 @@ function useConvexHull(predictorGroup, points) {
     }, [predictorGroup, points]);
 }
 
-function ConvexHull({predictorGroup, points, selected, onSelectGroup}) {
+function ConvexHull({predictorGroup, points, selected, onSelectGroup, tags, onContextMenu}) {
     const convexHull = useConvexHull(predictorGroup, points);
-    return <LassoGroup d={convexHull}
-                       width={W / 200}
-                       selectable
-                       selected={sameArray(selected, predictorGroup)}
-                       onClick={() => onSelectGroup(predictorGroup)}/>
+    return <Tooltip title={Array.from(tags).join(', ')}>
+        <LassoGroup d={convexHull}
+                    width={W / 200}
+                    selectable
+                    selected={sameArray(selected, predictorGroup)}
+                    onClick={() => onSelectGroup(predictorGroup)}
+                    onContextMenu={onContextMenu}/>
+    </Tooltip>
 }
 
 export default memo(ConvexHull);

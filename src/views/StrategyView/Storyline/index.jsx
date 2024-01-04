@@ -40,11 +40,8 @@ function PredictorsStoryline({store}) {
     const containerRef = useRef(null);
     const {width, height} = useSize(containerRef);
     const data = useStorylineData(store.predictionGroups);
-    console.log('raw data', data);
     const layout = useStorylineLayout(data);
-    console.log('after sort', layout);
     const lines = useStorylineLines(layout, width, height, config);
-    console.log('lines', lines);
 
     const theme = useTheme();
 
@@ -58,7 +55,7 @@ function PredictorsStoryline({store}) {
                         <Rect width={width - config.pl - config.pr + 10}
                               height={lines[0][sId * 2 + 1][1] - lines[0][sId * 2][1]}
                               fill={theme.palette.background.default}/>
-                        <Text text={stage.instances.toFixed(0)}
+                        <Text text={(stage.instances / layout.totalInstances * 100).toFixed(1) + '%'}
                               rotation={-90}
                               x={5 - config.pl} height={config.pl}
                               y={(lines[0][sId * 2 + 1][1] - lines[0][sId * 2][1]) / 2 + 50}

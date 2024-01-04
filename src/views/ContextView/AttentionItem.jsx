@@ -3,11 +3,11 @@ import {Box, Slider as MuiSlider, Typography} from "@mui/material";
 import {Check, Close} from "@mui/icons-material";
 
 function AttentionItem({colorLabel, label, value, attention, curAtt}) {
-    return <Container>
+    return <Container withValue={typeof value !== 'undefined'}>
         <Box width={20} height={20} flex={'0 0 20px'} display={'flex'} alignItems={'center'}>{colorLabel}</Box>
-        <Box width={150} flex={'0 0 150px'}><Typography sx={{maxWidth: 150}} align={'center'}
-                                                        noWrap>{label}</Typography></Box>
-        <Box width={100} flex={'0 0 120px'}>
+        <Box width={150} flex={'0 0 150px'}>
+            <Typography sx={{maxWidth: 150}} align={'center'}
+                        noWrap>{label}</Typography>
             {typeof value === 'number' && <Typography noWrap>{value.toFixed(0)}</Typography>}
             {typeof value === 'string' && <Typography noWrap>{value}</Typography>}
             {typeof value === 'boolean' && <Typography noWrap>{value ? <Check/> : <Close/>}</Typography>}
@@ -27,15 +27,15 @@ function AttentionItem({colorLabel, label, value, attention, curAtt}) {
             {attention && attention.length && <BarContainer>
                 <Bar style={{
                     width: `${attention[0] * 100 / 3}%`,
-                    opacity: (attention[0] - 0.5) * 2
+                    // opacity: (attention[0] - 0.5) * 2
                 }}/>
                 <Bar style={{
                     width: `${attention[1] * 100 / 3}%`,
-                    opacity: (attention[1] - 0.5) * 2
+                    // opacity: (attention[1] - 0.5) * 2
                 }}/>
                 <Bar style={{
                     width: `${attention[2] * 100 / 3}%`,
-                    opacity: (attention[2] - 0.5) * 2,
+                    // opacity: (attention[2] - 0.5) * 2,
                     borderRadius: '0 4px 4px 0'
                 }}/>
             </BarContainer>}
@@ -45,12 +45,15 @@ function AttentionItem({colorLabel, label, value, attention, curAtt}) {
 
 export default AttentionItem;
 
-const Container = styled('div')({
+const Container = styled('div', {
+    shouldForwardProp: propName => !['withValue'].includes(propName)
+})({
     display: 'flex',
-    height: 40,
     width: '100%',
     alignItems: 'center',
-})
+}, ({withValue, theme}) => ({
+    height: withValue ? 60 : 40,
+}))
 
 const Slider = styled(MuiSlider)(({theme}) => ({
     color: theme.palette.primary.main,

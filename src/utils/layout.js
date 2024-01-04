@@ -33,7 +33,7 @@ export function useLayout() {
         - viewSize.appTitleBarHeight
         - viewSize.viewTitleBarHeight
         - viewSize.timelineHeight;
-    const strategyViewWidth = (layout[0] - mapSize - viewSize.spacing * 6) / 2.5;
+    const strategyViewWidth = (layout[0] - mapSize - viewSize.spacing * 6) / 2.5 + 100;
 
     return {
         mapSize,

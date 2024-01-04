@@ -1,6 +1,6 @@
 import {computed, makeAutoObservable, observable} from "mobx";
 import {genContext, playerColors, updateGameData} from "../utils/game.js";
-import {contextFactory, genRandomStrategies, getStratAttention} from "../utils/fakeData.js";
+import {contextFactory, genRandomStrategies, getStratAttention, shuffle} from "../utils/fakeData.js";
 import api from "../api/api.js";
 
 class Store {
@@ -49,6 +49,11 @@ class Store {
 
     strategyViewDesign = 'matrix'
     changeStrategyDetailView = () => this.strategyViewDesign = (this.strategyViewDesign === 'matrix') ? 'storyline' : 'matrix';
+
+    workerTags = new Array(20).fill(0).map(() => new Set());
+    addTag = (idx, tag) => idx.forEach(i => this.workerTags[i].add(tag));
+    removeTag = (idx, tag) => idx.forEach(i => this.workerTags[i].delete(tag));
+    clearTag = (idx) => idx.forEach(i => this.workerTags[i].clear());
     //endregion
 
     //region game context
@@ -230,7 +235,7 @@ class Store {
 
     get selectedPlayerTrajectoryInTimeWindow() {
         if (!this.timeWindowEnabled) return this.selectedPlayerTrajectory;
-        
+
         // Check if a player is selected
         if (this.focusedPlayer === -1 || !this.gameData) return [];
 
@@ -267,9 +272,15 @@ class Store {
         const startPos = this.playerPositions[this.focusedTeam][this.focusedPlayer];
         const strategies = genRandomStrategies(startPos, this.curContext);
         let i = 0;
+        const idx = new Array(20).fill(0).map((_, i) => i);
+        shuffle(idx);
+        const predGroups = strategies.map(strat => strat.predictors.map(() => idx[i++]));
+        const predictions = [];
+        i = 0;
+        strategies.forEach(strat => strat.predictors.forEach(p => predictions[idx[i++]] = p));
         return {
-            predictions: strategies.map(strat => strat.predictors).flat(),
-            predGroups: strategies.map(strat => strat.predictors.map(() => i++)),
+            predictions,
+            predGroups,
         }
     }
     predict = () => {
