@@ -51,9 +51,9 @@ const Projection = styled('div')({
 
 const Wrapper = styled('div')({
     position: 'absolute',
-    left: 0,
+    left: '12.5%',
     top: 0,
-    width: '100%',
+    width: '75%',
     height: '100%',
 })
 

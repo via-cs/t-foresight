@@ -78,6 +78,7 @@ function PredictorsStoryline({store}) {
                     <Path data={createPath(line)}
                           onMouseEnter={() => store.viewPrediction(lId)}
                           onMouseLeave={() => store.viewPrediction(-1)}
+                          opacity={Math.min(1, store.predictions[lId]?.probability * 10)}
                           stroke={store.viewedPrediction === lId
                               ? theme.palette.secondary.main
                               : store.selectedPredictors.includes(lId)
