@@ -280,6 +280,7 @@ class Store {
                 }
             }
         }
+        // console.log(allPlayerTra)
         return allPlayerTra;
     }
 

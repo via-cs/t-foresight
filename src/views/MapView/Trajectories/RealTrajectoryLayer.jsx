@@ -31,11 +31,11 @@ function RealTrajectoryLayer({store, mapSize, scaleBalance, onAutoFocus}) {
     const points = transformedTrajectory.flatMap(([x, y]) => [Math.max(x * 0.02 * scaleBalance, x), Math.max(y * 0.02 * scaleBalance, y)]);
 
     useEffect(() => {
-        const centerPos = windowedTra[0];
-        const radius = Math.max(...tra.map(pos => mapDis(
+        const centerPos = store.playerPositions[store.focusedTeam][store.focusedPlayer];
+        const radius = Math.max(Math.min(Math.max(...tra.map(pos => mapDis(
             pos,
             store.playerPositions[store.focusedTeam][store.focusedPlayer]
-        ))) * 1.2;
+        ))) * 1.2, 3000), 2000);
         onAutoFocus && onAutoFocus(centerPos, radius);
     }, [windowedTra]);
 
@@ -49,7 +49,7 @@ function RealTrajectoryLayer({store, mapSize, scaleBalance, onAutoFocus}) {
     return <Layer>
         <Arrow points={points}
                stroke={store.curColor} // Line color
-               strokeWidth={3 * scaleBalance} // Line width
+               strokeWidth={2 * scaleBalance} // Line width
                pointerAtEnding={true}
                fill='red'
                pointerLength={15 * scaleBalance} // Adjust for smaller arrowhead length
@@ -58,7 +58,7 @@ function RealTrajectoryLayer({store, mapSize, scaleBalance, onAutoFocus}) {
         />
         <Arrow points={windowedTransformedTrajectory.flat()}
                stroke={store.curColor} // Line color
-               strokeWidth={3 * scaleBalance} // Line width
+               strokeWidth={2 * scaleBalance} // Line width
                pointerAtEnding={true}
                fill={'red'}
                pointerWidth={10 * scaleBalance}
