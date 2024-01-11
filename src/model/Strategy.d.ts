@@ -13,6 +13,7 @@ export interface AttentionRange {
 export type StratAttention = AttentionStruct<AttentionRange>
 
 export interface Prediction {
+    idx: number,
     trajectory: Trajectory
     probability: number
     attention: SingleAttention

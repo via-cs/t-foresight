@@ -1,5 +1,5 @@
-import {useState} from "react";
-import {MAX_Y, MIN_X, MIN_Y} from "../../../utils/game.js";
+import {useMemo, useState} from "react";
+import {MAX_X, MAX_Y, MIN_X, MIN_Y} from "../../../utils/game.js";
 
 const ensureSize = (x, scale, mapSize) => {
     return Math.min(0, Math.max(mapSize - mapSize * scale, x));
@@ -8,6 +8,18 @@ const ensureSize = (x, scale, mapSize) => {
 export default function useMapNavigation(mapSize, ref) {
     const [scale, setScale] = useState(1);
     const [offset, setOffset] = useState([0, 0]);
+    const displayRange = useMemo(() => {
+        return {
+            x: [
+                -offset[0] / (scale * mapSize) * (MAX_X - MIN_X) + MIN_X,
+                (-offset[0] + mapSize) / (scale * mapSize) * (MAX_X - MIN_X) + MIN_X
+            ],
+            y: [
+                MAX_Y - (-offset[1] + mapSize) / (scale * mapSize) * (MAX_Y - MIN_Y),
+                MAX_Y + offset[1] / (scale * mapSize) * (MAX_Y - MIN_Y),
+            ],
+        }
+    }, [scale, mapSize, offset]);
     const setNav = (scale, offset, anim = false) => {
         setScale(scale);
         setOffset(offset);
@@ -53,6 +65,9 @@ export default function useMapNavigation(mapSize, ref) {
             ]
         );
     }
+    const handleDragEnd = e => {
+        setOffset([ref.current.x(), ref.current.y()]);
+    }
     const dragBoundFunc = pos => {
         return {
             x: ensureSize(pos.x, scale, mapSize),
@@ -71,9 +86,11 @@ export default function useMapNavigation(mapSize, ref) {
     return {
         scale,
         offset,
+        displayRange,
         handleRecover,
         handleWheel,
         autoFocus,
         dragBoundFunc,
+        handleDragEnd,
     }
 }

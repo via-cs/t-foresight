@@ -1,4 +1,5 @@
 import {randint, shuffle} from "../../../utils/fakeData.js";
+import newArr from "../../../utils/newArr.js";
 
 function mergeGroup(groups) {
     let i = randint(0, groups.length - 1), j = randint(0, groups.length - 1);
@@ -48,8 +49,7 @@ export default function genStorylineData(initGroups) {
     const totalInstances = randint(300, 700);
     const numPredictors = initGroups.reduce((p, c) => p + c.length, 0);
 
-    const instances = new Array(randint(5, 7)).fill(0)
-        .map(() => randint(0, totalInstances));
+    const instances = newArr(randint(5, 7), () => randint(0, totalInstances));
     instances.sort((a, b) => a - b);
     instances.push(totalInstances);
     for (let i = instances.length - 1; i > 0; i--)
@@ -80,7 +80,7 @@ export default function genStorylineData(initGroups) {
 export function initStorylineData() {
     return {
         stages: [{
-            groups: new Array(20).fill(0).map((_, i) => [i]),
+            groups: newArr(20, i => [i]),
             instances: 0,
         }], numPredictors: 20, totalInstances: 1
     }

@@ -2,6 +2,7 @@ import {memo, useMemo} from "react";
 import hull from "hull.js";
 import LassoGroup from "./Group.js";
 import {Tooltip} from "@mui/material";
+import newArr from "../../../utils/newArr.js";
 
 const W = 1000, H = 1000;
 
@@ -18,11 +19,10 @@ function useConvexHull(predictorGroup, points) {
                 points[i][2] * W / 20
             ])
             .map(([x, y, r]) => {
-                return new Array(360).fill(0)
-                    .map((_, deg) => [
-                        x + r * Math.cos(deg / 180 * Math.PI) * 1.5,
-                        y + r * Math.sin(deg / 180 * Math.PI) * 1.5,
-                    ])
+                return newArr(360, deg => [
+                    x + r * Math.cos(deg / 180 * Math.PI) * 1.5,
+                    y + r * Math.sin(deg / 180 * Math.PI) * 1.5,
+                ])
             })
             .flat()
         const hullPoints = hull(samplePoints, 1000);

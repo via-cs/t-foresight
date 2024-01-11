@@ -34,7 +34,7 @@
       "saveCase": "save case"
     },
     "ContextView": {
-      "ClearContextLimit": "Clear Context Limit",
+      "ClearContextLimit": "Clear Checks",
       "GameContext": "Environment",
       "More": "show more",
       "ViewName": "Context View"
@@ -44,6 +44,7 @@
       "CurrentTime": "current time",
       "GreyMap": "Grey",
       "HighPossibility": "High Possibility",
+      "Legend": "Legend",
       "LowPossibility": "Low Possibility",
       "MapStyle": "Map Style",
       "PossibleDest": "Possible Destination",

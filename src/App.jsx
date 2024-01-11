@@ -5,7 +5,7 @@ import {styled} from "@mui/material/styles";
 import PlayerSelection from "./views/MapView/Map/PlayerSelection.jsx";
 import {Button, createTheme, CssBaseline, Divider, ThemeProvider} from "@mui/material";
 import Timeline from "./views/MapView/Timeline/Timeline.jsx";
-import MapRenderer from "./views/MapView/index.jsx";
+import {MapContextRenderer, MapRenderer} from "./views/MapView/index.jsx";
 import {inject, observer} from "mobx-react";
 import Waiting from "./components/Waiting.jsx";
 import {useTranslation} from "react-i18next";
@@ -13,6 +13,8 @@ import StrategyView from "./views/StrategyView/index.jsx";
 import ContextView from "./views/ContextView/index.jsx";
 import {defaultTheme} from "./utils/theme.js";
 import React from "react";
+import MapLegendTrigger from "./views/MapView/Legend/index.jsx";
+import {DisabledByDefault, OnlinePrediction} from "@mui/icons-material";
 
 // React本质上就是用函数表达从数据到视图的映射，每一个不同的映射称为一个组件。
 // 当数据发生变化时，React会自动处理视图的变化，并刷新组件的渲染。
@@ -44,9 +46,11 @@ function App({store}) {
             <View title={t('System.MapView.ViewName')} {...mapViewPos}
                   tools={[
                       <PlayerSelection team={0}/>,
-                      <PlayerSelection team={1}/>
+                      <PlayerSelection team={1}/>,
+                      <MapLegendTrigger/>,
                   ]}>
-                <MapRenderer size={mapSize}/>
+                <MapContextRenderer size={mapSize}
+                                    mapRenderer={(size, onNav) => <MapRenderer size={size} onNav={onNav}/>}/>
                 <Divider sx={{m: .5}}/>
                 <Timeline/>
             </View>
@@ -57,7 +61,8 @@ function App({store}) {
                       // </IconButton>,
                       <Button variant={'text'}
                               disabled={store.focusedPlayer === -1 || store.focusedTeam === -1 || store.gameData === null || !store.playerLifeStates[store.focusedTeam][store.focusedPlayer]}
-                              onClick={store.predict}>
+                              onClick={store.predict}
+                              startIcon={<OnlinePrediction/>}>
                           {t('System.StrategyView.Predict')}
                       </Button>
                   ]}>
@@ -66,7 +71,8 @@ function App({store}) {
             <View title={t('System.ContextView.ViewName')} {...contextViewPos}
                   tools={[
                       <Button variant={'text'}
-                              onClick={store.clearContextLimit}>
+                              onClick={store.clearContextLimit}
+                              startIcon={<DisabledByDefault/>}>
                           {t('System.ContextView.ClearContextLimit')}
                       </Button>
                   ]}>

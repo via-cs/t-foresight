@@ -1,4 +1,5 @@
 import {useMemo} from "react";
+import newArr from "../../../utils/newArr.js";
 
 /**
  *
@@ -25,9 +26,7 @@ export default function useStorylineLines(data, width, height, config) {
         //endregion
 
         //region points
-        const lines = new Array(data.numPredictors).fill(0)
-            .map(() => new Array(data.stages.length * 2).fill(0)
-                .map(() => [0, 0]));
+        const lines = newArr(data.numPredictors, () => newArr(data.stages.length * 2, () => [0, 0]));
         let y = pt;
         for (const [i, stage] of data.stages.entries()) {
             const yt = y, yb = y + stage.instances * instUnit;

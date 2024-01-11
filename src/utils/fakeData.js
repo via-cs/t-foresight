@@ -1,3 +1,5 @@
+import newArr from "./newArr.js";
+
 const DIS = 175;
 
 export function randint(min, max) {
@@ -49,7 +51,7 @@ function genRandomPrediction(startPos, context, startDir) {
  */
 export function genRandomStrategy(startPos, context, predNum) {
     const randomDir = rand(0, 2 * Math.PI);
-    const predictors = new Array(predNum).fill(0)
+    const predictors = newArr(predNum, 0)
         .map(() => genRandomPrediction(startPos, context, randomDir))
         .sort((a, b) => b.probability - a.probability);
     return {
@@ -63,7 +65,7 @@ function stratProb(strat) {
 
 function randomSplit(sum, n) {
     sum -= n;
-    const splits = new Array(n - 1).fill(0).map(() => randint(0, sum))
+    const splits = newArr(n - 1, () => randint(0, sum))
     splits.push(0, sum)
     splits.sort((a, b) => a - b);
     const res = [];

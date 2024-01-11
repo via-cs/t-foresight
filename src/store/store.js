@@ -5,6 +5,8 @@ import api from "../api/api.js";
 import {hashFileName} from "../utils/file.js";
 import {saveAs} from 'file-saver';
 import genStorylineData, {initStorylineData} from "../views/StrategyView/Storyline/useData.js";
+import discretize from "../utils/discretize.js";
+import newArr from "../utils/newArr.js";
 
 class Store {
     constructor() {
@@ -58,7 +60,7 @@ class Store {
     strategyViewDesign = 'storyline'
     changeStrategyDetailView = () => this.strategyViewDesign = (this.strategyViewDesign === 'matrix') ? 'storyline' : 'matrix';
 
-    workerTags = new Array(20).fill(0).map(() => new Set());
+    workerTags = newArr(20, () => new Set());
     addTag = (idx, tag) => idx.forEach(i => this.workerTags[i].add(tag));
     removeTag = (idx, tag) => idx.forEach(i => this.workerTags[i].delete(tag));
     clearTag = (idx) => idx.forEach(i => this.workerTags[i].clear());
@@ -114,8 +116,8 @@ class Store {
      */
     get playerPositions() {
         if (!this.gameData) return [
-            new Array(5).fill(0).map(() => [0, 0]),
-            new Array(5).fill(0).map(() => [0, 0])
+            newArr(5, () => [0, 0]),
+            newArr(5, () => [0, 0])
         ]
         const curFrame = this.gameData.gameRecords[this.frame];
         return curFrame.heroStates.map(team =>
@@ -125,14 +127,19 @@ class Store {
         )
     }
 
+    get focusedPlayerPosition() {
+        if (this.focusedTeam === -1 || this.focusedPlayer === -1) return [0, 0];
+        return this.playerPositions[this.focusedTeam][this.focusedPlayer];
+    }
+
     /**
      * 从gameData中提取第frame帧的玩家存活状态
      * @return {boolean[][]}: life state of 2*5 players
      */
     get playerLifeStates() {
         if (!this.gameData) return [
-            new Array(5).fill(false),
-            new Array(5).fill(false),
+            newArr(5, false),
+            newArr(5, false),
         ]
         const curFrame = this.gameData.gameRecords[this.frame];
         return curFrame.heroStates.map(team =>
@@ -273,7 +280,6 @@ class Store {
                 }
             }
         }
-        console.log(allPlayerTra)
         return allPlayerTra;
     }
 
@@ -283,7 +289,7 @@ class Store {
         const startPos = this.playerPositions[this.focusedTeam][this.focusedPlayer];
         const strategies = genRandomStrategies(startPos, this.curContext);
         let i = 0;
-        const idx = new Array(20).fill(0).map((_, i) => i);
+        const idx = newArr(20, i => i);
         shuffle(idx);
         const predGroups = strategies.map(strat => strat.predictors.map(() => idx[i++]));
         const predictions = [];
@@ -321,7 +327,7 @@ class Store {
      * @type {import('src/model/Strategy.d.ts').Prediction[]}
      */
     predictions = []
-    setPredictions = pred => this.predictions = pred;
+    setPredictions = pred => this.predictions = pred.map((p, idx) => ({idx, ...p}));
     viewedPrediction = -1;
     viewPrediction = p => this.viewedPrediction = p;
     /**
@@ -364,6 +370,35 @@ class Store {
         this.setPredProjection([])
         this.setInstancesData(initStorylineData());
     }
+
+    trajStat = (xRange, yRange, numGrid, timeStep) => computed(() => {
+        const xData = newArr(numGrid, () => newArr(timeStep, () => [0, [0, 0], new Set()]));
+        const yData = newArr(numGrid, () => newArr(timeStep, () => [0, [0, 0], new Set()]));
+        const predictions = this.selectedPredictorsAsAStrategy;
+        if (predictions)
+            for (const {probability, trajectory, idx} of predictions.predictors) {
+                for (let i = 0; i < trajectory.length - 1; i++) {
+                    const tPos = discretize(i, [0, trajectory.length - 2], timeStep);
+                    const xPos = discretize(trajectory[i][0], xRange, numGrid);
+                    const yPos = discretize(trajectory[i][1], yRange, numGrid);
+                    const dx = trajectory[i + 1][0] - trajectory[i][0];
+                    const dy = trajectory[i + 1][1] - trajectory[i][1];
+                    if (xPos !== -1) {
+                        xData[xPos][tPos][0] += probability;
+                        xData[xPos][tPos][1][0] += dx * probability;
+                        xData[xPos][tPos][1][1] += dy * probability;
+                        xData[xPos][tPos][2].add(idx);
+                    }
+                    if (yPos !== -1) {
+                        yData[yPos][tPos][0] += probability;
+                        yData[yPos][tPos][1][0] += dx * probability;
+                        yData[yPos][tPos][1][1] += dy * probability;
+                        yData[yPos][tPos][2].add(idx);
+                    }
+                }
+            }
+        return [xData, yData, predictions?.predictors?.length || 1];
+    }).get();
 
     //endregion
 

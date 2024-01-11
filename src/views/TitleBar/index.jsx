@@ -9,7 +9,7 @@ import {viewSize} from "../../utils/layout.js";
 import {inject, observer} from "mobx-react";
 import {readJSONFile, selectFile} from "../../utils/file.js";
 import {useTranslation} from "react-i18next";
-import {Settings, Translate} from "@mui/icons-material";
+import {Settings, Signpost, Translate} from "@mui/icons-material";
 
 /**
  * @param {number} width
@@ -48,7 +48,8 @@ function TitleBar({width, store}) {
     const handleSaveCase = () => store.saveCase();
 
     return <Bar style={{width}}>
-        <Title variant={'h5'}>{t('System.SystemName')}</Title>
+        <Signpost color={"inherit"}/>
+        <Typography variant={'h5'}>{t('System.SystemName')}</Typography>
         <div style={{flex: 1}}/>
         <Button variant={'contained'}
                 sx={{mr: 1}}
@@ -84,12 +85,8 @@ const Bar = styled('div')(({theme}) => ({
     height: viewSize.appTitleBarHeight,
     backgroundColor: theme.palette.primary.main,
     borderBottomRightRadius: theme.shape.borderRadius,
+    color: theme.palette.primary.contrastText,
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingLeft: theme.spacing(1),
-}))
-
-const Title = styled(Typography)(({theme}) => ({
-    color: theme.palette.primary.contrastText,
 }))

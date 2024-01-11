@@ -34,7 +34,7 @@
       "saveCase": "保存进度"
     },
     "ContextView": {
-      "ClearContextLimit": "清除选中环境因素",
+      "ClearContextLimit": "清空勾选项",
       "GameContext": "游戏环境",
       "More": "显示更多",
       "ViewName": "环境视图"
@@ -44,6 +44,7 @@
       "CurrentTime": "当前时间",
       "GreyMap": "黑白",
       "HighPossibility": "高概率",
+      "Legend": "图例",
       "LowPossibility": "低概率",
       "MapStyle": "地图风格",
       "PossibleDest": "可能的位置",
