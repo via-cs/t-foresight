@@ -1,7 +1,7 @@
 import {inject, observer} from "mobx-react";
 import {styled} from "@mui/material/styles";
 import {Tooltip, Typography} from "@mui/material";
-import {playerColors, teamNames, teamShapes} from "../../../utils/game.js";
+import {teamNames, teamShapes} from "../../../utils/game.js";
 import {useTranslation} from "react-i18next";
 
 /**
@@ -25,7 +25,6 @@ function PlayerSelection({
             <Tooltip key={playerIndex}
                      title={players[playerIndex]}>
                 <PlayerIcon shape={teamShapes[team]}
-                            color={playerColors[team][playerIndex]}
                             src={`./icons/${players[playerIndex] || 'hero'}.webp`}
                             lifeState={playerLifeState[playerIndex]}
                             selected={store.focusedTeam === team && store.focusedPlayer === playerIndex}

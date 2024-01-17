@@ -39,7 +39,7 @@ function App({store}) {
 
     // 使用类似HTML的方式（即JSX的方式），形象地返回结果（和D3相比，更容易看懂了）
     // Root是下方定义的styled component，TitleBar/View/Waiting都是其他文件定义的组件
-    return <ThemeProvider theme={createTheme(defaultTheme(store.curColor))}>
+    return <ThemeProvider theme={createTheme(defaultTheme())}>
         <CssBaseline/>
         <Root>
             <TitleBar width={appTitleBarWidth}/>
