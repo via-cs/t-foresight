@@ -67,4 +67,4 @@ function RealTrajectoryLayer({store, mapSize, scaleBalance, onAutoFocus}) {
 }
 
 
-export default inject('store')(observer(RealTrajectoryLayer))
+export default inject('store')(observer(RealTrajectoryLayer));
