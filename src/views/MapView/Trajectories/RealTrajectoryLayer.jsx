@@ -1,5 +1,5 @@
 import {inject, observer} from "mobx-react";
-import {Arrow, Layer} from "react-konva";
+import {Arrow, Layer, Line} from "react-konva";
 import {mapDis, mapProject} from "../../../utils/game.js";
 import {useEffect} from "react";
 
@@ -47,14 +47,14 @@ function RealTrajectoryLayer({store, mapSize, scaleBalance, onAutoFocus}) {
 
     var alltra = store.allPlayerTrajectory;
     return <Layer>
-        <Arrow points={points}
-               stroke={store.curColor} // Line color
-               strokeWidth={2 * scaleBalance} // Line width
-               pointerAtEnding={true}
-               fill='red'
-               pointerLength={15 * scaleBalance} // Adjust for smaller arrowhead length
-               pointerWidth={10 * scaleBalance} // Adjust for smaller arrowhead width
-               opacity={0.4}
+        <Line points={points}
+              stroke={store.curColor} // Line color
+              strokeWidth={2 * scaleBalance} // Line width
+              pointerAtEnding={true}
+              fill='red'
+              pointerLength={15 * scaleBalance} // Adjust for smaller arrowhead length
+              pointerWidth={10 * scaleBalance} // Adjust for smaller arrowhead width
+              opacity={0.4}
         />
         <Arrow points={windowedTransformedTrajectory.flat()}
                stroke={store.curColor} // Line color

@@ -53,7 +53,7 @@ class Store {
         }[this.mapStyle] || './map.jpeg';
     }
 
-    timeWindowEnabled = false
+    timeWindowEnabled = true
     enableTimeWindow = () => this.timeWindowEnabled = true;
     disableTimeWindow = () => this.timeWindowEnabled = false;
 
@@ -252,7 +252,7 @@ class Store {
     }
 
     get selectedPlayerTrajectoryInTimeWindow() {
-        if (!this.timeWindowEnabled) return this.selectedPlayerTrajectory;
+        // if (!this.timeWindowEnabled) return this.selectedPlayerTrajectory;
 
         // Check if a player is selected
         if (this.focusedPlayer === -1 || !this.gameData) return [];
