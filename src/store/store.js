@@ -341,11 +341,11 @@ class Store {
      * @type {number[]}
      */
     selectedPredictors = [];
-    selectedPredictors2 = [];
+    comparedPredictors = [];
     selectPredictors = (ps, group) => {
         if (ps.length) this.setMapStyle('grey');
         else this.setMapStyle('colored');
-        if (group === 1) this.selectedPredictors2 = ps;
+        if (group === 1) this.comparedPredictors = ps;
         else this.selectedPredictors = ps;
     }
     predictionProjection = []
@@ -366,7 +366,7 @@ class Store {
     }
 
     get comparedPredictorsAsAStrategy() {
-        const selectedPredictors = this.selectedPredictors2.map(i => this.predictions[i]);
+        const selectedPredictors = this.comparedPredictors.map(i => this.predictions[i]);
         if (selectedPredictors.length === 0) selectedPredictors.push(...this.predictions.map(p => p));
         return {
             predictors: selectedPredictors,
@@ -426,7 +426,7 @@ class Store {
         this.viewPrediction(data.viewedPrediction);
         this.setPredGroups(data.predictionGroups);
         this.selectPredictors(data.selectedPredictors, 0);
-        this.selectPredictors(data.selectedPredictors2 || [], 1);
+        this.selectPredictors(data.comparedPredictors || [], 1);
         this.setPredProjection(data.predictionProjection);
         this.setInstancesData(data.instancesData);
     }
@@ -444,7 +444,7 @@ class Store {
             viewedPrediction: this.viewedPrediction,
             predictionGroups: this.predictionGroups,
             selectedPredictors: this.selectedPredictors,
-            selectedPredictors2: this.selectedPredictors2,
+            comparedPredictors: this.comparedPredictors,
             predictionProjection: this.predictionProjection,
             instancesData: this.instancesData,
         })

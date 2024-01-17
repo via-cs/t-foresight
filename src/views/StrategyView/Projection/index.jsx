@@ -18,7 +18,7 @@ const W = 1000, H = 1000;
  * @param {import('src/model/Strategy.js').Prediction[]} allPredictors
  * @param {number[][]} predictorGroups
  * @param {number[]} selectedPredictors
- * @param {number[]} selectedPredictors2
+ * @param {number[]} comparedPredictors
  * @param {number} viewedPredictor
  * @param {(predIds: number[], whichGroup: 0 | 1) => void} onSelectGroup
  * @param {(predId: number) => void} onViewPredictor
@@ -28,7 +28,7 @@ function PredictorsProjection({
                                   allPredictors,
                                   predictorGroups,
                                   selectedPredictors,
-                                  selectedPredictors2,
+                                  comparedPredictors,
                                   viewedPredictor,
                                   onSelectGroup,
                                   onViewPredictor,
@@ -103,7 +103,7 @@ function PredictorsProjection({
                         <Tooltip title={Array.from(store.workerTags[pId]).join(', ')}>
                             <Point fillOpacity={opacity}
                                    selected={selectedPredictors.includes(pId)}
-                                   compared={selectedPredictors2.includes(pId)}
+                                   compared={comparedPredictors.includes(pId)}
                                    viewed={viewedPredictor === pId}
                                    isDrawing={isDrawing}
                                    r={points[pId][2] * W / 20}
