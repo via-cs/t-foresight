@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useRef} from "react";
 import {Image} from 'react-konva';
 
-function useImage(src, onLoad) {
+function useImage(src, onlyNonTransparent, onLoad) {
     const image = useRef(new window.Image());
     useEffect(() => {
         image.current.src = src;

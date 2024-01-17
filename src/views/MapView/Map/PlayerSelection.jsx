@@ -26,6 +26,7 @@ function PlayerSelection({
                      title={players[playerIndex]}>
                 <PlayerIcon shape={teamShapes[team]}
                             color={playerColors[team][playerIndex]}
+                            src={`./icons/${players[playerIndex] || 'hero'}.webp`}
                             lifeState={playerLifeState[playerIndex]}
                             selected={store.focusedTeam === team && store.focusedPlayer === playerIndex}
                             onClick={() => store.focusOnPlayer(team, playerIndex)}/>
@@ -41,21 +42,21 @@ const Root = styled('div')({
     alignItems: 'center',
 })
 
-const PlayerIcon = styled('div')(({theme, shape, color, selected, lifeState}) => ({
-    width: 20,
-    height: 20,
-    backgroundColor: color,
-    marginRight: theme.spacing(1),
-    cursor: 'pointer',
-    borderRadius: shape === 'circle' ? '50%' : theme.shape.borderRadius,
-    border: 'none',
-    boxShadow: 'none',
-    transition: 'border .3s ease; box-shadow .3s ease',
-    ...(selected && {
-        border: '3px solid black',
-        boxShadow: '0 0 5px 0 rgba(0,0,0,.25)'
-    }),
-    ...(!lifeState && {
-        opacity: 0.1,
-    })
-}))
+const PlayerIcon = styled('img')(
+    ({theme, shape, selected, lifeState}) => ({
+        width: 20,
+        height: 20,
+        marginRight: theme.spacing(1),
+        cursor: 'pointer',
+        borderRadius: shape === 'rect' ? theme.shape.borderRadius : 10,
+        boxShadow: 'none',
+        transition: 'border .3s ease; box-shadow .3s ease',
+        border: '1px solid grey',
+        ...(selected && {
+            border: '2px solid black',
+            boxShadow: '0 0 5px 0 rgba(0,0,0,.25)'
+        }),
+        ...(!lifeState && {
+            opacity: 0.1,
+        })
+    }))

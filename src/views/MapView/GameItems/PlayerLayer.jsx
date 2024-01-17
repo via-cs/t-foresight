@@ -1,6 +1,8 @@
 import {inject, observer} from "mobx-react";
-import {Circle, Layer, Rect} from "react-konva";
-import {mapProject, playerColors, teamShapes} from "../../../utils/game.js";
+import {Circle, Group, Layer, Rect} from "react-konva";
+import {mapProject, teamShapes} from "../../../utils/game.js";
+import KonvaImage from "../../../components/KonvaImage.jsx";
+import {alpha} from "@mui/material";
 
 /**
  * @param {import('src/store/store.js').Store} store
@@ -12,14 +14,16 @@ import {mapProject, playerColors, teamShapes} from "../../../utils/game.js";
 function PlayerLayer({store, mapSize, scaleBalance}) {
     const playerLifeStates = store.playerLifeStates;
     const playerPositions = store.playerPositions;
+    const playerNames = store.playerNames;
     const modelSize = mapSize * 0.007;
-    const iconSize = Math.max(mapSize * 0.02 * scaleBalance, modelSize);
+    const iconSize = Math.max(mapSize * 0.025 * scaleBalance, modelSize);
     return <Layer>
         {[0, 1].map(teamIdx =>
             [0, 1, 2, 3, 4].map(playerIdx => (
                 playerLifeStates[teamIdx][playerIdx] &&
                 <PlayerIcon key={`${teamIdx}-${playerIdx}`}
-                            teamIdx={teamIdx} playerIdx={playerIdx}
+                            shape={teamShapes[teamIdx]}
+                            name={playerNames[teamIdx][playerIdx]}
                             pos={mapProject(playerPositions[teamIdx][playerIdx], mapSize)}
                             size={iconSize}
                             selected={store.focusedTeam === teamIdx && store.focusedPlayer === playerIdx}/>
@@ -31,25 +35,23 @@ function PlayerLayer({store, mapSize, scaleBalance}) {
 export default inject('store')(observer(PlayerLayer))
 
 
-function PlayerIcon({teamIdx, playerIdx, selected, pos, size}) {
-    const style = {
-        fill: playerColors[teamIdx][playerIdx],
-        ...(selected && {
-            stroke: 'black',
-            strokeWidth: size * 0.1,
-            shadowColor: 'black',
-            shadowBlur: 5,
-            shadowOffsetX: 0,
-            shadowOffsetY: 0,
-            shadowOpacity: 1,
-        })
-    }
-    if (teamShapes[teamIdx] === 'circle')
-        return <Circle x={pos[0]} y={pos[1]}
-                       radius={size / 2} shadow
-                       {...style}/>
-    else
-        return <Rect x={pos[0] - size / 2} y={pos[1] - size / 2}
-                     width={size} height={size}
-                     {...style}/>
+function PlayerIcon({shape, selected, pos, name, size}) {
+    const scale = 1.1;
+    return <Group x={pos[0]} y={pos[1]}>
+        {shape === 'rect' &&
+            <Rect x={-size / 2 * scale} y={-size / 2 * scale}
+                  width={size * scale} height={size * scale}
+                  cornerRadius={size / 8}
+                  fill={alpha('#fff', 0.5)}
+                  stroke={'black'}
+                  strokeWidth={selected ? size * 0.1 : size * 0.05}/>}
+        {shape === 'circle' &&
+            <Circle radius={size / 2 * scale}
+                    fill={alpha('#fff', 0.5)}
+                    stroke={'black'}
+                    strokeWidth={selected ? size * 0.1 : size * 0.05}/>}
+        <KonvaImage src={`./icons/${name}.webp`}
+                    x={-size / 2} y={-size / 2}
+                    w={size} h={size}/>
+    </Group>
 }
