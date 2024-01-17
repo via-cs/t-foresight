@@ -341,10 +341,12 @@ class Store {
      * @type {number[]}
      */
     selectedPredictors = [];
-    selectPredictors = ps => {
+    selectedPredictors2 = [];
+    selectPredictors = (ps, group) => {
         if (ps.length) this.setMapStyle('grey');
         else this.setMapStyle('colored');
-        this.selectedPredictors = ps;
+        if (group === 1) this.selectedPredictors2 = ps;
+        else this.selectedPredictors = ps;
     }
     predictionProjection = []
     setPredProjection = pp => this.predictionProjection = pp;
@@ -363,11 +365,21 @@ class Store {
         };
     }
 
+    get comparedPredictorsAsAStrategy() {
+        const selectedPredictors = this.selectedPredictors2.map(i => this.predictions[i]);
+        if (selectedPredictors.length === 0) selectedPredictors.push(...this.predictions.map(p => p));
+        return {
+            predictors: selectedPredictors,
+            attention: contextFactory(this.curContext, (g, i) => getStratAttention(selectedPredictors, g, i))
+        };
+    }
+
     clearPredictions = () => {
         this.setPredictions([]);
         this.viewPrediction(-1);
         this.setPredGroups([]);
-        this.selectPredictors([]);
+        this.selectPredictors([], 0);
+        this.selectPredictors([], 1);
         this.setPredProjection([])
         this.setInstancesData(initStorylineData());
     }
@@ -413,7 +425,8 @@ class Store {
         this.setPredictions(data.predictions);
         this.viewPrediction(data.viewedPrediction);
         this.setPredGroups(data.predictionGroups);
-        this.selectPredictors(data.selectedPredictors);
+        this.selectPredictors(data.selectedPredictors, 0);
+        this.selectPredictors(data.selectedPredictors2 || [], 1);
         this.setPredProjection(data.predictionProjection);
         this.setInstancesData(data.instancesData);
     }
@@ -431,6 +444,7 @@ class Store {
             viewedPrediction: this.viewedPrediction,
             predictionGroups: this.predictionGroups,
             selectedPredictors: this.selectedPredictors,
+            selectedPredictors2: this.selectedPredictors2,
             predictionProjection: this.predictionProjection,
             instancesData: this.instancesData,
         })

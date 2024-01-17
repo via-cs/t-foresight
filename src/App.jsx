@@ -3,7 +3,7 @@ import TitleBar from "./views/TitleBar";
 import {useLayout} from "./utils/layout";
 import {styled} from "@mui/material/styles";
 import PlayerSelection from "./views/MapView/Map/PlayerSelection.jsx";
-import {Button, createTheme, CssBaseline, Divider, ThemeProvider} from "@mui/material";
+import {Button, createTheme, CssBaseline, Divider, ThemeProvider, Typography} from "@mui/material";
 import Timeline from "./views/MapView/Timeline/Timeline.jsx";
 import {MapContextRenderer, MapRenderer} from "./views/MapView/index.jsx";
 import {inject, observer} from "mobx-react";
@@ -11,10 +11,10 @@ import Waiting from "./components/Waiting.jsx";
 import {useTranslation} from "react-i18next";
 import StrategyView from "./views/StrategyView/index.jsx";
 import ContextView from "./views/ContextView/index.jsx";
-import {defaultTheme} from "./utils/theme.js";
-import React from "react";
+import {defaultTheme, selectionColor} from "./utils/theme.js";
 import MapLegendTrigger from "./views/MapView/Legend/index.jsx";
 import {DisabledByDefault, OnlinePrediction} from "@mui/icons-material";
+import {LassoIcon, ShiftIcon} from "./views/StrategyView/Projection/Icons.jsx";
 
 // React本质上就是用函数表达从数据到视图的映射，每一个不同的映射称为一个组件。
 // 当数据发生变化时，React会自动处理视图的变化，并刷新组件的渲染。
@@ -56,6 +56,14 @@ function App({store}) {
             </View>
             <View title={t('System.StrategyView.ViewName')} {...strategyViewPos}
                   tools={[
+                      <>
+                          <LassoIcon fontSize={'0.8125rem'} htmlColor={selectionColor[0]}/>
+                          <Typography sx={{ml: .5}}>{t('System.StrategyView.View')}</Typography>
+                      </>,
+                      <>
+                          <ShiftIcon fontSize={'0.8125rem'} htmlColor={selectionColor[1]}/>
+                          <Typography sx={{ml: .5}}>{t('System.StrategyView.Compare')}</Typography>
+                      </>,
                       // <IconButton onClick={store.changeStrategyDetailView}>
                       //     <TableView/>
                       // </IconButton>,

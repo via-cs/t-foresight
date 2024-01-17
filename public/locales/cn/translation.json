@@ -54,9 +54,11 @@
       "ViewName": "地图视图"
     },
     "StrategyView": {
+      "Compare": "对比",
       "PredNum": "{{num}}条路",
       "Predict": "预测",
       "SID": "策略{{sId}}",
+      "View": "查看",
       "ViewName": "策略视图"
     },
     "SystemName": "DOTA 2 玩家轨迹预测分析系统"

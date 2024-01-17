@@ -70,6 +70,8 @@ const Toolbar = styled('div')(({theme}) => ({
 }));
 
 const Tool = styled('div')(({theme}) => ({
+    display: 'flex',
+    alignItems: 'center',
     marginRight: theme.spacing(1),
 }));
 

@@ -54,9 +54,11 @@
       "ViewName": "Map View"
     },
     "StrategyView": {
+      "Compare": "Comp.",
       "PredNum": "{{num}} pred.",
-      "Predict": "Predict",
+      "Predict": "Pred.",
       "SID": "Strat. {{sId}}",
+      "View": "View",
       "ViewName": "Strategy View"
     },
     "SystemName": "RoadSign for DOTA 2"

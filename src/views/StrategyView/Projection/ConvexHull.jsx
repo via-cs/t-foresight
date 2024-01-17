@@ -37,7 +37,7 @@ function ConvexHull({predictorGroup, points, selected, onSelectGroup, tags, onCo
                     width={W / 200}
                     selectable
                     selected={sameArray(selected, predictorGroup)}
-                    onClick={() => onSelectGroup(predictorGroup)}
+                    onClick={e => onSelectGroup(predictorGroup, e.button === 0 ? 0 : 1)}
                     onContextMenu={onContextMenu}/>
     </Tooltip>
 }

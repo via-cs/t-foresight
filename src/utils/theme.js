@@ -77,3 +77,8 @@ export const defaultTheme = secondary => ({
         }
     }
 })
+
+export const selectionColor = [
+    '#2196f3',
+    '#f44336',
+]

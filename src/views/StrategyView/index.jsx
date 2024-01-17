@@ -19,6 +19,7 @@ function StrategyView({store}) {
                 <PredictorsProjection allPredictors={store.predictions}
                                       predictorGroups={store.predictionGroups}
                                       selectedPredictors={store.selectedPredictors}
+                                      selectedPredictors2={store.selectedPredictors2}
                                       viewedPredictor={store.viewedPrediction}
                                       onSelectGroup={store.selectPredictors}
                                       onViewPredictor={store.viewPrediction}/>
