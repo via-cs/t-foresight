@@ -45,9 +45,9 @@ function MapRenderer({
             <Layer>
                 <KonvaImage src={store.mapImage} w={size} h={size}/>
             </Layer>
-            {store.selectedPredictorsAsAStrategy && <StrategyRenderer mapSize={size}
-                                                                      strat={store.selectedPredictorsAsAStrategy}
-                                                                      onAutoFocus={autoFocus}/>}
+            {store.selectedPredictors.length !== 0 && <StrategyRenderer mapSize={size}
+                                                                        strat={store.selectedPredictorsAsAStrategy}
+                                                                        onAutoFocus={autoFocus}/>}
             {store.viewedPrediction !== -1 && <PredictedTrajectoryLayer mapSize={size}
                                                                         scaleBalance={scaleBalance}
                                                                         prediction={store.predictions[store.viewedPrediction].trajectory}

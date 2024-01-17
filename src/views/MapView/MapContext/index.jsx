@@ -37,10 +37,12 @@ function MapContext({store, size, mapRenderer, numGrid = 50, timeStep = 5}) {
                                   y={-gridSize / 2} height={gridSize}
                                   stroke={theme.palette.background.default} strokeWidth={2}
                                   fill={alpha(store.curColor || '#fff', Math.min(1, xData[g][t][0] * amp))}/>
-                            <Arrow stroke={'#fff'} strokeWidth={1}
-                                   pointerWidth={4 * arrowSize} pointerLength={4 * arrowSize}
-                                   points={[-gridSize / 2 * arrowSize, 0, gridSize / 2 * arrowSize, 0]}
-                                   rotation={rot(xData[g][t][1])}/>
+                            {(store.viewedPrediction === -1 || xData[g][t][2].has(store.viewedPrediction)) &&
+                                <Arrow stroke={'#fff'} strokeWidth={1}
+                                       pointerWidth={4 * arrowSize}
+                                       pointerLength={4 * arrowSize}
+                                       points={[-gridSize / 2 * arrowSize, 0, gridSize / 2 * arrowSize, 0]}
+                                       rotation={rot(xData[g][t][1])}/>}
                         </Group>
                     ))}
                     {curPosX > xRange[0] && curPosX < xRange[1] &&
@@ -61,10 +63,11 @@ function MapContext({store, size, mapRenderer, numGrid = 50, timeStep = 5}) {
                                   y={-gridSize / 2} height={gridSize}
                                   stroke={theme.palette.background.default} strokeWidth={2}
                                   fill={alpha(store.curColor || '#fff', Math.min(1, yData[g][t][0] * amp))}/>
-                            <Arrow stroke={'#fff'} strokeWidth={1}
-                                   pointerWidth={4 * arrowSize} pointerLength={4 * arrowSize}
-                                   points={[-gridSize / 2 * arrowSize, 0, gridSize / 2 * arrowSize, 0]}
-                                   rotation={rot(yData[g][t][1])}/>
+                            {(store.viewedPrediction === -1 || yData[g][t][2].has(store.viewedPrediction)) &&
+                                <Arrow stroke={'#fff'} strokeWidth={1}
+                                       pointerWidth={4 * arrowSize} pointerLength={4 * arrowSize}
+                                       points={[-gridSize / 2 * arrowSize, 0, gridSize / 2 * arrowSize, 0]}
+                                       rotation={rot(yData[g][t][1])}/>}
                         </Group>
                     ))}
                     {curPosY > yRange[0] && curPosY < yRange[1] &&

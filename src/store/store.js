@@ -352,11 +352,11 @@ class Store {
     setInstancesData = id => this.instancesData = id;
 
     /**
-     * @return {import('src/model/Strategy.d.ts').Strategy | null}
+     * @return {import('src/model/Strategy.d.ts').Strategy}
      */
     get selectedPredictorsAsAStrategy() {
         const selectedPredictors = this.selectedPredictors.map(i => this.predictions[i]);
-        if (selectedPredictors.length === 0) return null;
+        if (selectedPredictors.length === 0) selectedPredictors.push(...this.predictions.map(p => p));
         return {
             predictors: selectedPredictors,
             attention: contextFactory(this.curContext, (g, i) => getStratAttention(selectedPredictors, g, i))
