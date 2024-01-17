@@ -19,15 +19,15 @@ export const viewSize = {
 export function useLayout() {
     const [layout, setLayout] = useState([window.innerWidth, window.innerHeight]);
     useEffect(() => {
-        const resize = () => {
-            if (window.innerWidth !== layout[0] || window.innerHeight !== layout[1])
-                setLayout([window.innerWidth, window.innerHeight]);
-        }
+        const resize = () => setLayout(l =>
+            l[0] === window.innerWidth && l[1] === window.innerHeight
+                ? l
+                : [window.innerWidth, window.innerHeight]
+        )
         resize();
         window.addEventListener('resize', resize);
         return () => window.removeEventListener('resize', resize);
     }, []);
-
     const mapSize = layout[1]
         - viewSize.spacing * 5
         - viewSize.appTitleBarHeight
