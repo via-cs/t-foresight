@@ -66,6 +66,14 @@ class Store {
     clearTag = (idx) => idx.forEach(i => this.workerTags[i].clear());
     setTags = (tags) => this.workerTags = tags.map(tag => new Set(tag));
     saveTags = () => this.workerTags.map(tagSet => Array.from(tagSet));
+
+    contextSort = 'default';
+    setContextSort = cs => this.contextSort = cs;
+    autoDetermineContextSort = () => {
+        if (this.selectedPredictors.length === 0 && this.comparedPredictors.length === 0) this.setContextSort('default');
+        else if (this.selectedPredictors.length !== 0 && this.comparedPredictors.length !== 0) this.setContextSort('highDiffFirst');
+        else this.setContextSort('highAttFirst');
+    }
     //endregion
 
     //region game context
@@ -347,6 +355,8 @@ class Store {
         else this.setMapStyle('colored');
         if (group === 1) this.comparedPredictors = ps;
         else this.selectedPredictors = ps;
+
+        this.autoDetermineContextSort();
     }
     predictionProjection = []
     setPredProjection = pp => this.predictionProjection = pp;
@@ -429,12 +439,14 @@ class Store {
         this.selectPredictors(data.comparedPredictors || [], 1);
         this.setPredProjection(data.predictionProjection);
         this.setInstancesData(data.instancesData);
+        this.setContextSort(data.contextSort || this.contextSort);
     }
 
     saveCase() {
         const data = JSON.stringify({
             match_id: this.gameData.gameInfo.match_id,
             tags: this.saveTags(),
+            contextSort: this.contextSort,
             focusedTeam: this.focusedTeam,
             focusedPlayer: this.focusedPlayer,
             frame: this.frame,

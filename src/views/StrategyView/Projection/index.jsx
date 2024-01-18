@@ -75,10 +75,7 @@ function PredictorsProjection({
     return <Fragment>
         <svg viewBox={`0 0 ${W} ${H}`} width={'100%'} height={'100%'}
              onContextMenu={handleClear}
-             onMouseDown={e => {
-                 if (e.shiftKey) setShift(true);
-                 handleMouseDown(e);
-             }}
+             onMouseDown={handleMouseDown}
              onMouseMove={handleMouseMove}
              onMouseUp={e => {
                  if (isDrawing) onSelectGroup(preSelectedPointsIdx, shift ? 1 : 0);

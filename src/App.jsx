@@ -15,6 +15,7 @@ import {defaultTheme, selectionColor} from "./utils/theme.js";
 import MapLegendTrigger from "./views/MapView/Legend/index.jsx";
 import {DisabledByDefault, OnlinePrediction} from "@mui/icons-material";
 import {LassoIcon, ShiftIcon} from "./views/StrategyView/Projection/Icons.jsx";
+import ContextSortMenu from "./views/ContextView/SortMenu.jsx";
 
 // React本质上就是用函数表达从数据到视图的映射，每一个不同的映射称为一个组件。
 // 当数据发生变化时，React会自动处理视图的变化，并刷新组件的渲染。
@@ -78,6 +79,7 @@ function App({store}) {
             </View>
             <View title={t('System.ContextView.ViewName')} {...contextViewPos}
                   tools={[
+                      <ContextSortMenu/>,
                       <Button variant={'text'}
                               onClick={store.clearContextLimit}
                               startIcon={<DisabledByDefault/>}>

@@ -37,6 +37,13 @@
       "ClearContextLimit": "Clear Checks",
       "GameContext": "Environment",
       "More": "show more",
+      "Sort": {
+        "default": "Default",
+        "highAttFirst": "Attention: High to Low",
+        "highDiffFirst": "Difference: High to Low",
+        "lowAttFirst": "Attention: Low to High",
+        "lowDiffFirst": "Difference: Low to High"
+      },
       "ViewName": "Context View"
     },
     "MapView": {

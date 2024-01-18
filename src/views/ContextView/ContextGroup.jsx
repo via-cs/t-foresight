@@ -24,7 +24,7 @@ function calHeight(open, displayCnt, totalCnt) {
     return displayCnt * 60 + 101.75;
 }
 
-function ContextGroup({store, colorLabel, groupName, context, attention, curAtt}) {
+function ContextGroup({store, colorLabel, groupName, context, attention, compAtt}) {
     const {open, displayCnt, expand, toggle} = useExpand(Object.keys(context).length);
     const {t} = useTranslation();
     const sortedContextKeys = Object.keys(context).sort((a, b) => attention[b]?.avg - attention[a]?.avg);
@@ -34,7 +34,10 @@ function ContextGroup({store, colorLabel, groupName, context, attention, curAtt}
                       sx={{height: calHeight(open, displayCnt, Object.keys(context).length), mt: 1}}>
         <AttentionItem colorLabel={colorLabel}
                        label={groupName}
-                       attention={sortedContextKeys.slice(0, 3).map(key => attention[key]?.avg)}/>
+                       attention={sortedContextKeys.slice(0, 3).map(key => attention[key]?.avg)}
+            // if you want to get the overall attention data, just uncomment this line
+            // compAtt={sortedContextKeys.slice(0, 3).map(key => attention[key]?.avg)}
+        />
         {open && <Divider dir={'horizontal'} sx={{m: 0.5}}/>}
         <Collapse in={open}>
             {sortedContextKeys
@@ -51,7 +54,7 @@ function ContextGroup({store, colorLabel, groupName, context, attention, curAtt}
                                    label={t(`Game.${key}`)}
                                    value={context[key]}
                                    attention={attention[key]}
-                                   curAtt={curAtt[key]}/>
+                                   compAtt={compAtt[key]}/>
                 ))}
             {displayCnt < Object.keys(context).length &&
                 <Button startIcon={<KeyboardArrowDown/>}

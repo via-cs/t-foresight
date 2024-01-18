@@ -3,7 +3,7 @@ import {styled} from "@mui/material/styles";
 import {Box, Slider as MuiSlider, Typography} from "@mui/material";
 import {Check, Close} from "@mui/icons-material";
 
-function AttentionItem({store, colorLabel, label, value, attention, curAtt}) {
+function AttentionItem({store, colorLabel, label, value, attention, compAtt}) {
     let selectAttention = [];
     let isInclude = false;
     if (store.viewedPrediction !== -1) {
@@ -54,7 +54,7 @@ function AttentionItem({store, colorLabel, label, value, attention, curAtt}) {
                     <Typography noWrap>({parseInt(value[0] || 0)}, {parseInt(value[1] || 0)})</Typography>}
             </Box>
             <Box flex={1} position={'relative'}>
-                {curAtt && <Anchor style={{left: `${curAtt * 100}%`}}/>}
+                {compAtt && <Anchor style={{left: `${compAtt * 100}%`}}/>}
                 {attention && attention.avg && <Slider min={0} max={1}
                                                        value={[attention.min, attention.max]}
                                                        valueLabelDisplay={'auto'}

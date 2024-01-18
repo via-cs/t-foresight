@@ -37,6 +37,13 @@
       "ClearContextLimit": "清空勾选项",
       "GameContext": "游戏环境",
       "More": "显示更多",
+      "Sort": {
+        "default": "默认排序",
+        "highAttFirst": "关注度：从高到低",
+        "highDiffFirst": "区分度：从高到低",
+        "lowAttFirst": "关注度：从低到高",
+        "lowDiffFirst": "区分度：从低到高"
+      },
       "ViewName": "环境视图"
     },
     "MapView": {
