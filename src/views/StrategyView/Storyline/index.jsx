@@ -5,6 +5,7 @@ import {Group, Layer, Path, Rect, Stage, Text} from "react-konva";
 import {styled, useTheme} from "@mui/material/styles";
 import useStorylineLayout from "./useLayout.js";
 import useStorylineLines from "./useLines.js";
+import {selectionColor} from "../../../utils/theme.js";
 
 function createPath(line) {
     let path = `M${line[0][0]} ${line[0][1]}`;
@@ -64,28 +65,30 @@ function PredictorsStoryline({store}) {
                     </Group>
 
                 ))}
-                {lines.map((line, lId) => <Group key={lId}>
-                    <Text x={line[0][0] - 15} y={line[0][1] - 8}
-                          width={30} height={10}
-                          align={'center'}
-                          rotation={-45}
-                          fontSize={store.viewedPrediction === -1
-                              ? config.defaultFontSize
-                              : store.viewedPrediction === lId
-                                  ? config.highlightFontSize
-                                  : 0}
-                          text={(lId + 1).toFixed(0)}/>
-                    <Path data={createPath(line)}
-                          onMouseEnter={() => store.viewPrediction(lId)}
-                          onMouseLeave={() => store.viewPrediction(-1)}
-                          opacity={Math.min(1, store.predictions[lId]?.probability * 10)}
-                          stroke={store.viewedPrediction === lId
-                              ? theme.palette.secondary.main
-                              : store.selectedPredictors.includes(lId)
-                                  ? theme.palette.success.main
-                                  : theme.palette.text.primary}
-                          strokeWidth={(store.selectedPredictors.includes(lId) || store.viewedPrediction === lId) ? 4 : 2}/>
-                </Group>)}
+                {lines.map((line, lId) => {
+                    const selected = store.selectedPredictors.includes(lId),
+                        compared = store.comparedPredictors.includes(lId),
+                        viewed = store.viewedPredictions.includes(lId);
+                    return <Group key={lId}>
+                        <Text x={line[0][0] - 15} y={line[0][1] - 8}
+                              width={30} height={10}
+                              align={'center'}
+                              rotation={-45}
+                              fontSize={store.viewedPredictions.length === 0 ? config.defaultFontSize
+                                  : viewed ? config.highlightFontSize
+                                      : 0}
+                              text={(lId + 1).toFixed(0)}/>
+                        <Path data={createPath(line)}
+                              onMouseEnter={() => store.viewPredictions([lId])}
+                              onMouseLeave={() => store.viewPredictions([])}
+                              opacity={Math.min(1, store.predictions[lId]?.probability * 10)}
+                              stroke={viewed ? theme.palette.secondary.main
+                                  : selected ? selectionColor[0]
+                                      : compared ? selectionColor[1]
+                                          : theme.palette.text.primary}
+                              strokeWidth={(selected || compared || viewed) ? 4 : 2}/>
+                    </Group>
+                })}
             </Layer>
         </Stage>
     </Container>

@@ -2,7 +2,6 @@ import {inject, observer} from "mobx-react";
 import {Divider} from "@mui/material";
 import {styled} from "@mui/material/styles";
 import PredictorsProjection from "./Projection/index.jsx";
-import PredictorsMatrix from "./Matrix/index.jsx";
 import PredictorsStoryline from "./Storyline/index.jsx";
 
 /**
@@ -20,7 +19,7 @@ function StrategyView({store}) {
                                       predictorGroups={store.predictionGroups}
                                       selectedPredictors={store.selectedPredictors}
                                       comparedPredictors={store.comparedPredictors}
-                                      viewedPredictor={store.viewedPrediction}
+                                      viewedPredictors={store.viewedPredictions}
                                       onSelectGroup={store.selectPredictors}
                                       onViewPredictor={store.viewPrediction}/>
             </Wrapper>
@@ -28,7 +27,6 @@ function StrategyView({store}) {
         <Divider sx={{m: 1}}/>
         <Detail>
             {store.strategyViewDesign === 'storyline' && <PredictorsStoryline/>}
-            {store.strategyViewDesign === 'matrix' && <PredictorsMatrix/>}
         </Detail>
     </Container>
 }

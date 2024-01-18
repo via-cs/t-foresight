@@ -65,9 +65,6 @@ function App({store}) {
                           <ShiftIcon fontSize={'0.8125rem'} htmlColor={selectionColor[1]}/>
                           <Typography sx={{ml: .5}}>{t('System.StrategyView.Compare')}</Typography>
                       </>,
-                      // <IconButton onClick={store.changeStrategyDetailView}>
-                      //     <TableView/>
-                      // </IconButton>,
                       <Button variant={'text'}
                               disabled={store.focusedPlayer === -1 || store.focusedTeam === -1 || store.gameData === null || !store.playerLifeStates[store.focusedTeam][store.focusedPlayer]}
                               onClick={store.predict}

@@ -1,10 +1,11 @@
 import {inject, observer} from "mobx-react";
 import {Layer, Stage} from "react-konva";
-import {styled} from "@mui/material/styles";
+import {styled, useTheme} from "@mui/material/styles";
 import useAxisRange from "./useAxisRange.js";
 import MapContextMatrix from "./Matrix.jsx";
 import MapContextCorner from "./Corner.jsx";
 import useGeneralDir from "./useGeneralDir.js";
+import useKeyPressed from "../../../utils/useKeyPressed.js";
 
 const space = 3;
 const amp = 10;
@@ -21,6 +22,10 @@ function MapContext({store, size, mapRenderer, numGrid = 50, timeStep = 5}) {
 
     const generalDir = useGeneralDir(xData, yData);
 
+    const shift = useKeyPressed('Shift');
+
+    const theme = useTheme();
+
     return <Root>
         <Stage width={size} height={size}>
             <Layer>
@@ -29,47 +34,47 @@ function MapContext({store, size, mapRenderer, numGrid = 50, timeStep = 5}) {
                                       x={generalDir.endsWith('l') ? timeStep * disStep : 0} y={0} direction={'top'}
                                       gridSize={gridSize} space={space} arrowSize={arrowSize}
                                       data={xData}
-                                      color={store.curColor} amp={amp}
+                                      color={theme.palette.secondary.main} amp={amp}
                                       curPos={curPosX} range={xRange}
-                                      viewedPredictions={[store.viewedPrediction]}
-                                      onEnter={console.log}
-                                      onLeave={console.log}
-                                      onClick={console.log}/>}
+                                      viewedPredictions={store.viewedPredictions}
+                                      onEnter={(_, __, d) => store.viewPredictions(Array.from(d[2]))}
+                                      onLeave={() => store.viewPredictions([])}
+                                      onClick={(_, __, d) => store.selectPredictors(Array.from(d[2]), Number(shift))}/>}
                 {generalDir.endsWith('l') &&
                     <MapContextMatrix numGrid={numGrid} timeStep={timeStep}
                                       x={0} y={generalDir.startsWith('t') ? timeStep * disStep : 0} direction={'left'}
                                       gridSize={gridSize} space={space} arrowSize={arrowSize}
                                       data={yData}
-                                      color={store.curColor} amp={amp}
+                                      color={theme.palette.secondary.main} amp={amp}
                                       curPos={curPosY} range={yRange}
-                                      viewedPredictions={[store.viewedPrediction]}
-                                      onEnter={console.log}
-                                      onLeave={console.log}
-                                      onClick={console.log}/>}
+                                      viewedPredictions={store.viewedPredictions}
+                                      onEnter={(_, __, d) => store.viewPredictions(Array.from(d[2]))}
+                                      onLeave={() => store.viewPredictions([])}
+                                      onClick={(_, __, d) => store.selectPredictors(Array.from(d[2]), Number(shift))}/>}
                 {generalDir.endsWith('r') &&
                     <MapContextMatrix numGrid={numGrid} timeStep={timeStep}
                                       x={mapSize + space} y={generalDir.startsWith('t') ? timeStep * disStep : 0}
                                       direction={'right'}
                                       gridSize={gridSize} space={space} arrowSize={arrowSize}
                                       data={yData}
-                                      color={store.curColor} amp={amp}
+                                      color={theme.palette.secondary.main} amp={amp}
                                       curPos={curPosY} range={yRange}
-                                      viewedPredictions={[store.viewedPrediction]}
-                                      onEnter={console.log}
-                                      onLeave={console.log}
-                                      onClick={console.log}/>}
+                                      viewedPredictions={store.viewedPredictions}
+                                      onEnter={(_, __, d) => store.viewPredictions(Array.from(d[2]))}
+                                      onLeave={() => store.viewPredictions([])}
+                                      onClick={(_, __, d) => store.selectPredictors(Array.from(d[2]), Number(shift))}/>}
                 {generalDir.startsWith('b') &&
                     <MapContextMatrix numGrid={numGrid} timeStep={timeStep}
                                       x={generalDir.endsWith('l') ? timeStep * disStep : 0} y={mapSize + space}
                                       direction={'bottom'}
                                       gridSize={gridSize} space={space} arrowSize={arrowSize}
                                       data={xData}
-                                      color={store.curColor} amp={amp}
+                                      color={theme.palette.secondary.main} amp={amp}
                                       curPos={curPosX} range={xRange}
-                                      viewedPredictions={[store.viewedPrediction]}
-                                      onEnter={console.log}
-                                      onLeave={console.log}
-                                      onClick={console.log}/>}
+                                      viewedPredictions={store.viewedPredictions}
+                                      onEnter={(_, __, d) => store.viewPredictions(Array.from(d[2]))}
+                                      onLeave={() => store.viewPredictions([])}
+                                      onClick={(_, __, d) => store.selectPredictors(Array.from(d[2]), Number(shift))}/>}
                 {generalDir === 'tl' &&
                     <MapContextCorner timeStep={timeStep}
                                       gridSize={gridSize} space={space} direction={'tl'}

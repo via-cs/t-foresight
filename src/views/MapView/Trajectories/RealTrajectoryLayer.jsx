@@ -2,6 +2,7 @@ import {inject, observer} from "mobx-react";
 import {Arrow, Layer, Line} from "react-konva";
 import {mapDis, mapProject} from "../../../utils/game.js";
 import {useEffect} from "react";
+import {useTheme} from "@mui/material/styles";
 
 /**
  * @param {import('src/store/store').Store} store
@@ -46,9 +47,11 @@ function RealTrajectoryLayer({store, mapSize, scaleBalance, onAutoFocus}) {
     //    - the API documentation of an arrow shape: https://konvajs.org/api/Konva.Arrow.html
 
     var alltra = store.allPlayerTrajectory;
+
+    const theme = useTheme();
     return <Layer>
         <Line points={points}
-              stroke={store.curColor} // Line color
+              stroke={theme.palette.secondary.main} // Line color
               strokeWidth={2 * scaleBalance} // Line width
               pointerAtEnding={true}
               fill='red'
@@ -57,7 +60,7 @@ function RealTrajectoryLayer({store, mapSize, scaleBalance, onAutoFocus}) {
               opacity={0.4}
         />
         <Arrow points={windowedTransformedTrajectory.flat()}
-               stroke={store.curColor} // Line color
+               stroke={theme.palette.secondary.main} // Line color
                strokeWidth={2 * scaleBalance} // Line width
                pointerAtEnding={true}
                fill={'red'}

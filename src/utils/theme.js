@@ -6,7 +6,7 @@ export const defaultTheme = secondary => ({
             main: '#271c1c',
         },
         secondary: {
-            main: secondary || '#d500f9',
+            main: secondary || '#336c11',
         },
         background: {
             default: '#f0f0f0',

@@ -7,7 +7,7 @@ import RealTrajectoryLayer from "../Trajectories/RealTrajectoryLayer.jsx";
 import StrategyRenderer from "../Heatmap/StrategyRenderer.jsx";
 import {useEffect, useRef} from "react";
 import PredictedTrajectoryLayer from "../Trajectories/PredictedTrajectoryLayer.jsx";
-import {styled} from "@mui/material/styles";
+import {styled, useTheme} from "@mui/material/styles";
 
 /**
  * @param {import('src/store/store.js').Store} store
@@ -33,6 +33,8 @@ function MapRenderer({
         onNav(displayRange.x, displayRange.y)
     }, [onNav, displayRange]);
 
+    const theme = useTheme();
+
     return <Root>
         <Stage width={size} height={size}
                ref={n => ref.current = n}
@@ -48,10 +50,8 @@ function MapRenderer({
             {store.selectedPredictors.length !== 0 && <StrategyRenderer mapSize={size}
                                                                         strat={store.selectedPredictorsAsAStrategy}
                                                                         onAutoFocus={autoFocus}/>}
-            {store.viewedPrediction !== -1 && <PredictedTrajectoryLayer mapSize={size}
-                                                                        scaleBalance={scaleBalance}
-                                                                        prediction={store.predictions[store.viewedPrediction].trajectory}
-                                                                        color={store.curColor}/>}
+            <PredictedTrajectoryLayer mapSize={size}
+                                      scaleBalance={scaleBalance}/>
             {store.focusedPlayer !== -1 && <RealTrajectoryLayer mapSize={size}
                                                                 scaleBalance={scaleBalance}
                                                                 onAutoFocus={autoFocus}/>}

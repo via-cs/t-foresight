@@ -48,7 +48,7 @@ function TitleBar({width, store}) {
     const handleSaveCase = () => store.saveCase();
 
     return <Bar style={{width}}>
-        <Signpost color={"inherit"}/>
+        <Signpost color={"secondary"}/>
         <Typography variant={'h5'}>{t('System.SystemName')}</Typography>
         <div style={{flex: 1}}/>
         <Button variant={'contained'}

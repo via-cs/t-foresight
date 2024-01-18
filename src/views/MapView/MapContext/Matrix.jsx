@@ -75,7 +75,7 @@ function MapContextMatrix({
                            pointerWidth={4 * arrowSize}
                            pointerLength={4 * arrowSize}
                            points={[-gridSize / 2 * arrowSize, 0, gridSize / 2 * arrowSize, 0]}
-                           rotation={rot(data[g][t][1])}/>}
+                           rotation={data[g][t][0] === 0 ? 0 : rot(data[g][t][1])}/>}
             </Group>
         })}
         {curPos > range[0] && curPos < range[1] &&

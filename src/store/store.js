@@ -57,9 +57,6 @@ class Store {
     enableTimeWindow = () => this.timeWindowEnabled = true;
     disableTimeWindow = () => this.timeWindowEnabled = false;
 
-    strategyViewDesign = 'storyline'
-    changeStrategyDetailView = () => this.strategyViewDesign = (this.strategyViewDesign === 'matrix') ? 'storyline' : 'matrix';
-
     workerTags = newArr(20, () => new Set());
     addTag = (idx, tag) => idx.forEach(i => this.workerTags[i].add(tag));
     removeTag = (idx, tag) => idx.forEach(i => this.workerTags[i].delete(tag));
@@ -337,8 +334,23 @@ class Store {
      */
     predictions = []
     setPredictions = pred => this.predictions = pred.map((p, idx) => ({idx, ...p}));
-    viewedPrediction = -1;
-    viewPrediction = p => this.viewedPrediction = p;
+
+    get viewedPrediction() {
+        if (this.viewedPredictions.length === 1) return this.viewedPredictions[0];
+        else return -1;
+    }
+
+    viewPrediction = p => this.viewPredictions(p === -1 ? [] : [p]);
+    /**
+     * hovered predictions
+     * @type {number[]}
+     */
+    viewedPredictions = [];
+    viewPredictions = ps => {
+        const uniPs = Array.from(new Set(ps));
+        if (uniPs.length === this.viewedPredictions.length && uniPs.every(p => this.viewedPredictions.includes(p))) return;
+        this.viewedPredictions = ps;
+    }
     /**
      * prediction groups
      * @type {number[][]}
@@ -349,6 +361,9 @@ class Store {
      * @type {number[]}
      */
     selectedPredictors = [];
+    /**
+     * @type {number[]}
+     */
     comparedPredictors = [];
     selectPredictors = (ps, group) => {
         if (ps.length) this.setMapStyle('grey');
@@ -433,7 +448,7 @@ class Store {
         this.setTrajTimeWindow(data.trajTimeWindow);
         this.setContextLimit(data.contextLimit);
         this.setPredictions(data.predictions);
-        this.viewPrediction(data.viewedPrediction);
+        this.viewPredictions([]);
         this.setPredGroups(data.predictionGroups);
         this.selectPredictors(data.selectedPredictors, 0);
         this.selectPredictors(data.comparedPredictors || [], 1);
@@ -453,7 +468,6 @@ class Store {
             trajTimeWindow: this.trajTimeWindow,
             contextLimit: Array.from(this.contextLimit),
             predictions: this.predictions,
-            viewedPrediction: this.viewedPrediction,
             predictionGroups: this.predictionGroups,
             selectedPredictors: this.selectedPredictors,
             comparedPredictors: this.comparedPredictors,

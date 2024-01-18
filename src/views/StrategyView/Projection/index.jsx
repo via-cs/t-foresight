@@ -19,7 +19,7 @@ const W = 1000, H = 1000;
  * @param {number[][]} predictorGroups
  * @param {number[]} selectedPredictors
  * @param {number[]} comparedPredictors
- * @param {number} viewedPredictor
+ * @param {number[]} viewedPredictors
  * @param {(predIds: number[], whichGroup: 0 | 1) => void} onSelectGroup
  * @param {(predId: number) => void} onViewPredictor
  * @constructor
@@ -29,7 +29,7 @@ function PredictorsProjection({
                                   predictorGroups,
                                   selectedPredictors,
                                   comparedPredictors,
-                                  viewedPredictor,
+                                  viewedPredictors,
                                   onSelectGroup,
                                   onViewPredictor,
                                   store,
@@ -101,7 +101,7 @@ function PredictorsProjection({
                             <Point fillOpacity={opacity}
                                    selected={selectedPredictors.includes(pId)}
                                    compared={comparedPredictors.includes(pId)}
-                                   viewed={viewedPredictor === pId}
+                                   viewed={viewedPredictors.includes(pId)}
                                    isDrawing={isDrawing}
                                    r={points[pId][2] * W / 20}
                                    onContextMenu={handleContextMenu([pId])}
