@@ -3,6 +3,7 @@ import {alpha} from "@mui/material";
 import newArr from "../../../utils/newArr.js";
 import {useTheme} from "@mui/material/styles";
 import {useCallback} from "react";
+import {selectionColor} from "../../../utils/theme.js";
 
 const rot = vec => Math.atan(-vec[1] / vec[0]) / Math.PI * 180 - (vec[0] < 0 ? 180 : 0)
 
@@ -14,7 +15,6 @@ const rot = vec => Math.atan(-vec[1] / vec[0]) / Math.PI * 180 - (vec[0] < 0 ? 1
  * @param {number} y
  * @param {'left' | 'right' | 'top' | 'bottom'} direction
  * @param {number} gridSize
- * @param {string} color
  * @param {number} space
  * @param {[number, [number, number], Set<number>][][]} data
  * @param {number} arrowSize
@@ -32,7 +32,6 @@ function MapContextMatrix({
                               numGrid,
                               timeStep,
                               x, y,
-                              color,
                               direction,
                               gridSize,
                               space,
@@ -69,7 +68,7 @@ function MapContextMatrix({
                 <Rect x={-gridSize / 2} width={gridSize}
                       y={-gridSize / 2} height={gridSize}
                       stroke={theme.palette.background.default} strokeWidth={2}
-                      fill={alpha(color || '#fff', Math.min(1, data[g][t][0] * amp))}/>
+                      fill={alpha(selectionColor[0] || '#fff', Math.min(1, data[g][t][0] * amp))}/>
                 {(viewedPredictions.length === 0 || viewedPredictions[0] === -1 || viewedPredictions.some(p => data[g][t][2].has(p))) &&
                     <Arrow stroke={'#fff'} strokeWidth={1}
                            pointerWidth={4 * arrowSize}
@@ -79,7 +78,7 @@ function MapContextMatrix({
             </Group>
         })}
         {curPos > range[0] && curPos < range[1] &&
-            <Line stroke={color} strokeWidth={2}
+            <Line stroke={selectionColor[0]} strokeWidth={2}
                   points={[].includes(direction)
                       ? [
                           mapSize * (curPos - range[0]) / (range[1] - range[0]), 0,

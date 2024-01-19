@@ -1,8 +1,9 @@
 import {inject, observer} from "mobx-react";
-import {Arrow, Layer, Line} from "react-konva";
-import {mapDis, mapProject} from "../../../utils/game.js";
+import {Layer} from "react-konva";
+import {mapDis} from "../../../utils/game.js";
 import {useEffect} from "react";
 import {useTheme} from "@mui/material/styles";
+import Traj from "./Traj.jsx";
 
 /**
  * @param {import('src/store/store').Store} store
@@ -20,16 +21,8 @@ function RealTrajectoryLayer({store, mapSize, scaleBalance, onAutoFocus}) {
     //    But you need to get several future positions of the selected player.
     //    e.g., const trajectory = store.selectedPlayerTrajectory;
 
-    //player current position
-    const playerPositions = store.playerPositions;
-    //current frame
-    const curfra = store.curFrame;
-    // selected player trajectory
     const tra = store.selectedPlayerTrajectory;
     const windowedTra = store.selectedPlayerTrajectoryInTimeWindow;
-    const transformedTrajectory = tra.map(point => mapProject(point, mapSize));
-    const windowedTransformedTrajectory = windowedTra.map(point => mapProject(point, mapSize));
-    const points = transformedTrajectory.flatMap(([x, y]) => [Math.max(x * 0.02 * scaleBalance, x), Math.max(y * 0.02 * scaleBalance, y)]);
 
     useEffect(() => {
         const centerPos = store.playerPositions[store.focusedTeam][store.focusedPlayer];
@@ -40,32 +33,23 @@ function RealTrajectoryLayer({store, mapSize, scaleBalance, onAutoFocus}) {
         onAutoFocus && onAutoFocus(centerPos, radius);
     }, [windowedTra]);
 
-    // console.log(points);
-    // 2. You can render the trajectory here.
-    //    You may want to refer to:
-    //    - how to draw a simple shape: https://konvajs.org/docs/react/Shapes.html and
-    //    - the API documentation of an arrow shape: https://konvajs.org/api/Konva.Arrow.html
-
-    var alltra = store.allPlayerTrajectory;
-
     const theme = useTheme();
     return <Layer>
-        <Line points={points}
-              stroke={theme.palette.secondary.main} // Line color
-              strokeWidth={2 * scaleBalance} // Line width
-              pointerAtEnding={true}
-              fill='red'
-              pointerLength={15 * scaleBalance} // Adjust for smaller arrowhead length
-              pointerWidth={10 * scaleBalance} // Adjust for smaller arrowhead width
+        <Traj traj={tra}
+              mapSize={mapSize}
+              scaleBalance={scaleBalance}
+              noPointer
+              noDash
               opacity={0.4}
+              color={theme.palette.secondary.main}
+              timeRange={[-450, 150]}
         />
-        <Arrow points={windowedTransformedTrajectory.flat()}
-               stroke={theme.palette.secondary.main} // Line color
-               strokeWidth={2 * scaleBalance} // Line width
-               pointerAtEnding={true}
-               fill={'red'}
-               pointerWidth={10 * scaleBalance}
-               pointerLength={15 * scaleBalance}/>
+        <Traj traj={windowedTra}
+              mapSize={mapSize}
+              scaleBalance={scaleBalance}
+              noDash
+              color={theme.palette.secondary.main}
+              timeRange={store.trajTimeWindow}/>
     </Layer>
 }
 

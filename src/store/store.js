@@ -53,10 +53,6 @@ class Store {
         }[this.mapStyle] || './map.jpeg';
     }
 
-    timeWindowEnabled = true
-    enableTimeWindow = () => this.timeWindowEnabled = true;
-    disableTimeWindow = () => this.timeWindowEnabled = false;
-
     workerTags = newArr(20, () => new Set());
     addTag = (idx, tag) => idx.forEach(i => this.workerTags[i].add(tag));
     removeTag = (idx, tag) => idx.forEach(i => this.workerTags[i].delete(tag));
@@ -257,8 +253,6 @@ class Store {
     }
 
     get selectedPlayerTrajectoryInTimeWindow() {
-        // if (!this.timeWindowEnabled) return this.selectedPlayerTrajectory;
-
         // Check if a player is selected
         if (this.focusedPlayer === -1 || !this.gameData) return [];
 

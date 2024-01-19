@@ -32,10 +32,6 @@ function Timeline({
                           step={1}
                           disabled={!store.gameData}
                           value={store.trajTimeWindow}
-                          onThumbDragStart={store.enableTimeWindow}
-                          onThumbDragEnd={store.disableTimeWindow}
-                          onRangeDragStart={store.enableTimeWindow}
-                          onRangeDragEnd={store.disableTimeWindow}
                           onInput={store.setTrajTimeWindow}/>
             <Time>
                 {(store.trajTimeWindow[1] / 30).toFixed(1)} s

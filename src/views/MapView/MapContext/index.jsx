@@ -33,8 +33,7 @@ function MapContext({store, size, mapRenderer, numGrid = 50, timeStep = 5}) {
                     <MapContextMatrix numGrid={numGrid} timeStep={timeStep}
                                       x={generalDir.endsWith('l') ? timeStep * disStep : 0} y={0} direction={'top'}
                                       gridSize={gridSize} space={space} arrowSize={arrowSize}
-                                      data={xData}
-                                      color={theme.palette.secondary.main} amp={amp}
+                                      data={xData} amp={amp}
                                       curPos={curPosX} range={xRange}
                                       viewedPredictions={store.viewedPredictions}
                                       onEnter={(_, __, d) => store.viewPredictions(Array.from(d[2]))}
@@ -44,8 +43,7 @@ function MapContext({store, size, mapRenderer, numGrid = 50, timeStep = 5}) {
                     <MapContextMatrix numGrid={numGrid} timeStep={timeStep}
                                       x={0} y={generalDir.startsWith('t') ? timeStep * disStep : 0} direction={'left'}
                                       gridSize={gridSize} space={space} arrowSize={arrowSize}
-                                      data={yData}
-                                      color={theme.palette.secondary.main} amp={amp}
+                                      data={yData} amp={amp}
                                       curPos={curPosY} range={yRange}
                                       viewedPredictions={store.viewedPredictions}
                                       onEnter={(_, __, d) => store.viewPredictions(Array.from(d[2]))}
@@ -56,8 +54,7 @@ function MapContext({store, size, mapRenderer, numGrid = 50, timeStep = 5}) {
                                       x={mapSize + space} y={generalDir.startsWith('t') ? timeStep * disStep : 0}
                                       direction={'right'}
                                       gridSize={gridSize} space={space} arrowSize={arrowSize}
-                                      data={yData}
-                                      color={theme.palette.secondary.main} amp={amp}
+                                      data={yData} amp={amp}
                                       curPos={curPosY} range={yRange}
                                       viewedPredictions={store.viewedPredictions}
                                       onEnter={(_, __, d) => store.viewPredictions(Array.from(d[2]))}
@@ -68,8 +65,7 @@ function MapContext({store, size, mapRenderer, numGrid = 50, timeStep = 5}) {
                                       x={generalDir.endsWith('l') ? timeStep * disStep : 0} y={mapSize + space}
                                       direction={'bottom'}
                                       gridSize={gridSize} space={space} arrowSize={arrowSize}
-                                      data={xData}
-                                      color={theme.palette.secondary.main} amp={amp}
+                                      data={xData} amp={amp}
                                       curPos={curPosX} range={xRange}
                                       viewedPredictions={store.viewedPredictions}
                                       onEnter={(_, __, d) => store.viewPredictions(Array.from(d[2]))}

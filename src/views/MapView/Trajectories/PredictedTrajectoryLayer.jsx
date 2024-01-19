@@ -1,39 +1,45 @@
 import {inject, observer} from "mobx-react";
-import {Arrow, Group, Layer} from "react-konva";
-import {mapProject} from "../../../utils/game.js";
+import {Group, Layer} from "react-konva";
 import {selectionColor} from "../../../utils/theme.js";
 import {useTheme} from "@mui/material/styles";
+import Traj from "./Traj.jsx";
 
-function ArrowGroup({trajectories, color, scaleBalance}) {
+function ArrowGroup({trajectories, color, mapSize, scaleBalance, labelStyle = 'dot'}) {
     return <Group>
         {trajectories.map((traj, tId) => (
-            <Arrow key={tId}
-                   points={traj.flat()}
-                   strokeWidth={3 * scaleBalance} // Line width
-                   pointerWidth={7 * scaleBalance}
-                   pointerLength={7 * scaleBalance}
-                   stroke={color} dash={[5, 5]}
-                   fill={color}
-                   opacity={1}/>
+            <Traj key={tId}
+                  traj={traj}
+                  mapSize={mapSize}
+                  scaleBalance={scaleBalance}
+                  color={color}
+                  labelStyle={labelStyle}
+                  timeRange={[0, 150]}/>
         ))}
     </Group>
 }
 
 function PredictedTrajectoryLayer({store, mapSize, scaleBalance}) {
-    const getPredictionTraj = i => store.predictions[i].trajectory.map(p => mapProject(p, mapSize));
+    const getPredictionTraj = i => store.predictions[i].trajectory;
     const theme = useTheme();
 
     return (
         <Layer>
             <ArrowGroup scaleBalance={scaleBalance}
                         color={selectionColor[0]}
-                        trajectories={store.selectedPredictors.map(getPredictionTraj)}/>
+                        mapSize={mapSize}
+                        trajectories={store.selectedPredictors.map(getPredictionTraj)}
+                        timeRange={[0, 150]}/>
             <ArrowGroup scaleBalance={scaleBalance}
                         color={selectionColor[1]}
-                        trajectories={store.comparedPredictors.map(getPredictionTraj)}/>
+                        mapSize={mapSize}
+                        trajectories={store.comparedPredictors.map(getPredictionTraj)}
+                        timeRange={[0, 150]}/>
             <ArrowGroup scaleBalance={scaleBalance}
                         color={theme.palette.secondary.main}
-                        trajectories={store.viewedPredictions.map(getPredictionTraj)}/>
+                        mapSize={mapSize}
+                        labelStyle={'time'}
+                        trajectories={store.viewedPredictions.map(getPredictionTraj)}
+                        timeRange={[0, 150]}/>
         </Layer>
     );
 }

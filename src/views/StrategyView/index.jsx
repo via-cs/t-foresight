@@ -26,7 +26,7 @@ function StrategyView({store}) {
         </Projection>
         <Divider sx={{m: 1}}/>
         <Detail>
-            {store.strategyViewDesign === 'storyline' && <PredictorsStoryline/>}
+            <PredictorsStoryline/>
         </Detail>
     </Container>
 }

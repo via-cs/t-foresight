@@ -6,13 +6,16 @@ function useImage(src, onlyNonTransparent, onLoad) {
     useEffect(() => {
         image.current.src = src;
         image.current.addEventListener('load', onLoad);
-    }, [src]);
+        return () => image.current.removeEventListener('load', onLoad);
+    }, [src, onLoad]);
     return image.current;
 }
 
 function KonvaImage({x, y, w, h, src}) {
     const imageNode = useRef(null);
-    const redraw = useCallback(() => imageNode.current && imageNode.current.getLayer().batchDraw(), []);
+    const redraw = useCallback(() => {
+        imageNode.current && imageNode.current.getLayer().batchDraw();
+    }, []);
     const image = useImage(src, redraw);
 
     return <Image x={x} y={y}
