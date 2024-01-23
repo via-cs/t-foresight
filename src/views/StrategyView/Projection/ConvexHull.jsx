@@ -1,14 +1,10 @@
 import {memo, useMemo} from "react";
 import hull from "hull.js";
-import LassoGroup from "./Group.js";
-import {Tooltip} from "@mui/material";
+import {alpha, Tooltip} from "@mui/material";
 import newArr from "../../../utils/newArr.js";
+import {styled} from "@mui/material/styles";
 
 const W = 1000, H = 1000;
-
-function sameArray(a1, a2) {
-    return a1.length === a2.length && a1.every(v => a2.includes(v));
-}
 
 function useConvexHull(predictorGroup, points) {
     return useMemo(() => {
@@ -36,10 +32,29 @@ function ConvexHull({predictorGroup, points, selected, onSelectGroup, tags, onCo
         <LassoGroup d={convexHull}
                     width={W / 200}
                     selectable
-                    selected={sameArray(selected, predictorGroup)}
                     onClick={e => onSelectGroup(predictorGroup, e.shiftKey ? 1 : 0)}
                     onContextMenu={onContextMenu}/>
     </Tooltip>
 }
+
+export const LassoGroup = styled('path', {
+    shouldForwardProp: propName => !['width', 'selectable', 'color'].includes(propName),
+})(({theme, width, selectable, color}) => ({
+    stroke: color || theme.palette.secondary.dark,
+    fill: alpha(color || theme.palette.secondary.main, 0.1),
+    ...(selectable
+        ? {
+            strokeWidth: 0,
+            cursor: 'pointer',
+            '&:hover': {
+                strokeWidth: width,
+                fill: alpha(color || theme.palette.secondary.main, 0.2),
+            },
+        }
+        : {
+            strokeWidth: width,
+            pointerEvents: 'none',
+        }),
+}))
 
 export default memo(ConvexHull);

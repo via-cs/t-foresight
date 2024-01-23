@@ -1,6 +1,6 @@
 import {inject, observer} from "mobx-react";
 import {Divider} from "@mui/material";
-import {styled} from "@mui/material/styles";
+import {styled, useTheme} from "@mui/material/styles";
 import PredictorsProjection from "./Projection/index.jsx";
 import PredictorsStoryline from "./Storyline/index.jsx";
 
@@ -11,7 +11,8 @@ import PredictorsStoryline from "./Storyline/index.jsx";
  * @constructor
  */
 
-function StrategyView({store}) {
+function StrategyView({store, width, height}) {
+    const theme = useTheme();
     return <Container>
         <Projection>
             <Wrapper>
@@ -26,7 +27,8 @@ function StrategyView({store}) {
         </Projection>
         <Divider sx={{m: 1}}/>
         <Detail>
-            <PredictorsStoryline/>
+            <PredictorsStoryline width={width - parseInt(theme.spacing(2))}
+                                 height={height - 40 - 0.75 * width - parseInt(theme.spacing(3))}/>
         </Detail>
     </Container>
 }

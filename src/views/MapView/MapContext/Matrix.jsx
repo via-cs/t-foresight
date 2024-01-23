@@ -4,6 +4,7 @@ import newArr from "../../../utils/newArr.js";
 import {useTheme} from "@mui/material/styles";
 import {useCallback} from "react";
 import {selectionColor} from "../../../utils/theme.js";
+import {probOpacity} from "../../../utils/encoding.js";
 
 const rot = vec => Math.atan(-vec[1] / vec[0]) / Math.PI * 180 - (vec[0] < 0 ? 180 : 0)
 
@@ -68,11 +69,11 @@ function MapContextMatrix({
                 <Rect x={-gridSize / 2} width={gridSize}
                       y={-gridSize / 2} height={gridSize}
                       stroke={theme.palette.background.default} strokeWidth={2}
-                      fill={alpha(selectionColor[0] || '#fff', Math.min(1, data[g][t][0] * amp))}/>
+                      fill={alpha(selectionColor[0] || '#fff', probOpacity(data[g][t][0]))}/>
                 {(viewedPredictions.length === 0 || viewedPredictions[0] === -1 || viewedPredictions.some(p => data[g][t][2].has(p))) &&
-                    <Arrow stroke={'#fff'} strokeWidth={1}
-                           pointerWidth={4 * arrowSize}
-                           pointerLength={4 * arrowSize}
+                    <Arrow stroke={'#fff'} fill={'#fff'} strokeWidth={1}
+                           pointerWidth={0.4 * gridSize * arrowSize}
+                           pointerLength={0.4 * gridSize * arrowSize}
                            points={[-gridSize / 2 * arrowSize, 0, gridSize / 2 * arrowSize, 0]}
                            rotation={data[g][t][0] === 0 ? 0 : rot(data[g][t][1])}/>}
             </Group>

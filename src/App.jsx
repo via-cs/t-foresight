@@ -72,7 +72,7 @@ function App({store}) {
                           {t('System.StrategyView.Predict')}
                       </Button>
                   ]}>
-                <StrategyView/>
+                <StrategyView width={strategyViewPos.w} height={strategyViewPos.h}/>
             </View>
             <View title={t('System.ContextView.ViewName')} {...contextViewPos}
                   tools={[

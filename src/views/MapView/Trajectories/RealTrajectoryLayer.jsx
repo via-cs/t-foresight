@@ -41,14 +41,14 @@ function RealTrajectoryLayer({store, mapSize, scaleBalance, onAutoFocus}) {
               noPointer
               noDash
               opacity={0.4}
-              color={theme.palette.secondary.main}
+              color={'#fff'}
               timeRange={[-450, 150]}
         />
         <Traj traj={windowedTra}
               mapSize={mapSize}
               scaleBalance={scaleBalance}
               noDash
-              color={theme.palette.secondary.main}
+              color={'#fff'}
               timeRange={store.trajTimeWindow}/>
     </Layer>
 }

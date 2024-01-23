@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Menu} from "@mui/material";
+import {Popover} from "@mui/material";
 
 export default function useContextMenu() {
     const [contextMenu, setContextMenu] = useState(null);
@@ -16,17 +16,17 @@ export default function useContextMenu() {
     }
     const onClose = () => setContextMenu(null);
     const menuFactory = children => (
-        <Menu open={contextMenu !== null}
-              onClose={onClose}
-              anchorReference="anchorPosition"
-              anchorPosition={
-                  contextMenu !== null
-                      ? {top: contextMenu.mouseY, left: contextMenu.mouseX}
-                      : undefined
-              }
+        <Popover open={contextMenu !== null}
+                 onClose={onClose}
+                 anchorReference="anchorPosition"
+                 anchorPosition={
+                     contextMenu !== null
+                         ? {top: contextMenu.mouseY, left: contextMenu.mouseX}
+                         : undefined
+                 }
         >
             {children}
-        </Menu>
+        </Popover>
     )
 
     return {menuFactory, onContextMenu, onClose}

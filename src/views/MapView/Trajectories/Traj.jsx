@@ -17,6 +17,7 @@ const pos = (p, r, l) => Math.floor((p - r[0]) / (r[1] - r[0]) * (l - 1));
 
 export default memo(function Traj({
                                       traj,
+                                      id,
                                       mapSize,
                                       scaleBalance,
                                       color,
@@ -24,7 +25,9 @@ export default memo(function Traj({
                                       labelStyle = 'dot',
                                       noPointer = false,
                                       noDash = false,
-                                      opacity = 1
+                                      opacity = 1,
+                                      onMouseEnter,
+                                      onMouseLeave,
                                   }) {
     const t0 = Math.ceil(timeRange[0] / 30), t1 = Math.floor(timeRange[1] / 30);
     const tAnno = newArr(t1 - t0 + 1, i => ({
@@ -35,16 +38,22 @@ export default memo(function Traj({
     const theme = useTheme();
     const timeLabelLayout = timeLabelLayoutFactory(scaleBalance);
 
-    return <Group opacity={opacity}>
+    return <Group opacity={opacity}
+                  onMouseEnter={() => onMouseEnter && onMouseEnter(id)}
+                  onMouseLeave={() => onMouseLeave && onMouseLeave(id)}>
         <Arrow points={traj.map(p => mapProject(p, mapSize)).flat()}
                strokeWidth={1.2 * scaleBalance} // Line width
                pointerWidth={noPointer ? 0 : 4 * scaleBalance}
                pointerLength={noPointer ? 0 : 4 * scaleBalance}
+               lineCap={'round'} lineJoin={'round'}
                dash={noDash ? [] : [6 * scaleBalance, 2 * scaleBalance]}
                stroke={color} fill={color}/>
         {tAnno.map(({label, pos}) => labelStyle === 'dot'
-            ? <Circle x={pos[0]} y={pos[1]} fill={color} radius={3 * scaleBalance}/>
-            : <Group x={pos[0]} y={pos[1]}>
+            ? <Circle key={label}
+                      x={pos[0]} y={pos[1]} radius={1.5 * scaleBalance}
+                      fill={color}/>
+            : <Group key={label}
+                     x={pos[0]} y={pos[1]}>
                 <Rect fill={color}
                       {...timeLabelLayout}/>
                 <Text text={`${label}s`}

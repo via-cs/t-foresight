@@ -1,11 +1,11 @@
 import {inject, observer} from "mobx-react";
 import {useRef} from "react";
-import useSize from "../../../utils/useSize.js";
 import {Group, Layer, Path, Rect, Stage, Text} from "react-konva";
 import {styled, useTheme} from "@mui/material/styles";
 import useStorylineLayout from "./useLayout.js";
 import useStorylineLines from "./useLines.js";
 import {selectionColor} from "../../../utils/theme.js";
+import {probOpacity} from "../../../utils/encoding.js";
 
 function createPath(line) {
     let path = `M${line[0][0]} ${line[0][1]}`;
@@ -33,12 +33,13 @@ const config = {
 /**
  *
  * @param {import('src/store/store.js').Store} store
+ * @param {number} width
+ * @param {number} height
  * @return {JSX.Element}
  * @constructor
  */
-function PredictorsStoryline({store}) {
+function PredictorsStoryline({store, width, height}) {
     const containerRef = useRef(null);
-    const {width, height} = useSize(containerRef);
     const data = store.instancesData;
     const layout = useStorylineLayout(data);
     const lines = useStorylineLines(layout, width, height, config);
@@ -81,7 +82,7 @@ function PredictorsStoryline({store}) {
                         <Path data={createPath(line)}
                               onMouseEnter={() => store.viewPredictions([lId])}
                               onMouseLeave={() => store.viewPredictions([])}
-                              opacity={Math.min(1, store.predictions[lId]?.probability * 10)}
+                              opacity={probOpacity(store.predictions[lId]?.probability)}
                               stroke={viewed ? theme.palette.secondary.main
                                   : selected ? selectionColor[0]
                                       : compared ? selectionColor[1]

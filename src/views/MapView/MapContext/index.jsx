@@ -1,6 +1,6 @@
 import {inject, observer} from "mobx-react";
 import {Layer, Stage} from "react-konva";
-import {styled, useTheme} from "@mui/material/styles";
+import {styled} from "@mui/material/styles";
 import useAxisRange from "./useAxisRange.js";
 import MapContextMatrix from "./Matrix.jsx";
 import MapContextCorner from "./Corner.jsx";
@@ -10,8 +10,11 @@ import useKeyPressed from "../../../utils/useKeyPressed.js";
 const space = 3;
 const amp = 10;
 const arrowSize = 0.7;
+const minGridSize = 20;
+const autoDecideNumGrid = (size, timeStep) => Math.floor((size + space) / (minGridSize + space) - timeStep);
 
-function MapContext({store, size, mapRenderer, numGrid = 50, timeStep = 5}) {
+function MapContext({store, size, mapRenderer, numGrid = -1, timeStep = 5}) {
+    if (numGrid === -1) numGrid = autoDecideNumGrid(size, timeStep);
     const disStep = (size + space) / (numGrid + timeStep);
     const gridSize = disStep - space;
     const mapSize = disStep * numGrid - space;
@@ -23,8 +26,6 @@ function MapContext({store, size, mapRenderer, numGrid = 50, timeStep = 5}) {
     const generalDir = useGeneralDir(xData, yData);
 
     const shift = useKeyPressed('Shift');
-
-    const theme = useTheme();
 
     return <Root>
         <Stage width={size} height={size}>
