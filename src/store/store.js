@@ -449,6 +449,11 @@ class Store {
         this.setPredProjection(data.predictionProjection);
         this.setInstancesData(data.instancesData);
         this.setContextSort(data.contextSort || this.contextSort);
+        this.setMapStyle(data.mapStyle || (
+            (data.selectedPredictors.length || data.comparedPredictors.length)
+                ? 'grey'
+                : 'colored'
+        ))
     }
 
     saveCase() {
@@ -467,6 +472,7 @@ class Store {
             comparedPredictors: this.comparedPredictors,
             predictionProjection: this.predictionProjection,
             instancesData: this.instancesData,
+            mapStyle: this.mapStyle,
         })
         saveAs(new File(
             [data],
