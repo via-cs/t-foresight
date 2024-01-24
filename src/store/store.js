@@ -9,6 +9,7 @@ import discretize from "../utils/discretize.js";
 import newArr from "../utils/newArr.js";
 import {joinSet} from "../utils/set.js";
 import {rot} from "../utils/rot.js";
+import {createContext, useContext} from "react";
 
 class Store {
     constructor() {
@@ -530,3 +531,12 @@ class Store {
 }
 
 export default Store;
+
+export const store = new Store();
+
+const StoreContext = createContext(store);
+
+/**
+ * @return {Store}
+ */
+export const useStore = () => useContext(StoreContext);

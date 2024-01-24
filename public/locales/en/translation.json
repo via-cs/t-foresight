@@ -69,12 +69,12 @@
       "ViewName": "Map View"
     },
     "StrategyView": {
-      "Compare": "Comp.",
+      "Compare": "Strategy 2",
       "InputTag": "Input new tags...",
       "PredNum": "{{num}} pred.",
       "Predict": "Pred.",
       "SID": "Strat. {{sId}}",
-      "View": "View",
+      "View": "Strategy 1",
       "ViewName": "Strategy View",
       "WorkerTag": "Tags of Worker #{{id}}"
     },

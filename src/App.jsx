@@ -3,7 +3,7 @@ import TitleBar from "./views/TitleBar";
 import {useLayout} from "./utils/layout";
 import {styled} from "@mui/material/styles";
 import PlayerSelection from "./views/MapView/Map/PlayerSelection.jsx";
-import {Button, createTheme, CssBaseline, Divider, ThemeProvider, Typography} from "@mui/material";
+import {createTheme, CssBaseline, Divider, IconButton, ThemeProvider, Tooltip, Typography} from "@mui/material";
 import Timeline from "./views/MapView/Timeline/Timeline.jsx";
 import {MapContextRenderer, MapRenderer} from "./views/MapView/index.jsx";
 import {inject, observer} from "mobx-react";
@@ -13,7 +13,7 @@ import StrategyView from "./views/StrategyView/index.jsx";
 import ContextView from "./views/ContextView/index.jsx";
 import {defaultTheme, selectionColor} from "./utils/theme.js";
 import MapLegendTrigger from "./views/MapView/Legend/index.jsx";
-import {DisabledByDefault, OnlinePrediction} from "@mui/icons-material";
+import {DisabledByDefault} from "@mui/icons-material";
 import {LassoIcon, ShiftIcon} from "./views/StrategyView/Projection/Icons.jsx";
 import ContextSortMenu from "./views/ContextView/SortMenu.jsx";
 
@@ -65,23 +65,19 @@ function App({store}) {
                           <ShiftIcon fontSize={'0.8125rem'} htmlColor={selectionColor[1]}/>
                           <Typography sx={{ml: .5}}>{t('System.StrategyView.Compare')}</Typography>
                       </>,
-                      <Button variant={'text'}
-                              disabled={store.focusedPlayer === -1 || store.focusedTeam === -1 || store.gameData === null || !store.playerLifeStates[store.focusedTeam][store.focusedPlayer]}
-                              onClick={store.predict}
-                              startIcon={<OnlinePrediction/>}>
-                          {t('System.StrategyView.Predict')}
-                      </Button>
                   ]}>
                 <StrategyView width={strategyViewPos.w} height={strategyViewPos.h}/>
             </View>
             <View title={t('System.ContextView.ViewName')} {...contextViewPos}
                   tools={[
-                      <ContextSortMenu/>,
-                      <Button variant={'text'}
-                              onClick={store.clearContextLimit}
-                              startIcon={<DisabledByDefault/>}>
-                          {t('System.ContextView.ClearContextLimit')}
-                      </Button>
+                      <Tooltip title={'Sort'}>
+                          <ContextSortMenu/>
+                      </Tooltip>,
+                      <Tooltip title={t('System.ContextView.ClearContextLimit')}>
+                          <IconButton onClick={store.clearContextLimit}>
+                              <DisabledByDefault/>
+                          </IconButton>
+                      </Tooltip>,
                   ]}>
                 <ContextView/>
             </View>

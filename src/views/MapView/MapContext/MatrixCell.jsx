@@ -1,9 +1,10 @@
 import {Fragment} from "react";
-import {Arc, Arrow, Circle, Group} from "react-konva";
+import {Arrow, Circle, Group} from "react-konva";
 import {selectionColor} from "../../../utils/theme.js";
 import {useTheme} from "@mui/material/styles";
 import {rot} from "../../../utils/rot.js";
 import {alpha} from "@mui/material";
+import {probOpacity} from "../../../utils/encoding.js";
 
 const arcRadiusFactory = r => [
     [r - 1, r],
@@ -49,18 +50,18 @@ function MatrixCell({
     const options = {
         sel: {
             data: sel,
-            color: selectionColor[0],
+            color: alpha(selectionColor[0], probOpacity(sel.probability)),
         },
         comp: {
             data: comp,
-            color: selectionColor[1],
+            color: alpha(selectionColor[1], probOpacity(comp.probability)),
         },
         view: {
             data: view,
-            color: theme.palette.secondary.main,
+            color: alpha(theme.palette.secondary.main, probOpacity(view.probability)),
         }
     };
-    const arrowSize = arcRadius[layers.length - 1][0] * 0.9;
+    const arrowSize = layers.length ? arcRadius[layers.length - 1][0] * 0.9 : 0;
 
     return <Fragment>
         <Circle radius={gridSize / 2}
@@ -72,10 +73,10 @@ function MatrixCell({
 
             const [start, angle] = calAngle(data.dirRange);
             return <Group key={lId}>
-                <Arc angle={angle}
-                     rotation={start}
-                     innerRadius={arcRadius[lId][0]} outerRadius={arcRadius[lId][1]}
-                     fill={color}/>
+                {/*<Arc angle={angle}*/}
+                {/*     rotation={start}*/}
+                {/*     innerRadius={arcRadius[lId][0]} outerRadius={arcRadius[lId][1]}*/}
+                {/*     fill={color}/>*/}
                 {(!viewEnabled || layer === 'view') &&
                     <Arrow stroke={color} fill={color} strokeWidth={1}
                            pointerWidth={0.5 * arrowSize}

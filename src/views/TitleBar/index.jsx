@@ -9,7 +9,9 @@ import {viewSize} from "../../utils/layout.js";
 import {inject, observer} from "mobx-react";
 import {readJSONFile, selectFile} from "../../utils/file.js";
 import {useTranslation} from "react-i18next";
-import {Settings, Signpost, Translate} from "@mui/icons-material";
+import {Signpost} from "@mui/icons-material";
+import {useState} from "react";
+import Settings from "./Settings.jsx";
 
 /**
  * @param {number} width
@@ -18,8 +20,11 @@ import {Settings, Signpost, Translate} from "@mui/icons-material";
  * @constructor
  */
 function TitleBar({width, store}) {
-    const {t, i18n} = useTranslation();
-    const toggleLanguage = () => i18n.changeLanguage(i18n.language === 'en' ? 'cn' : 'en');
+    const {t} = useTranslation();
+    const [settings, setSettings] = useState(false);
+    const handleOpenSettings = () => setSettings(true);
+    const handleCloseSettings = () => setSettings(false);
+
     const handleImportData = () => {
         selectFile()
             .then(file => {
@@ -48,9 +53,17 @@ function TitleBar({width, store}) {
     const handleSaveCase = () => store.saveCase();
 
     return <Bar style={{width}}>
-        <Signpost color={"secondary"}/>
+        <Button color={store.devMode ? 'secondary' : 'inherit'}
+                onClick={handleOpenSettings}>
+            <Signpost/>
+        </Button>
         <Typography variant={'h5'}>{t('System.SystemName')}</Typography>
         <div style={{flex: 1}}/>
+        <Button variant={'contained'}
+                disabled={store.focusedPlayer === -1 || store.focusedTeam === -1 || store.gameData === null || !store.playerLifeStates[store.focusedTeam][store.focusedPlayer]}
+                onClick={store.predict}>
+            {t('System.StrategyView.Predict')}
+        </Button>
         <Button variant={'contained'}
                 sx={{mr: 1}}
                 disabled={!store.gameData}
@@ -62,17 +75,7 @@ function TitleBar({width, store}) {
         <Button variant={'contained'}
                 sx={{mr: 1}}
                 onClick={handleImportData}>{t('System.Actions.importData')}</Button>
-        <Button variant={'contained'}
-                sx={{mr: 1}}
-                onClick={toggleLanguage}>
-            <Translate fontSize={'small'}/>
-        </Button>
-        <Button variant={'contained'}
-                color={store.devMode ? 'secondary' : 'primary'}
-                sx={{mr: 1}}
-                onClick={() => store.setDevMode(!store.devMode)}>
-            <Settings/>
-        </Button>
+        <Settings open={settings} onClose={handleCloseSettings}/>
     </Bar>
 }
 

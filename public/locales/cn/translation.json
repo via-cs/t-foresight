@@ -69,12 +69,12 @@
       "ViewName": "地图视图"
     },
     "StrategyView": {
-      "Compare": "对比",
+      "Compare": "对比策略",
       "InputTag": "请输入标签……",
       "PredNum": "{{num}}条路",
       "Predict": "预测",
       "SID": "策略{{sId}}",
-      "View": "查看",
+      "View": "主策略",
       "ViewName": "策略视图",
       "WorkerTag": "预测{{id}}的标签"
     },
