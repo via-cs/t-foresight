@@ -3,6 +3,14 @@
     "Dire": "夜魇",
     "PlayerPos": "{{team}}{{playerId}}号位",
     "Radiant": "天辉",
+    "StratTag": {
+      "AntiGank": "防gank",
+      "Attack": "进攻",
+      "Defend": "防守",
+      "Farm": "发育",
+      "Fog": "开雾",
+      "Gank": "gank"
+    },
     "creepBot": "下路兵线",
     "creepMid": "中路兵线",
     "creepTop": "上路兵线",
@@ -62,11 +70,13 @@
     },
     "StrategyView": {
       "Compare": "对比",
+      "InputTag": "请输入标签……",
       "PredNum": "{{num}}条路",
       "Predict": "预测",
       "SID": "策略{{sId}}",
       "View": "查看",
-      "ViewName": "策略视图"
+      "ViewName": "策略视图",
+      "WorkerTag": "预测{{id}}的标签"
     },
     "SystemName": "DOTA 2 玩家轨迹预测分析系统"
   }

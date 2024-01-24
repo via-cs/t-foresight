@@ -4,7 +4,6 @@ import {Fragment, useCallback, useRef} from "react";
 import ConvexHull, {LassoGroup} from "./ConvexHull.jsx";
 import {inject, observer} from "mobx-react";
 import useContextMenu from "../../../utils/useContextMenu.jsx";
-import joinSet from "../../../utils/joinSet.js";
 import {selectionColor} from "../../../utils/theme.js";
 import useKeyPressed from "../../../utils/useKeyPressed.js";
 import WorkerTagsMenu from "./WorkerTagsMenu.jsx";
@@ -37,7 +36,6 @@ function PredictorsProjection({
                               }) {
     const points = store.predictionProjection;
     const [pointOrder, active] = useOrder(points.length);
-    console.log(pointOrder);
     const {lasso, isDrawing, handleMouseDown, handleMouseUp, handleMouseMove} = useLasso();
     const shift = useKeyPressed('Shift');
     const preSelectedPointsIdx = usePointLassoSelection(points, lasso);
@@ -48,8 +46,8 @@ function PredictorsProjection({
         onSelectGroup([], 1);
     }, []);
 
-    const tagSelection = useRef(-1);
-    const {menuFactory, onContextMenu, onClose} = useContextMenu();
+    const tagSelection = useRef([]);
+    const {menuFactory, onContextMenu} = useContextMenu();
     const handleContextMenu = pId => e => {
         e.stopPropagation();
         e.preventDefault();
@@ -72,7 +70,7 @@ function PredictorsProjection({
                     <ConvexHull key={gId}
                                 predictorGroup={g}
                                 points={points}
-                                tags={joinSet(g.map(w => store.workerTags[w]))}
+                                tags={store.clusterTags(g)}
                                 selected={selectedPredictors}
                                 onSelectGroup={onSelectGroup}
                                 onContextMenu={handleContextMenu(g)}/>
@@ -106,7 +104,7 @@ function PredictorsProjection({
                                       color={selectionColor[Number(shift)]}
                                       width={W / 200}/>}
         </svg>
-        {menuFactory(<WorkerTagsMenu tagSelection={tagSelection.current} onFinish={onClose}/>)}
+        {menuFactory(<WorkerTagsMenu tagSelection={tagSelection.current}/>)}
     </Fragment>
 }
 

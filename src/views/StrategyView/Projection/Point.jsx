@@ -37,7 +37,7 @@ function Point({
                       onMouseLeave={onMouseLeave}>
                 <path d={`M0 0H1L${1 - arrowLength} ${arrowWidth}V${-arrowWidth}L1 0Z`}
                       strokeWidth={0}
-                      fill={!selected && !compared && !(!isLassoing && viewed) && fill}
+                      fill={!selected && !compared && !(!isLassoing && viewed) ? fill : undefined}
                       transform={`rotate(${deg}) scale(${r * 1.35},${r * 1.35})`}/>
                 <circle r={r * 0.1}
                         fill={theme.palette.secondary.main}

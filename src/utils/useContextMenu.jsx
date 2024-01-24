@@ -24,7 +24,11 @@ export default function useContextMenu() {
                          ? {top: contextMenu.mouseY, left: contextMenu.mouseX}
                          : undefined
                  }
-        >
+                 sx={{
+                     '& .MuiPopover-paper': {
+                         p: 1
+                     }
+                 }}>
             {children}
         </Popover>
     )

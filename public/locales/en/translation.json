@@ -3,6 +3,14 @@
     "Dire": "Dire",
     "PlayerPos": "{{team}} Pos {{playerId}}",
     "Radiant": "Radiant",
+    "StratTag": {
+      "AntiGank": "Anti-gank",
+      "Attack": "Attack",
+      "Defend": "Defend",
+      "Farm": "Farm",
+      "Fog": "Fog",
+      "Gank": "Gank"
+    },
     "creepBot": "Bottom-Lane Creeps",
     "creepMid": "Middle-Lane Creeps",
     "creepTop": "Top-Lane Creeps",
@@ -62,11 +70,13 @@
     },
     "StrategyView": {
       "Compare": "Comp.",
+      "InputTag": "Input new tags...",
       "PredNum": "{{num}} pred.",
       "Predict": "Pred.",
       "SID": "Strat. {{sId}}",
       "View": "View",
-      "ViewName": "Strategy View"
+      "ViewName": "Strategy View",
+      "WorkerTag": "Tags of Worker #{{id}}"
     },
     "SystemName": "RoadSign for DOTA 2"
   }

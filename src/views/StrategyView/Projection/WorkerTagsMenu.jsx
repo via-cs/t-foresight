@@ -1,28 +1,40 @@
-import {MenuItem} from "@mui/material";
+import {Autocomplete, Chip, TextField} from "@mui/material";
 import {inject, observer} from "mobx-react";
+import {useTranslation} from "react-i18next";
 
-function WorkerTagsMenu({store, tagSelection, onFinish}) {
-    const handleAddTag = () => {
-        onFinish();
-        const tag = window.prompt('Input the tag name:');
-        if (!tag) return;
-        store.addTag(tagSelection.current, tag);
-    }
-    const handleRemoveTag = () => {
-        onFinish();
-        const tag = window.prompt('Input the tag name:');
-        if (!tag) return;
-        store.removeTag(tagSelection.current, tag);
-    }
-    const handleClearTag = () => {
-        onFinish();
-        store.clearTag(tagSelection.current)
-    }
-    return [
-        <MenuItem key={'add'} onClick={handleAddTag}>Add Tag</MenuItem>,
-        <MenuItem key={'rem'} onClick={handleRemoveTag}>Remove Tag</MenuItem>,
-        <MenuItem key={'clr'} onClick={handleClearTag}>Clear Tag</MenuItem>,
-    ]
+const defaultTags = t => [
+    t('Game.StratTag.Attack'),
+    t('Game.StratTag.Defend'),
+    t('Game.StratTag.AntiGank'),
+    t('Game.StratTag.Farm'),
+    t('Game.StratTag.Gank'),
+    t('Game.StratTag.Fog'),
+]
+
+function WorkerTagsMenu({store, tagSelection}) {
+    const tags = store.clusterTags(tagSelection);
+
+    const {t} = useTranslation();
+
+    return <Autocomplete multiple
+                         value={Array.from(tags)}
+                         onChange={(_, newValue) =>
+                             store.setTags(tagSelection, new Set(newValue), tags)
+                         }
+                         options={defaultTags(t)}
+                         renderTags={(tagValue, getTagProps) =>
+                             tagValue.map((option, index) => (
+                                 <Chip label={option}
+                                       {...getTagProps({index})}/>
+                             ))
+                         }
+                         style={{width: window.innerWidth / 4}}
+                         renderInput={params => (
+                             <TextField {...params}
+                                        label={tagSelection.length === 0 ? ''
+                                            : t('System.StrategyView.WorkerTag', {id: tagSelection.join(', ')})}
+                                        placeholder={t('System.StrategyView.InputTag')}/>
+                         )}/>
 }
 
 export default inject('store')(observer(WorkerTagsMenu));

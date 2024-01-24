@@ -7,6 +7,7 @@ import {saveAs} from 'file-saver';
 import genStorylineData, {initStorylineData} from "../views/StrategyView/Storyline/useData.js";
 import discretize from "../utils/discretize.js";
 import newArr from "../utils/newArr.js";
+import joinSet from "../utils/joinSet.js";
 
 class Store {
     constructor() {
@@ -54,10 +55,17 @@ class Store {
     }
 
     workerTags = newArr(20, () => new Set());
+    clusterTags = workers => computed(() => joinSet(workers.map(w => this.workerTags[w]))).get()
     addTag = (idx, tag) => idx.forEach(i => this.workerTags[i].add(tag));
     removeTag = (idx, tag) => idx.forEach(i => this.workerTags[i].delete(tag));
     clearTag = (idx) => idx.forEach(i => this.workerTags[i].clear());
-    setTags = (tags) => this.workerTags = tags.map(tag => new Set(tag));
+    setTags = (idx, newTags, oldTags) => {
+        for (const tag of newTags)
+            if (!oldTags.has(tag)) this.addTag(idx, tag);
+        for (const tag of oldTags)
+            if (!newTags.has(tag)) this.removeTag(idx, tag);
+    }
+    initTags = (tags) => this.workerTags = tags.map(tag => new Set(tag));
     saveTags = () => this.workerTags.map(tagSet => Array.from(tagSet));
 
     contextSort = 'default';
@@ -435,7 +443,7 @@ class Store {
     //endregion
 
     setCase(data) {
-        this.setTags(data.tags);
+        this.initTags(data.tags);
         this.focusOnPlayer(data.focusedTeam, data.focusedPlayer);
         if (this.focusedPlayer === -1) this.focusOnPlayer(data.focusedTeam, data.focusedPlayer);
         this.setFrame(data.frame);
