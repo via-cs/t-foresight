@@ -83,6 +83,7 @@ function PredictorsProjection({
                     const opacity = probOpacity(allPredictors[pId].probability);
                     return <Point key={pId} pId={pId}
                                   x={points[pId][0] * W} y={points[pId][1] * H}
+                                  traj={allPredictors[pId].trajectory}
                                   r={points[pId][2] * W / 20}
                                   tags={store.workerTags[pId]}
                                   opacity={opacity}
