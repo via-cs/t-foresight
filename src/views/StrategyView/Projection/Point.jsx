@@ -2,8 +2,8 @@ import {styled, useTheme} from "@mui/material/styles";
 import {selectionColor} from "../../../utils/theme.js";
 import {lighten, Tooltip} from "@mui/material";
 import newArr from "../../../utils/newArr.js";
+import {rot} from "../../../utils/rot.js";
 
-const rot = vec => Math.atan(-vec[1] / vec[0]) / Math.PI * 180 - (vec[0] < 0 ? 180 : 0)
 const arrowLength = 0.4, arrowWidth = 0.4;
 
 function Point({

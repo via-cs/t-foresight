@@ -7,7 +7,8 @@ import {saveAs} from 'file-saver';
 import genStorylineData, {initStorylineData} from "../views/StrategyView/Storyline/useData.js";
 import discretize from "../utils/discretize.js";
 import newArr from "../utils/newArr.js";
-import joinSet from "../utils/joinSet.js";
+import {joinSet} from "../utils/set.js";
+import {rot} from "../utils/rot.js";
 
 class Store {
     constructor() {
@@ -68,7 +69,7 @@ class Store {
     initTags = (tags) => this.workerTags = tags.map(tag => new Set(tag));
     saveTags = () => this.workerTags.map(tagSet => Array.from(tagSet));
 
-    projWorkerOrder = newArr(20, i => i);
+    projWorkerOrder = [];
     initProjWorkerOrder = len => this.projWorkerOrder = newArr(len, i => i);
     moveTopProjWorker = ids => {
         const newOrder = typeof ids === 'number'
@@ -398,22 +399,25 @@ class Store {
     /**
      * @return {import('src/model/Strategy.d.ts').Strategy}
      */
-    get selectedPredictorsAsAStrategy() {
-        const selectedPredictors = this.selectedPredictors.map(i => this.predictions[i]);
-        if (selectedPredictors.length === 0) selectedPredictors.push(...this.predictions.map(p => p));
+    strategyFromPredictions = ps => computed(() => {
+        const predictors = ps.map(i => this.predictions[i]);
+        if (predictors.length === 0) return null;
         return {
-            predictors: selectedPredictors,
-            attention: contextFactory(this.curContext, (g, i) => getStratAttention(selectedPredictors, g, i))
+            predictors,
+            attention: contextFactory(this.curContext, (g, i) => getStratAttention(predictors, g, i))
         };
+    }).get();
+
+    get selectedPredictorsAsAStrategy() {
+        return this.strategyFromPredictions(this.selectedPredictors);
     }
 
     get comparedPredictorsAsAStrategy() {
-        const selectedPredictors = this.comparedPredictors.map(i => this.predictions[i]);
-        if (selectedPredictors.length === 0) selectedPredictors.push(...this.predictions.map(p => p));
-        return {
-            predictors: selectedPredictors,
-            attention: contextFactory(this.curContext, (g, i) => getStratAttention(selectedPredictors, g, i))
-        };
+        return this.strategyFromPredictions(this.comparedPredictors);
+    }
+
+    get viewedPredictorsAsAStrategy() {
+        return this.strategyFromPredictions(this.viewedPredictions);
     }
 
     clearPredictions = () => {
@@ -426,12 +430,30 @@ class Store {
         this.setInstancesData(initStorylineData());
     }
 
-    trajStat = (xRange, yRange, numGrid, timeStep) => computed(() => {
-        const xData = newArr(numGrid, () => newArr(timeStep, () => [0, [0, 0], new Set()]));
-        const yData = newArr(numGrid, () => newArr(timeStep, () => [0, [0, 0], new Set()]));
-        const predictions = this.selectedPredictorsAsAStrategy;
-        if (predictions)
-            for (const {probability, trajectory, idx} of predictions.predictors) {
+    /**
+     *
+     * @param {[number, number]} xRange
+     * @param {[number, number]} yRange
+     * @param {number} numGrid
+     * @param {number} timeStep
+     * @param {import('src/model/Strategy.js').Strategy} strategy
+     * @return {[import('src/model/System.js').MatrixCell[][], import('src/model/System.js').MatrixCell[][]]}
+     */
+    trajStat = (xRange, yRange, numGrid, timeStep, strategy) => computed(() => {
+        const xData = newArr(numGrid, () => newArr(timeStep, () => ({
+            probability: 0,
+            avgDirection: [0, 0],
+            dirRange: [],
+            predictionIdxes: new Set(),
+        })));
+        const yData = newArr(numGrid, () => newArr(timeStep, () => ({
+            probability: 0,
+            avgDirection: [0, 0],
+            dirRange: [],
+            predictionIdxes: new Set(),
+        })));
+        if (strategy)
+            for (const {probability, trajectory, idx} of strategy.predictors) {
                 for (let i = 0; i < trajectory.length - 1; i++) {
                     const tPos = discretize(i, [0, trajectory.length - 2], timeStep);
                     const xPos = discretize(trajectory[i][0], xRange, numGrid);
@@ -439,20 +461,22 @@ class Store {
                     const dx = trajectory[i + 1][0] - trajectory[i][0];
                     const dy = trajectory[i + 1][1] - trajectory[i][1];
                     if (xPos !== -1) {
-                        xData[xPos][tPos][0] += probability;
-                        xData[xPos][tPos][1][0] += dx * probability;
-                        xData[xPos][tPos][1][1] += dy * probability;
-                        xData[xPos][tPos][2].add(idx);
+                        xData[xPos][tPos].probability += probability;
+                        xData[xPos][tPos].avgDirection[0] += dx * probability;
+                        xData[xPos][tPos].avgDirection[1] += dy * probability;
+                        xData[xPos][tPos].dirRange.push(rot([dx, dy]));
+                        xData[xPos][tPos].predictionIdxes.add(idx);
                     }
                     if (yPos !== -1) {
-                        yData[yPos][tPos][0] += probability;
-                        yData[yPos][tPos][1][0] += dx * probability;
-                        yData[yPos][tPos][1][1] += dy * probability;
-                        yData[yPos][tPos][2].add(idx);
+                        yData[yPos][tPos].probability += probability;
+                        yData[yPos][tPos].avgDirection[0] += dx * probability;
+                        yData[yPos][tPos].avgDirection[1] += dy * probability;
+                        yData[yPos][tPos].dirRange.push(rot([dx, dy]));
+                        yData[yPos][tPos].predictionIdxes.add(idx);
                     }
                 }
             }
-        return [xData, yData, predictions?.predictors?.length || 1];
+        return [xData, yData];
     }).get();
 
     //endregion

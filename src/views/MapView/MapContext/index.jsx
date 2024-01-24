@@ -6,6 +6,7 @@ import MapContextMatrix from "./Matrix.jsx";
 import MapContextCorner from "./Corner.jsx";
 import useGeneralDir from "./useGeneralDir.js";
 import useKeyPressed from "../../../utils/useKeyPressed.js";
+import {unionSet} from "../../../utils/set.js";
 
 const space = 3;
 const amp = 10;
@@ -13,6 +14,16 @@ const arrowSize = 0.7;
 const minGridSize = 20;
 const autoDecideNumGrid = (size, timeStep) => Math.floor((size + space) / (minGridSize + space) - timeStep);
 
+/**
+ *
+ * @param {import('src/store/store.js').Store} store
+ * @param size
+ * @param mapRenderer
+ * @param numGrid
+ * @param timeStep
+ * @return {JSX.Element}
+ * @constructor
+ */
 function MapContext({store, size, mapRenderer, numGrid = -1, timeStep = 5}) {
     if (numGrid === -1) numGrid = autoDecideNumGrid(size, timeStep);
     const disStep = (size + space) / (numGrid + timeStep);
@@ -20,12 +31,20 @@ function MapContext({store, size, mapRenderer, numGrid = -1, timeStep = 5}) {
     const mapSize = disStep * numGrid - space;
 
     const {xRange, yRange, onNav} = useAxisRange();
-    const [xData, yData] = store.trajStat(xRange, yRange, numGrid, timeStep);
+    const [xSel, ySel] = store.trajStat(xRange, yRange, numGrid, timeStep, store.selectedPredictorsAsAStrategy);
+    const [xComp, yComp] = store.trajStat(xRange, yRange, numGrid, timeStep, store.comparedPredictorsAsAStrategy);
+    const [xView, yView] = store.trajStat(xRange, yRange, numGrid, timeStep, store.viewedPredictorsAsAStrategy);
     const [curPosX, curPosY] = store.focusedPlayerPosition;
 
-    const generalDir = useGeneralDir(xData, yData);
+    const generalDir = useGeneralDir(xSel, ySel);
 
     const shift = useKeyPressed('Shift');
+
+    const handleViewX = (g, t) => store.viewPredictions(Array.from(unionSet([xSel[g][t].predictionIdxes, xComp[g][t].predictionIdxes])));
+    const handleViewY = (g, t) => store.viewPredictions(Array.from(unionSet([ySel[g][t].predictionIdxes, yComp[g][t].predictionIdxes])));
+
+    const handleSelectX = (g, t) => store.selectPredictors(Array.from(unionSet([xSel[g][t].predictionIdxes, xComp[g][t].predictionIdxes])), Number(shift));
+    const handleSelectY = (g, t) => store.selectPredictors(Array.from(unionSet([ySel[g][t].predictionIdxes, yComp[g][t].predictionIdxes])), Number(shift));
 
     return <Root>
         <Stage width={size} height={size}>
@@ -33,45 +52,53 @@ function MapContext({store, size, mapRenderer, numGrid = -1, timeStep = 5}) {
                 {generalDir.startsWith('t') &&
                     <MapContextMatrix numGrid={numGrid} timeStep={timeStep}
                                       x={generalDir.endsWith('l') ? timeStep * disStep : 0} y={0} direction={'top'}
-                                      gridSize={gridSize} space={space} arrowSize={arrowSize}
-                                      data={xData} amp={amp}
+                                      gridSize={gridSize} space={space}
+                                      data={xSel} compData={xComp} viewData={xView}
                                       curPos={curPosX} range={xRange}
+                                      selectedPredictions={store.selectedPredictors}
+                                      comparedPredictions={store.comparedPredictors}
                                       viewedPredictions={store.viewedPredictions}
-                                      onEnter={(_, __, d) => store.viewPredictions(Array.from(d[2]))}
+                                      onEnter={handleViewX}
                                       onLeave={() => store.viewPredictions([])}
-                                      onClick={(_, __, d) => store.selectPredictors(Array.from(d[2]), Number(shift))}/>}
+                                      onClick={handleSelectX}/>}
                 {generalDir.endsWith('l') &&
                     <MapContextMatrix numGrid={numGrid} timeStep={timeStep}
                                       x={0} y={generalDir.startsWith('t') ? timeStep * disStep : 0} direction={'left'}
-                                      gridSize={gridSize} space={space} arrowSize={arrowSize}
-                                      data={yData} amp={amp}
+                                      gridSize={gridSize} space={space}
+                                      data={ySel} compData={yComp} viewData={yView}
                                       curPos={curPosY} range={yRange}
+                                      selectedPredictions={store.selectedPredictors}
+                                      comparedPredictions={store.comparedPredictors}
                                       viewedPredictions={store.viewedPredictions}
-                                      onEnter={(_, __, d) => store.viewPredictions(Array.from(d[2]))}
+                                      onEnter={handleViewY}
                                       onLeave={() => store.viewPredictions([])}
-                                      onClick={(_, __, d) => store.selectPredictors(Array.from(d[2]), Number(shift))}/>}
+                                      onClick={handleSelectY}/>}
                 {generalDir.endsWith('r') &&
                     <MapContextMatrix numGrid={numGrid} timeStep={timeStep}
                                       x={mapSize + space} y={generalDir.startsWith('t') ? timeStep * disStep : 0}
                                       direction={'right'}
-                                      gridSize={gridSize} space={space} arrowSize={arrowSize}
-                                      data={yData} amp={amp}
+                                      gridSize={gridSize} space={space}
+                                      data={ySel} compData={yComp} viewData={yView}
                                       curPos={curPosY} range={yRange}
+                                      selectedPredictions={store.selectedPredictors}
+                                      comparedPredictions={store.comparedPredictors}
                                       viewedPredictions={store.viewedPredictions}
-                                      onEnter={(_, __, d) => store.viewPredictions(Array.from(d[2]))}
+                                      onEnter={handleViewY}
                                       onLeave={() => store.viewPredictions([])}
-                                      onClick={(_, __, d) => store.selectPredictors(Array.from(d[2]), Number(shift))}/>}
+                                      onClick={handleSelectY}/>}
                 {generalDir.startsWith('b') &&
                     <MapContextMatrix numGrid={numGrid} timeStep={timeStep}
                                       x={generalDir.endsWith('l') ? timeStep * disStep : 0} y={mapSize + space}
                                       direction={'bottom'}
-                                      gridSize={gridSize} space={space} arrowSize={arrowSize}
-                                      data={xData} amp={amp}
+                                      gridSize={gridSize} space={space}
+                                      data={xSel} compData={xComp} viewData={xView}
                                       curPos={curPosX} range={xRange}
+                                      selectedPredictions={store.selectedPredictors}
+                                      comparedPredictions={store.comparedPredictors}
                                       viewedPredictions={store.viewedPredictions}
-                                      onEnter={(_, __, d) => store.viewPredictions(Array.from(d[2]))}
+                                      onEnter={handleViewX}
                                       onLeave={() => store.viewPredictions([])}
-                                      onClick={(_, __, d) => store.selectPredictors(Array.from(d[2]), Number(shift))}/>}
+                                      onClick={handleSelectX}/>}
                 {generalDir === 'tl' &&
                     <MapContextCorner timeStep={timeStep}
                                       gridSize={gridSize} space={space} direction={'tl'}

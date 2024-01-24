@@ -1,12 +1,8 @@
-import {Arrow, Group, Line, Rect} from "react-konva";
-import {alpha} from "@mui/material";
+import {Group, Line} from "react-konva";
 import newArr from "../../../utils/newArr.js";
 import {useTheme} from "@mui/material/styles";
 import {useCallback} from "react";
-import {selectionColor} from "../../../utils/theme.js";
-import {probOpacity} from "../../../utils/encoding.js";
-
-const rot = vec => Math.atan(-vec[1] / vec[0]) / Math.PI * 180 - (vec[0] < 0 ? 180 : 0)
+import MatrixCell from "./MatrixCell.jsx";
 
 /**
  *
@@ -17,15 +13,17 @@ const rot = vec => Math.atan(-vec[1] / vec[0]) / Math.PI * 180 - (vec[0] < 0 ? 1
  * @param {'left' | 'right' | 'top' | 'bottom'} direction
  * @param {number} gridSize
  * @param {number} space
- * @param {[number, [number, number], Set<number>][][]} data
- * @param {number} arrowSize
- * @param {number} amp
+ * @param {import('src/model/System.js').MatrixCell[][]} data
+ * @param {import('src/model/System.js').MatrixCell[][]} compData
+ * @param {import('src/model/System.js').MatrixCell[][]} viewData
  * @param {number} curPos
  * @param {[number, number]} range
+ * @param {number[]} selectedPredictions
+ * @param {number[]} comparedPredictions
  * @param {number[]} viewedPredictions
- * @param {(g: number, t: number, data: [number, [number, number], Set<number>]) => void} onEnter
- * @param {(g: number, t: number, data: [number, [number, number], Set<number>]) => void} onLeave
- * @param {(g: number, t: number, data: [number, [number, number], Set<number>]) => void} onClick
+ * @param {(g: number, t: number) => void} onEnter
+ * @param {(g: number, t: number) => void} onLeave
+ * @param {(g: number, t: number) => void} onClick
  * @return {JSX.Element}
  * @constructor
  */
@@ -36,11 +34,11 @@ function MapContextMatrix({
                               direction,
                               gridSize,
                               space,
-                              data,
-                              arrowSize,
-                              amp,
+                              data, compData, viewData,
                               curPos,
                               range,
+                              selectedPredictions,
+                              comparedPredictions,
                               viewedPredictions,
                               onEnter,
                               onLeave,
@@ -58,29 +56,9 @@ function MapContextMatrix({
     }, [direction, pos]);
 
     return <Group x={x} y={y}>
-        {gridArr.map(([g, t]) => {
-            const [x, y] = gridPos(g, t);
-            return <Group key={`${g},${t}`}
-                          x={x}
-                          y={y}
-                          onMouseEnter={() => onEnter(g, t, data[g][t])}
-                          onMouseLeave={() => onLeave(g, t, data[g][t])}
-                          onClick={() => onClick(g, t, data[g][t])}>
-                <Rect x={-gridSize / 2} width={gridSize}
-                      y={-gridSize / 2} height={gridSize}
-                      stroke={theme.palette.background.default} strokeWidth={2}
-                      fill={alpha(selectionColor[0] || '#fff', probOpacity(data[g][t][0]))}/>
-                {(viewedPredictions.length === 0 || viewedPredictions[0] === -1 || viewedPredictions.some(p => data[g][t][2].has(p))) &&
-                    <Arrow stroke={'#fff'} fill={'#fff'} strokeWidth={1}
-                           pointerWidth={0.4 * gridSize * arrowSize}
-                           pointerLength={0.4 * gridSize * arrowSize}
-                           points={[-gridSize / 2 * arrowSize, 0, gridSize / 2 * arrowSize, 0]}
-                           rotation={data[g][t][0] === 0 ? 0 : rot(data[g][t][1])}/>}
-            </Group>
-        })}
         {curPos > range[0] && curPos < range[1] &&
-            <Line stroke={selectionColor[0]} strokeWidth={2}
-                  points={[].includes(direction)
+            <Line stroke={theme.palette.secondary.main} strokeWidth={2}
+                  points={['top', 'bottom'].includes(direction)
                       ? [
                           mapSize * (curPos - range[0]) / (range[1] - range[0]), 0,
                           mapSize * (curPos - range[0]) / (range[1] - range[0]), timeStep * disStep,
@@ -88,6 +66,20 @@ function MapContextMatrix({
                           0, mapSize * (range[1] - curPos) / (range[1] - range[0]),
                           timeStep * disStep, mapSize * (range[1] - curPos) / (range[1] - range[0]),
                       ]}/>}
+        {gridArr.map(([g, t]) => {
+            const [x, y] = gridPos(g, t);
+            return <Group key={`${g},${t}`}
+                          x={x}
+                          y={y}
+                          onMouseEnter={() => onEnter(g, t)}
+                          onMouseLeave={() => onLeave(g, t)}
+                          onClick={() => onClick(g, t)}>
+                <MatrixCell gridSize={gridSize}
+                            sel={data[g][t]} selEnabled={selectedPredictions.length !== 0}
+                            comp={compData[g][t]} compEnabled={comparedPredictions.length !== 0}
+                            view={viewData[g][t]} viewEnabled={viewedPredictions.length !== 0}/>
+            </Group>
+        })}
     </Group>
 }
 
