@@ -7,6 +7,7 @@ import MapContextCorner from "./Corner.jsx";
 import useGeneralDir from "./useGeneralDir.js";
 import useKeyPressed from "../../../utils/useKeyPressed.js";
 import {unionSet} from "../../../utils/set.js";
+import {useState} from "react";
 
 const space = 3;
 const amp = 10;
@@ -29,6 +30,9 @@ function MapContext({store, size, mapRenderer, numGrid = -1, timeStep = 5}) {
     const disStep = (size + space) / (numGrid + timeStep);
     const gridSize = disStep - space;
     const mapSize = disStep * numGrid - space;
+
+    const [gridVariant, setGridVariant] = useState('rect');
+    const toggleGridVariant = () => setGridVariant(v => v === 'rect' ? 'circle' : 'rect');
 
     const {xRange, yRange, onNav} = useAxisRange();
     const [xSel, ySel] = store.trajStat(xRange, yRange, numGrid, timeStep, store.selectedPredictorsAsAStrategy);
@@ -53,6 +57,7 @@ function MapContext({store, size, mapRenderer, numGrid = -1, timeStep = 5}) {
                     <MapContextMatrix numGrid={numGrid} timeStep={timeStep}
                                       x={generalDir.endsWith('l') ? timeStep * disStep : 0} y={0} direction={'top'}
                                       gridSize={gridSize} space={space}
+                                      gridVariant={gridVariant}
                                       data={xSel} compData={xComp} viewData={xView}
                                       curPos={curPosX} range={xRange}
                                       selectedPredictions={store.selectedPredictors}
@@ -65,6 +70,7 @@ function MapContext({store, size, mapRenderer, numGrid = -1, timeStep = 5}) {
                     <MapContextMatrix numGrid={numGrid} timeStep={timeStep}
                                       x={0} y={generalDir.startsWith('t') ? timeStep * disStep : 0} direction={'left'}
                                       gridSize={gridSize} space={space}
+                                      gridVariant={gridVariant}
                                       data={ySel} compData={yComp} viewData={yView}
                                       curPos={curPosY} range={yRange}
                                       selectedPredictions={store.selectedPredictors}
@@ -78,6 +84,7 @@ function MapContext({store, size, mapRenderer, numGrid = -1, timeStep = 5}) {
                                       x={mapSize + space} y={generalDir.startsWith('t') ? timeStep * disStep : 0}
                                       direction={'right'}
                                       gridSize={gridSize} space={space}
+                                      gridVariant={gridVariant}
                                       data={ySel} compData={yComp} viewData={yView}
                                       curPos={curPosY} range={yRange}
                                       selectedPredictions={store.selectedPredictors}
@@ -91,6 +98,7 @@ function MapContext({store, size, mapRenderer, numGrid = -1, timeStep = 5}) {
                                       x={generalDir.endsWith('l') ? timeStep * disStep : 0} y={mapSize + space}
                                       direction={'bottom'}
                                       gridSize={gridSize} space={space}
+                                      gridVariant={gridVariant}
                                       data={xSel} compData={xComp} viewData={xView}
                                       curPos={curPosX} range={xRange}
                                       selectedPredictions={store.selectedPredictors}
@@ -101,18 +109,22 @@ function MapContext({store, size, mapRenderer, numGrid = -1, timeStep = 5}) {
                                       onClick={handleSelectX}/>}
                 {generalDir === 'tl' &&
                     <MapContextCorner timeStep={timeStep}
+                                      onClick={toggleGridVariant}
                                       gridSize={gridSize} space={space} direction={'tl'}
                                       x={timeStep * disStep} y={timeStep * disStep}/>}
                 {generalDir === 'tr' &&
                     <MapContextCorner timeStep={timeStep}
+                                      onClick={toggleGridVariant}
                                       gridSize={gridSize} space={space} direction={'tr'}
                                       x={mapSize} y={timeStep * disStep}/>}
                 {generalDir === 'bl' &&
                     <MapContextCorner timeStep={timeStep}
+                                      onClick={toggleGridVariant}
                                       gridSize={gridSize} space={space} direction={'bl'}
                                       x={timeStep * disStep} y={mapSize}/>}
                 {generalDir === 'br' &&
                     <MapContextCorner timeStep={timeStep}
+                                      onClick={toggleGridVariant}
                                       gridSize={gridSize} space={space} direction={'br'}
                                       x={mapSize}
                                       y={mapSize}/>}

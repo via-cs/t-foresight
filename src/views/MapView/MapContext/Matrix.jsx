@@ -12,6 +12,7 @@ import MatrixCell from "./MatrixCell.jsx";
  * @param {number} y
  * @param {'left' | 'right' | 'top' | 'bottom'} direction
  * @param {number} gridSize
+ * @param {'rect' | 'circle'} gridVariant
  * @param {number} space
  * @param {import('src/model/System.js').MatrixCell[][]} data
  * @param {import('src/model/System.js').MatrixCell[][]} compData
@@ -32,7 +33,7 @@ function MapContextMatrix({
                               timeStep,
                               x, y,
                               direction,
-                              gridSize,
+                              gridSize, gridVariant = 'rect',
                               space,
                               data, compData, viewData,
                               curPos,
@@ -74,7 +75,7 @@ function MapContextMatrix({
                           onMouseEnter={() => onEnter(g, t)}
                           onMouseLeave={() => onLeave(g, t)}
                           onClick={() => onClick(g, t)}>
-                <MatrixCell gridSize={gridSize}
+                <MatrixCell gridSize={gridSize} variant={gridVariant}
                             sel={data[g][t]} selEnabled={selectedPredictions.length !== 0}
                             comp={compData[g][t]} compEnabled={comparedPredictions.length !== 0}
                             view={viewData[g][t]} viewEnabled={viewedPredictions.length !== 0}/>
