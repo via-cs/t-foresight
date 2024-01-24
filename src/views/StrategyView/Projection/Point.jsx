@@ -3,7 +3,7 @@ import {selectionColor} from "../../../utils/theme.js";
 import {lighten, Tooltip} from "@mui/material";
 import newArr from "../../../utils/newArr.js";
 
-const rot = vec => -Math.atan(-vec[1] / vec[0]) / Math.PI * 180 + (vec[0] < 0 ? 180 : 0)
+const rot = vec => Math.atan(-vec[1] / vec[0]) / Math.PI * 180 - (vec[0] < 0 ? 180 : 0)
 const arrowLength = 0.4, arrowWidth = 0.4;
 
 function Point({
@@ -39,12 +39,12 @@ function Point({
                       strokeWidth={0}
                       fill={!selected && !compared && !(!isLassoing && viewed) ? fill : undefined}
                       transform={`rotate(${deg}) scale(${r * 1.35},${r * 1.35})`}/>
-                <circle r={r * 0.1}
-                        fill={theme.palette.secondary.main}
-                        cx={dx / Math.sqrt(dx * dx + dy * dy) * r}
-                        cy={dy / Math.sqrt(dx * dx + dy * dy) * r}/>
                 <circle r={r}
                         fill={fill}/>
+                <circle r={r * 0.1}
+                        fill={theme.palette.secondary.main}
+                        cx={r} cy={0}
+                        transform={`rotate(${deg})`}/>
             </VizPoint>
         </Tooltip>
         {isLassoing

@@ -9,7 +9,6 @@ import useKeyPressed from "../../../utils/useKeyPressed.js";
 import WorkerTagsMenu from "./WorkerTagsMenu.jsx";
 import {probOpacity} from "../../../utils/encoding.js";
 import Point from "./Point.jsx";
-import useOrder from "../../../utils/useOrder.js";
 
 const W = 1000, H = 1000;
 
@@ -35,7 +34,7 @@ function PredictorsProjection({
                                   store,
                               }) {
     const points = store.predictionProjection;
-    const [pointOrder, active] = useOrder(points.length);
+    const pointOrder = store.projWorkerOrder;
     const {lasso, isDrawing, handleMouseDown, handleMouseUp, handleMouseMove} = useLasso();
     const shift = useKeyPressed('Shift');
     const preSelectedPointsIdx = usePointLassoSelection(points, lasso);
@@ -93,10 +92,7 @@ function PredictorsProjection({
                                   isLassoing={isDrawing}
                                   onContextMenu={handleContextMenu([pId])}
                                   onClick={handleSelectPoint(pId)}
-                                  onMouseEnter={() => {
-                                      onViewPredictor(pId);
-                                      active(pId);
-                                  }}
+                                  onMouseEnter={() => onViewPredictor(pId)}
                                   onMouseLeave={() => onViewPredictor(-1)}/>
                 })}
             </g>

@@ -68,6 +68,17 @@ class Store {
     initTags = (tags) => this.workerTags = tags.map(tag => new Set(tag));
     saveTags = () => this.workerTags.map(tagSet => Array.from(tagSet));
 
+    projWorkerOrder = newArr(20, i => i);
+    initProjWorkerOrder = len => this.projWorkerOrder = newArr(len, i => i);
+    moveTopProjWorker = ids => {
+        const newOrder = typeof ids === 'number'
+            ? this.projWorkerOrder.filter(i => ids !== i)
+            : this.projWorkerOrder.filter(i => !ids.includes(i));
+        if (typeof ids === 'number') newOrder.push(ids);
+        else newOrder.push(...ids);
+        this.projWorkerOrder = newOrder;
+    }
+
     contextSort = 'default';
     setContextSort = cs => this.contextSort = cs;
     autoDetermineContextSort = () => {
@@ -335,7 +346,10 @@ class Store {
      * @type {import('src/model/Strategy.d.ts').Prediction[]}
      */
     predictions = []
-    setPredictions = pred => this.predictions = pred.map((p, idx) => ({idx, ...p}));
+    setPredictions = pred => {
+        this.predictions = pred.map((p, idx) => ({idx, ...p}));
+        this.initProjWorkerOrder(this.predictions.length);
+    }
 
     get viewedPrediction() {
         if (this.viewedPredictions.length === 1) return this.viewedPredictions[0];
@@ -352,6 +366,7 @@ class Store {
         const uniPs = Array.from(new Set(ps));
         if (uniPs.length === this.viewedPredictions.length && uniPs.every(p => this.viewedPredictions.includes(p))) return;
         this.viewedPredictions = ps;
+        this.moveTopProjWorker(ps);
     }
     /**
      * prediction groups
