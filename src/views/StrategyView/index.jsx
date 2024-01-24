@@ -22,7 +22,7 @@ function StrategyView({store, width, height}) {
                                       comparedPredictors={store.comparedPredictors}
                                       viewedPredictors={store.viewedPredictions}
                                       onSelectGroup={store.selectPredictors}
-                                      onViewPredictor={store.viewPrediction}/>
+                                      onViewPredictors={store.viewPredictions}/>
             </Wrapper>
         </Projection>
         <Divider sx={{m: 1}}/>

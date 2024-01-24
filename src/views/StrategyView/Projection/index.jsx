@@ -20,7 +20,7 @@ const W = 1000, H = 1000;
  * @param {number[]} comparedPredictors
  * @param {number[]} viewedPredictors
  * @param {(predIds: number[], whichGroup: 0 | 1) => void} onSelectGroup
- * @param {(predId: number) => void} onViewPredictor
+ * @param {(predId: number[]) => void} onViewPredictors
  * @constructor
  */
 function PredictorsProjection({
@@ -30,7 +30,7 @@ function PredictorsProjection({
                                   comparedPredictors,
                                   viewedPredictors,
                                   onSelectGroup,
-                                  onViewPredictor,
+                                  onViewPredictors,
                                   store,
                               }) {
     const points = store.predictionProjection;
@@ -71,6 +71,7 @@ function PredictorsProjection({
                                 points={points}
                                 tags={store.clusterTags(g)}
                                 selected={selectedPredictors}
+                                onViewGroup={onViewPredictors}
                                 onSelectGroup={onSelectGroup}
                                 onContextMenu={handleContextMenu(g)}/>
                 ))}
@@ -92,8 +93,8 @@ function PredictorsProjection({
                                   isLassoing={isDrawing}
                                   onContextMenu={handleContextMenu([pId])}
                                   onClick={handleSelectPoint(pId)}
-                                  onMouseEnter={() => onViewPredictor(pId)}
-                                  onMouseLeave={() => onViewPredictor(-1)}/>
+                                  onMouseEnter={() => onViewPredictors([pId])}
+                                  onMouseLeave={() => onViewPredictors([])}/>
                 })}
             </g>
             {isDrawing && <LassoGroup d={'M' + lasso.map(p => `${p[0] * W} ${p[1] * H}`).join('L')}

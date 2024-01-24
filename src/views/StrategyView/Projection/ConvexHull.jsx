@@ -26,12 +26,14 @@ function useConvexHull(predictorGroup, points) {
     }, [predictorGroup, points]);
 }
 
-function ConvexHull({predictorGroup, points, selected, onSelectGroup, tags, onContextMenu}) {
+function ConvexHull({predictorGroup, points, onViewGroup, onSelectGroup, tags, onContextMenu}) {
     const convexHull = useConvexHull(predictorGroup, points);
     return <Tooltip title={Array.from(tags).join(', ')}>
         <LassoGroup d={convexHull}
                     width={W / 200}
                     selectable
+                    onMouseEnter={() => onViewGroup(predictorGroup)}
+                    onMouseLeave={() => onViewGroup([])}
                     onClick={e => onSelectGroup(predictorGroup, e.shiftKey ? 1 : 0)}
                     onContextMenu={onContextMenu}/>
     </Tooltip>
