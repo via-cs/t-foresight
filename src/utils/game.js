@@ -148,8 +148,8 @@ export function genContext(gameData, frame) {
         teamCtx.towerBot1 = teamRec.towers[6];
         teamCtx.towerBot2 = teamRec.towers[7];
         teamCtx.towerBot3 = teamRec.towers[8];
-        teamCtx.towerBase1 = teamRec.towers[10];
-        teamCtx.towerBase2 = teamRec.towers[11];
+        teamCtx.towerBase1 = teamRec.towers[9];
+        teamCtx.towerBase2 = teamRec.towers[10];
         teamCtx.creepTop = teamRec.creeps[0];
         teamCtx.creepMid = teamRec.creeps[1];
         teamCtx.creepBot = teamRec.creeps[2];

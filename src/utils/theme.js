@@ -30,6 +30,11 @@ export const defaultTheme = secondary => ({
                 size: "small",
             },
         },
+        MuiSvgIcon: {
+            defaultProps: {
+                fontSize: "small",
+            },
+        },
         MuiSlider: {
             defaultProps: {
                 size: "small",

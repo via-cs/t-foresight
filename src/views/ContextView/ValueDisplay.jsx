@@ -157,12 +157,16 @@ const config = {
     creepMid: r => <MiniMap pos={getWorldPosByLanePos(1, r)}/>,
     creepBot: r => <MiniMap pos={getWorldPosByLanePos(2, r)}/>,
     gameTime: t => <IconText icon={<AccessTime/>} text={formatTime(t)}/>,
-    isNight: i => <IconText icon={i ? <LightMode/> : <DarkMode/>} text={i ? 'daytime' : 'nighttime'}/>,
+    isNight: i => <IconText icon={i ? <LightMode/> : <DarkMode/>}
+                            text={i ? 'daytime' : 'nighttime'}/>,
     roshanHP: ([v, mv]) => <HealthBar value={v} max={mv}/>,
 }
 
 export default function ValueDisplay({valueKey, value}) {
-    if (!valueKey || !config[valueKey] || !value) return null;
+    if (!valueKey || !config[valueKey] || value === undefined) {
+        console.log(valueKey, value);
+        return null;
+    }
     return config[valueKey](value);
 }
 
