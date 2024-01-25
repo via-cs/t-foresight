@@ -6,7 +6,7 @@ import {getHighestAtt} from "./contextSortFunctions";
 import ValueDisplay from "./ValueDisplay.jsx";
 
 function AttentionItem({store, colorLabel, onSelect, label, valueKey, value, attention, compAtt}) {
-    console.log(store.comparedPredictors)
+
     let isComp = store.comparedPredictors.length !== 0;
     let isSelect = store.selectedPredictors.length !== 0;
     let selectWorker = store.selectedPredictors.length === 1;
@@ -65,12 +65,28 @@ function AttentionItem({store, colorLabel, onSelect, label, valueKey, value, att
                 <ValueDisplay valueKey={valueKey} value={value}/>
             </Box>
             <Box flex={1} position={'realtive'}>
-                {!isComp && selectWorker && !attention?.length &&
-                    <Anchor style={{left: `${attention.avg * 100}%`, top: "33px"}}/>}
-                {!isComp && selectWorker && !attention?.length && <Slider
+                {!isComp && compWorker  && compAtt && compAtt.avg && !compAtt?.length &&
+                    <Anchor style={{left: `${comp.avg * 100}%`, top: "33px"}}/>}
+                {!isComp && compWorker  && compAtt && compAtt.avg && !compAtt?.length &&
+                 <Slider
                     min={0}
                     max={1}/>}
-                {!isComp && !selectWorker && !attention?.length && <Slider min={0} max={1}
+                {!isComp && !compWorker  && compAtt && compAtt.avg && !compAtt?.length && <Slider min={0} max={1}
+                                                                           style={{top: "20px"}}
+                                                                           value={[compAtt.min, compAtt.max]}
+                                                                           valueLabelDisplay={'auto'}
+                                                                           marks={[{
+                                                                               value: compAtt.avg,
+                                                                               label: `avg: ${compAtt.avg.toFixed(2)}`
+                                                                           }]}
+                                                                           valueLabelFormat={v => v.toFixed(2)}/>}   
+
+                {!isComp && selectWorker  && attention && attention.avg && !attention?.length &&
+                    <Anchor style={{left: `${attention.avg * 100}%`, top: "33px"}}/>}
+                {!isComp && selectWorker && attention && attention.avg && !attention?.length && <Slider
+                    min={0}
+                    max={1}/>}
+                {!isComp && !selectWorker && attention && attention.avg && !attention?.length && <Slider min={0} max={1}
                                                                            style={{top: "20px"}}
                                                                            value={[attention.min, attention.max]}
                                                                            valueLabelDisplay={'auto'}
@@ -80,13 +96,13 @@ function AttentionItem({store, colorLabel, onSelect, label, valueKey, value, att
                                                                            }]}
                                                                            valueLabelFormat={v => v.toFixed(2)}/>}
 
-                {isComp && selectWorker && !attention?.length &&
+                {isComp && selectWorker && attention && attention.avg && !attention?.length &&
                     <Anchor style={{left: `${attention.avg * 100}%`, top: compWorker ? "33px" : "33px"}}
                             anchorColor={selectionColor[0]}/>}
-                {isComp && compWorker && !attention?.length &&
+                {isComp && compWorker && attention && attention.avg && compAtt && compAtt.avg && !attention?.length &&
                     <Anchor style={{left: `${compAtt.avg * 100}%`, top: selectWorker ? "8px" : "33px"}}
                             anchorColor={selectionColor[1]}/>}
-                {isComp && compWorker && selectWorker && !attention?.length && <Slider
+                {isComp && compWorker && attention && attention.avg && compAtt && compAtt.avg && selectWorker && !attention?.length && <Slider
                     style={{top: "-25px"}}
                     min={0}
                     max={1}/>}
@@ -217,7 +233,7 @@ function AttentionItem({store, colorLabel, onSelect, label, valueKey, value, att
             {/* <Box width={65} height={20} ></Box> */}
             <Bar style={{width: `${65}%`, height: `${10}`, borderTop: `1px solid grey`, borderRight: `1px solid grey`}}
                  barColor="transparent"> Feature </Bar>
-            <Bar style={{width: `${220}%`, height: `${10}`, borderTop: `1px solid grey`}}
+            <Bar style={{width: `${150}%`, height: `${10}`, borderTop: `1px solid grey`}}
                  barColor="transparent"> Attention </Bar>
         </Box>}
     </div>
