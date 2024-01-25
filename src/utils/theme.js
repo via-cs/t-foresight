@@ -6,7 +6,7 @@ export const defaultTheme = secondary => ({
             main: '#271c1c',
         },
         secondary: {
-            main: secondary || '#336c11',
+            main: secondary || '#8000FF',
         },
         background: {
             default: '#f0f0f0',
@@ -79,6 +79,9 @@ export const defaultTheme = secondary => ({
 })
 
 export const selectionColor = [
-    '#2196f3',
-    '#f44336',
+    // '#2196f3',
+    '#8000FF',
+    '#D4AF37'
+    // '#f44336',
 ]
+

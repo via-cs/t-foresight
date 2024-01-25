@@ -17,6 +17,20 @@ function getHighestAttKeys(cg) {
     return att.map(i => i[1]);
 }
 
+export function getHighestAtt(cg) {
+    let att = [];
+    Object.keys(cg.attention).forEach(key => {
+        const vals = Object.values(cg.attention[key]);
+        const avgs = []
+        Object.keys(vals).forEach(feature => {
+            avgs.push(vals[feature].avg);
+        });
+        avgs.sort((a, b) => b - a);
+        att[key] = avgs.slice(0, 3);
+    })
+    return att;
+}
+
 function getAttVal(cg, keys) {
     return keys.reduce((p, key) => p + cg.attention[key].avg, 0);
 }

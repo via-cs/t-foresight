@@ -47,8 +47,7 @@ function ContextGroup({store, colorLabel, groupName, context, attention, compAtt
                        valueKey={null}
                        label={groupName}
                        attention={sortedContextKeys.slice(0, 3).map(key => attention[key]?.avg)}
-            // if you want to get the overall attention data, just uncomment this line
-            // compAtt={sortedContextKeys.slice(0, 3).map(key => attention[key]?.avg)}
+                       compAtt={sortedContextKeys.slice(0, 3).map(key => attention[key]?.avg)}
         />
         {open && <Divider dir={'horizontal'} sx={{m: 0.5}}/>}
         {sortedContextKeys
