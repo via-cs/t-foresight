@@ -1,9 +1,9 @@
 import {inject, observer} from "mobx-react";
 import {styled} from "@mui/material/styles";
 import {Box, Slider as MuiSlider, Typography} from "@mui/material";
-import {Check, Close} from "@mui/icons-material";
+import ValueDisplay from "./ValueDisplay.jsx";
 
-function AttentionItem({store, colorLabel, label, value, attention, compAtt}) {
+function AttentionItem({store, colorLabel, onSelect, label, valueKey, value, attention, compAtt}) {
     let selectAttention = [];
     let isInclude = false;
     if (store.viewedPrediction !== -1) {
@@ -41,17 +41,19 @@ function AttentionItem({store, colorLabel, label, value, attention, compAtt}) {
     }
 
     return <div>
-        <Container withValue={typeof value !== 'undefined'}>
-            <Box width={20} height={20} flex={'0 0 20px'} display={'flex'} alignItems={'center'}>{colorLabel}</Box>
-            <Box width={100} flex={'0 0 150px'}>
-                <Typography sx={{maxWidth: 150}} align={'center'} noWrap>{label}</Typography>
-                {/*{isInclude && value === undefined &&*/}
-                {/*    <Typography sx={{maxWidth: 150}} align={'center'} noWrap>{"Overall Attention"}</Typography>}*/}
-                {typeof value === 'number' && <Typography noWrap>{value.toFixed(0)}</Typography>}
-                {typeof value === 'string' && <Typography noWrap>{value}</Typography>}
-                {typeof value === 'boolean' && <Typography noWrap>{value ? <Check/> : <Close/>}</Typography>}
-                {typeof value === 'object' &&
-                    <Typography noWrap>({parseInt(value[0] || 0)}, {parseInt(value[1] || 0)})</Typography>}
+        <Container selectable={Boolean(onSelect)}
+                   onClick={Boolean(onSelect) ? e => {
+                       e.stopPropagation();
+                       onSelect()
+                   } : undefined}>
+            <Box position={'absolute'} top={0} bottom={0} left={0} width={20}
+                 flex={'0 0 20px'} display={'flex'} alignItems={'center'}
+                 justifyContent={'center'}>
+                {colorLabel}
+            </Box>
+            <Box marginLeft={'20px'} width={160} flex={'0 0 160px'}>
+                <Typography sx={{height: 30, lineHeight: '30px'}} align={'center'} noWrap>{label}</Typography>
+                <ValueDisplay valueKey={valueKey} value={value}/>
             </Box>
             <Box flex={1} position={'relative'}>
                 {compAtt && <Anchor style={{left: `${compAtt * 100}%`}}/>}
@@ -109,13 +111,19 @@ export default inject('store')(observer(AttentionItem));
 
 
 const Container = styled('div', {
-    shouldForwardProp: propName => !['withValue'].includes(propName)
-})({
+    shouldForwardProp: propName => !['selectable'].includes(propName)
+})(({theme, selectable}) => ({
+    position: 'relative',
     display: 'flex',
     width: '100%',
     alignItems: 'center',
-}, ({withValue = false, theme}) => ({
-    height: withValue ? 60 : 40,
+    minHeight: 40,
+    borderRadius: theme.shape.borderRadius,
+    ...selectable && {
+        '&:hover': {
+            backgroundColor: theme.palette.background.paper
+        }
+    },
 }))
 
 const Slider = styled(MuiSlider)(({theme}) => ({

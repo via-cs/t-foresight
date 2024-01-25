@@ -11,6 +11,49 @@ const y = v => (MAX_Y - v) / (MAX_Y - MIN_Y);
 const rx = v => v * (MAX_X - MIN_X) + MIN_X;
 const ry = v => MAX_Y - v * (MAX_Y - MIN_Y);
 
+export const lanePositions = [
+    [[9794, 12625], [9794, 22144], [20280, 22144]],
+    [[11518, 12008], [20903, 20387]],
+    [[12104, 10277], [22712, 10277], [22712, 19768]],
+];
+export const laneLength = [
+    [20005, 9519, 10486],
+    [12581, 12581],
+    [20099, 10608, 9491]
+];
+
+export function getWorldPosByLanePos(laneId, lanePos) {
+    const anchors = lanePositions[laneId], lengths = laneLength[laneId];
+    if (lanePos === 0) return anchors[0];
+    if (lanePos === 1) return anchors[anchors.length - 1];
+
+    let worldLanePos = lanePos * lengths[0];
+    for (let i = 1; i < anchors.length; i++)
+        if (worldLanePos > lengths[i]) worldLanePos -= lengths[i];
+        else {
+            let vx = anchors[i][0] - anchors[i - 1][0], vy = anchors[i][1] - anchors[i - 1][1];
+            const scale = worldLanePos / lengths[i];
+            vx *= scale;
+            vy *= scale;
+            return [vx + anchors[i - 1][0], vy + anchors[i - 1][1]];
+        }
+    return [-1, -1];
+}
+
+export function formatTime(t) {
+    const sign = t < 0 ? '-' : '';
+    t = Math.abs(t);
+    const h = Math.floor(t / 3600)
+    t -= h * 3600;
+    const m = Math.floor(t / 60)
+    t -= m * 60;
+    const s = Math.floor(t);
+
+    const str = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    if (h === 0) return `${sign}${str}`;
+    else return `${sign}${h}:${str}`;
+}
+
 /**
  * Project the positions in data onto the map
  * @param {[number, number]} posInData
@@ -70,6 +113,11 @@ export function mapDis(pos1, pos2) {
     return Math.sqrt((pos1[0] - pos2[0]) * (pos1[0] - pos2[0]) + (pos1[1] - pos2[1]) * (pos1[1] - pos2[1]))
 }
 
+export function roshanMaxHP(gameTime) {
+    if (gameTime < 0 || !gameTime) return 0;
+    return Math.floor(gameTime / 60) * 130 + 6000;
+}
+
 /**
  * @param {import('src/model/D2Data.js').D2Data | null} gameData
  * @param {number} frame
@@ -81,8 +129,8 @@ export function genContext(gameData, frame) {
     [0, 1].forEach(tId => [0, 1, 2, 3, 4].forEach(pId => {
         const playerRec = gameRecord ? gameRecord.heroStates[tId][pId] : {pos: []};
         const playerCtx = ctx[`p${tId}${pId}`] = {};
-        playerCtx.health = playerRec.hp;
-        playerCtx.mana = playerRec.mp;
+        playerCtx.health = [playerRec.hp, playerRec.mhp];
+        playerCtx.mana = [playerRec.mp, playerRec.mmp];
         playerCtx.position = playerRec.pos.slice(0, 2);
         playerCtx.level = playerRec.lvl;
         playerCtx.isAlive = playerRec.life === 0;
@@ -109,7 +157,7 @@ export function genContext(gameData, frame) {
     ctx.g = {
         gameTime: gameRecord?.game_time,
         isNight: gameRecord?.is_night,
-        roshanHP: gameRecord?.roshan_hp,
+        roshanHP: [gameRecord?.roshan_hp, roshanMaxHP(gameRecord?.game_time)],
     }
     return ctx;
 }

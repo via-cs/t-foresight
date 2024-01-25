@@ -54,7 +54,6 @@ const PlayerIcon = styled('img', {
     ({theme, shape, selected, lifeState}) => ({
         width: 20,
         height: 20,
-        marginRight: theme.spacing(1),
         cursor: 'pointer',
         borderRadius: shape === 'rect' ? theme.shape.borderRadius : 10,
         boxShadow: 'none',

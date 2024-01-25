@@ -5,6 +5,7 @@ import {viewSize} from "../../../utils/layout.js";
 import RangeSlider from 'react-range-slider-input';
 import "react-range-slider-input/dist/style.css";
 import {t} from "i18next";
+import {formatTime} from "../../../utils/game.js";
 
 /**
  * @param {import('src/store/store.js').Store} store
@@ -110,17 +111,3 @@ const WindowSlider = styled(RangeSlider)(({theme}) => ({
         textAlign: 'center',
     }
 }))
-
-function formatTime(t) {
-    const sign = t < 0 ? '-' : '';
-    t = Math.abs(t);
-    const h = Math.floor(t / 3600)
-    t -= h * 3600;
-    const m = Math.floor(t / 60)
-    t -= m * 60;
-    const s = Math.floor(t);
-
-    const str = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-    if (h === 0) return `${sign}${str}`;
-    else return `${sign}${h}:${str}`;
-}
