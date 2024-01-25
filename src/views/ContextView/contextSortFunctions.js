@@ -32,7 +32,12 @@ export function getHighestAtt(cg) {
 }
 
 function getAttVal(cg, keys) {
-    return keys.reduce((p, key) => p + cg.attention[key].avg, 0);
+    console.log(cg.attention);
+    if (!cg || !cg.attention) {
+        console.error('cg.attention is undefined', cg.attention);
+        return 0; // or handle the error appropriately
+    }
+    return keys.reduce((p, key) => p + cg.attention[key].avg , 0);
 }
 
 function getCompAttVal(cg, keys) {
