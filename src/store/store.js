@@ -1,7 +1,12 @@
 import {computed, makeAutoObservable, observable} from "mobx";
 import {genContext, playerColors, updateGameData} from "../utils/game.js";
-import {contextFactory, genRandomStrategies, getStratAttention} from "../utils/fakeData.js";
+import {contextFactory, genProjection, genRandomStrategies, getStratAttention, shuffle} from "../utils/fakeData.js";
 import api from "../api/api.js";
+import {hashFileName} from "../utils/file.js";
+import {saveAs} from 'file-saver';
+import genStorylineData, {initStorylineData} from "../views/StrategyView/Storyline/useData.js";
+
+import {createContext, useContext} from "react";
 
 class Store {
     constructor() {
@@ -13,7 +18,12 @@ class Store {
         // 此处的gameData额外设置为observable.shallow有两个原因。
         // 1. observable会监听整个hierarchical的结构，observable.shallow只会监听根部引用的改变，提高效率
         // 2. gameData导入后是不变的，因此没必要监听其内部元素变化
-        makeAutoObservable(this, {gameData: observable.shallow});
+        makeAutoObservable(this, {
+            gameData: observable.shallow,
+            predictionGroups: observable.shallow,
+            predictionProjection: observable.shallow,
+            instancesData: observable.shallow,
+        });
 
         this.setDevMode(window.localStorage.getItem('dev') === 'true');
     }
@@ -43,12 +53,13 @@ class Store {
         }[this.mapStyle] || './map.jpeg';
     }
 
-    timeWindowEnabled = false
-    enableTimeWindow = () => this.timeWindowEnabled = true;
-    disableTimeWindow = () => this.timeWindowEnabled = false;
-
-    strategyViewDesign = 'matrix'
-    changeStrategyDetailView = () => this.strategyViewDesign = (this.strategyViewDesign === 'matrix') ? 'storyline' : 'matrix';
+    contextSort = 'default';
+    setContextSort = cs => this.contextSort = cs;
+    autoDetermineContextSort = () => {
+        if (this.selectedPredictors.length === 0 && this.comparedPredictors.length === 0) this.setContextSort('default');
+        else if (this.selectedPredictors.length !== 0 && this.comparedPredictors.length !== 0) this.setContextSort('highDiffFirst');
+        else this.setContextSort('highAttFirst');
+    }
     //endregion
 
     //region game context
@@ -64,7 +75,7 @@ class Store {
      * @param {import('src/model/D2Data.d.ts').D2Data} gameData
      */
     setData = (filename, gameData) => {
-        this.gameName = filename;
+        this.gameName = filename.substring(0, filename.length - 5);
         this.gameData = updateGameData(gameData);
         this.focusOnPlayer(-1, -1);
         this.setFrame(0);
@@ -99,8 +110,8 @@ class Store {
      */
     get playerPositions() {
         if (!this.gameData) return [
-            new Array(5).fill(0).map(() => [0, 0]),
-            new Array(5).fill(0).map(() => [0, 0])
+            newArr(5, () => [0, 0]),
+            newArr(5, () => [0, 0])
         ]
         const curFrame = this.gameData.gameRecords[this.frame];
         return curFrame.heroStates.map(team =>
@@ -110,14 +121,19 @@ class Store {
         )
     }
 
+    get focusedPlayerPosition() {
+        if (this.focusedTeam === -1 || this.focusedPlayer === -1) return [0, 0];
+        return this.playerPositions[this.focusedTeam][this.focusedPlayer];
+    }
+
     /**
      * 从gameData中提取第frame帧的玩家存活状态
      * @return {boolean[][]}: life state of 2*5 players
      */
     get playerLifeStates() {
         if (!this.gameData) return [
-            new Array(5).fill(false),
-            new Array(5).fill(false),
+            newArr(5, false),
+            newArr(5, false),
         ]
         const curFrame = this.gameData.gameRecords[this.frame];
         return curFrame.heroStates.map(team =>
@@ -205,6 +221,7 @@ class Store {
     addContextLimit = (ctxGroup, ctxItem) => this.contextLimit.add(`${ctxGroup}|||${ctxItem}`);
     rmContextLimit = (ctxGroup, ctxItem) => this.contextLimit.delete(`${ctxGroup}|||${ctxItem}`);
     clearContextLimit = () => this.contextLimit.clear();
+    setContextLimit = cl => this.contextLimit = new Set(cl);
 
     //endregion
 
@@ -229,8 +246,6 @@ class Store {
     }
 
     get selectedPlayerTrajectoryInTimeWindow() {
-        if (!this.timeWindowEnabled) return this.selectedPlayerTrajectory;
-        
         // Check if a player is selected
         if (this.focusedPlayer === -1 || !this.gameData) return [];
 
@@ -267,30 +282,36 @@ class Store {
         const startPos = this.playerPositions[this.focusedTeam][this.focusedPlayer];
         const strategies = genRandomStrategies(startPos, this.curContext);
         let i = 0;
+        const idx = newArr(20, i => i);
+        shuffle(idx);
+        const predGroups = strategies.map(strat => strat.predictors.map(() => idx[i++]));
+        const predictions = [];
+        i = 0;
+        strategies.forEach(strat => strat.predictors.forEach(p => predictions[idx[i++]] = p));
         return {
-            predictions: strategies.map(strat => strat.predictors).flat(),
-            predGroups: strategies.map(strat => strat.predictors.map(() => i++)),
+            predictions,
+            predGroups,
+            predProjection: genProjection(predictions, predGroups),
+            predInstances: genStorylineData(predGroups),
         }
     }
     predict = () => {
-        if (this.devMode) {
-            const {predictions, predGroups} = this.fakePredict();
-            this.setPredictions(predictions);
-            this.setPredGroups(predGroups);
-            return;
-        }
-
         this.setWaiting(true);
-        api.predict({
-            gameName: this.gameName,
-            teamId: this.focusedTeam,
-            playerId: this.focusedPlayer,
-            frame: this.frame,
-            contextLimit: this.contextLimit,
+        new Promise((resolve, reject) => {
+            if (this.devMode) reject();
+            else api.predict({
+                gameName: this.gameName,
+                teamId: this.focusedTeam,
+                playerId: this.focusedPlayer,
+                frame: this.frame,
+                contextLimit: this.contextLimit,
+            }).catch(reject).then(resolve);
         }).catch(this.fakePredict)
             .then(res => {
                 this.setPredictions(res.predictions);
                 this.setPredGroups(res.predGroups);
+                this.setPredProjection(res.predProjection);
+                this.setInstancesData(res.predInstances);
             }).finally(() => this.setWaiting(false));
     }
 
@@ -299,11 +320,28 @@ class Store {
      * @type {import('src/model/Strategy.d.ts').Prediction[]}
      */
     predictions = []
-    setPredictions = pred => this.predictions = pred;
-    viewedPrediction = -1;
-    viewPrediction = p => this.viewedPrediction = (p === this.viewedPrediction ? -1 : p);
-    
-    
+    setPredictions = pred => {
+        this.predictions = pred.map((p, idx) => ({idx, ...p}));
+        this.initProjWorkerOrder(this.predictions.length);
+    }
+
+    get viewedPrediction() {
+        if (this.viewedPredictions.length === 1) return this.viewedPredictions[0];
+        else return -1;
+    }
+
+    viewPrediction = p => this.viewPredictions(p === -1 ? [] : [p]);
+    /**
+     * hovered predictions
+     * @type {number[]}
+     */
+    viewedPredictions = [];
+    viewPredictions = ps => {
+        const uniPs = Array.from(new Set(ps));
+        if (uniPs.length === this.viewedPredictions.length && uniPs.every(p => this.viewedPredictions.includes(p))) return;
+        this.viewedPredictions = ps;
+        this.moveTopProjWorker(ps);
+    }
     /**
      * prediction groups
      * @type {number[][]}
@@ -314,31 +352,114 @@ class Store {
      * @type {number[]}
      */
     selectedPredictors = [];
-    selectPredictors = ps => {
+    /**
+     * @type {number[]}
+     */
+    comparedPredictors = [];
+    selectPredictors = (ps, group) => {
         if (ps.length) this.setMapStyle('grey');
         else this.setMapStyle('colored');
-        this.selectedPredictors = ps;
+        if (group === 1) this.comparedPredictors = ps;
+        else this.selectedPredictors = ps;
+
+        this.autoDetermineContextSort();
     }
+    predictionProjection = []
+    setPredProjection = pp => this.predictionProjection = pp;
+    instancesData = initStorylineData();
+    setInstancesData = id => this.instancesData = id;
 
     /**
-     * @return {import('src/model/Strategy.d.ts').Strategy | null}
+     * @return {import('src/model/Strategy.d.ts').Strategy}
      */
-    get selectedPredictorsAsAStrategy() {
-        const selectedPredictors = this.selectedPredictors.map(i => this.predictions[i]);
-        if (selectedPredictors.length === 0) return null;
+    strategyFromPredictions = ps => computed(() => {
+        const predictors = ps.map(i => this.predictions[i]);
+        if (predictors.length === 0) return null;
         return {
-            predictors: selectedPredictors,
-            attention: contextFactory(this.curContext, (g, i) => getStratAttention(selectedPredictors, g, i))
+            predictors,
+            attention: contextFactory(this.curContext, (g, i) => getStratAttention(predictors, g, i))
         };
+    }).get();
+
+    get selectedPredictorsAsAStrategy() {
+        return this.strategyFromPredictions(this.selectedPredictors);
+    }
+
+    get comparedPredictorsAsAStrategy() {
+        return this.strategyFromPredictions(this.comparedPredictors);
+    }
+
+    get viewedPredictorsAsAStrategy() {
+        return this.strategyFromPredictions(this.viewedPredictions);
     }
 
     clearPredictions = () => {
         this.setPredictions([]);
         this.viewPrediction(-1);
         this.setPredGroups([]);
-        this.selectPredictors([]);
+        this.selectPredictors([], 0);
+        this.selectPredictors([], 1);
+        this.setPredProjection([])
+        this.setInstancesData(initStorylineData());
     }
+
     //endregion
+
+    setCase(data) {
+        this.initTags(data.tags);
+        this.focusOnPlayer(data.focusedTeam, data.focusedPlayer);
+        if (this.focusedPlayer === -1) this.focusOnPlayer(data.focusedTeam, data.focusedPlayer);
+        this.setFrame(data.frame);
+        this.setTrajTimeWindow(data.trajTimeWindow);
+        this.setContextLimit(data.contextLimit);
+        this.setPredictions(data.predictions);
+        this.viewPredictions([]);
+        this.setPredGroups(data.predictionGroups);
+        this.selectPredictors(data.selectedPredictors, 0);
+        this.selectPredictors(data.comparedPredictors || [], 1);
+        this.setPredProjection(data.predictionProjection);
+        this.setInstancesData(data.instancesData);
+        this.setContextSort(data.contextSort || this.contextSort);
+        this.setMapStyle(data.mapStyle || (
+            (data.selectedPredictors.length || data.comparedPredictors.length)
+                ? 'grey'
+                : 'colored'
+        ))
+    }
+
+    saveCase() {
+        const data = JSON.stringify({
+            match_id: this.gameData.gameInfo.match_id,
+            tags: this.saveTags(),
+            contextSort: this.contextSort,
+            focusedTeam: this.focusedTeam,
+            focusedPlayer: this.focusedPlayer,
+            frame: this.frame,
+            trajTimeWindow: this.trajTimeWindow,
+            contextLimit: Array.from(this.contextLimit),
+            predictions: this.predictions,
+            predictionGroups: this.predictionGroups,
+            selectedPredictors: this.selectedPredictors,
+            comparedPredictors: this.comparedPredictors,
+            predictionProjection: this.predictionProjection,
+            instancesData: this.instancesData,
+            mapStyle: this.mapStyle,
+        })
+        saveAs(new File(
+            [data],
+            `${hashFileName(this.gameName, data)}.json`,
+            {type: "text/plain;charset=utf-8"}
+        ))
+    }
 }
 
 export default Store;
+
+export const store = new Store();
+
+const StoreContext = createContext(store);
+
+/**
+ * @return {Store}
+ */
+export const useStore = () => useContext(StoreContext);
