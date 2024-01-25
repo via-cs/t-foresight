@@ -32,7 +32,7 @@ export function getHighestAtt(cg) {
 }
 
 function getAttVal(cg, keys) {
-    return keys.reduce((p, key) => p + cg.attention[key].avg, 0);
+    return keys.reduce((p, key) => p + (cg.attention[key]?.avg ?? cg.compAtt[key]?.avg ?? 0), 0);
 }
 
 function getCompAttVal(cg, keys) {
