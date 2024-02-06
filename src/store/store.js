@@ -60,7 +60,6 @@ class Store {
     clusterTags = workers => computed(() => joinSet(workers.map(w => this.workerTags[w]))).get()
     addTag = (idx, tag) => idx.forEach(i => this.workerTags[i].add(tag));
     removeTag = (idx, tag) => idx.forEach(i => this.workerTags[i].delete(tag));
-    clearTag = (idx) => idx.forEach(i => this.workerTags[i].clear());
     setTags = (idx, newTags, oldTags) => {
         for (const tag of newTags)
             if (!oldTags.has(tag)) this.addTag(idx, tag);
@@ -69,17 +68,6 @@ class Store {
     }
     initTags = (tags) => this.workerTags = tags.map(tag => new Set(tag));
     saveTags = () => this.workerTags.map(tagSet => Array.from(tagSet));
-
-    projWorkerOrder = [];
-    initProjWorkerOrder = len => this.projWorkerOrder = newArr(len, i => i);
-    moveTopProjWorker = ids => {
-        const newOrder = typeof ids === 'number'
-            ? this.projWorkerOrder.filter(i => ids !== i)
-            : this.projWorkerOrder.filter(i => !ids.includes(i));
-        if (typeof ids === 'number') newOrder.push(ids);
-        else newOrder.push(...ids);
-        this.projWorkerOrder = newOrder;
-    }
 
     contextSort = 'default';
     setContextSort = cs => this.contextSort = cs;
@@ -350,7 +338,6 @@ class Store {
     predictions = []
     setPredictions = pred => {
         this.predictions = pred.map((p, idx) => ({idx, ...p}));
-        this.initProjWorkerOrder(this.predictions.length);
     }
 
     get viewedPrediction() {
@@ -368,7 +355,6 @@ class Store {
         const uniPs = Array.from(new Set(ps));
         if (uniPs.length === this.viewedPredictions.length && uniPs.every(p => this.viewedPredictions.includes(p))) return;
         this.viewedPredictions = ps;
-        this.moveTopProjWorker(ps);
     }
     /**
      * prediction groups
@@ -392,6 +378,10 @@ class Store {
 
         this.autoDetermineContextSort();
     }
+    /**
+     *
+     * @type {[number, number][]}
+     */
     predictionProjection = []
     setPredProjection = pp => this.predictionProjection = pp;
     instancesData = initStorylineData();

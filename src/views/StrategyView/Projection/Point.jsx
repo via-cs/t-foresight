@@ -1,10 +1,13 @@
 import {styled, useTheme} from "@mui/material/styles";
 import {selectionColor} from "../../../utils/theme.js";
-import {lighten, Tooltip} from "@mui/material";
+import {alpha, Tooltip} from "@mui/material";
 import newArr from "../../../utils/newArr.js";
 import {rot} from "../../../utils/rot.js";
 
-const arrowLength = 0.4, arrowWidth = 0.4;
+const arrowLength = 1.35;
+const arrowR = Math.acos(1 / arrowLength);
+const [x, y] = [Math.cos(arrowR), Math.sin(arrowR)];
+const arrowPath = `M${arrowLength} 0L${x} ${y}A1 1 0 0 0 ${x} ${-y}Z`;
 
 function Point({
                    x, y, r,
@@ -21,7 +24,7 @@ function Point({
                }) {
     const theme = useTheme();
     const color = theme.palette.primary.main;
-    const fill = lighten(color, 1 - opacity);
+    const fill = alpha(color, opacity);
     const [dx, dy] = newArr(2, i => traj[traj.length - 1][i] - traj[0][i]);
     const deg = rot([dx, dy]);
 
@@ -35,10 +38,10 @@ function Point({
                       onClick={onClick}
                       onMouseEnter={onMouseEnter}
                       onMouseLeave={onMouseLeave}>
-                <path d={`M0 0H1L${1 - arrowLength} ${arrowWidth}V${-arrowWidth}L1 0Z`}
+                <path d={arrowPath}
                       strokeWidth={0}
                       fill={!selected && !compared && !(!isLassoing && viewed) ? fill : undefined}
-                      transform={`rotate(${deg}) scale(${r * 1.35},${r * 1.35})`}/>
+                      transform={`rotate(${deg}) scale(${r},${r})`}/>
                 <circle r={r}
                         fill={fill}/>
                 <circle r={r * 0.1}

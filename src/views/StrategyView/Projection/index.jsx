@@ -9,6 +9,7 @@ import useKeyPressed from "../../../utils/useKeyPressed.js";
 import WorkerTagsMenu from "./WorkerTagsMenu.jsx";
 import {probOpacity} from "../../../utils/encoding.js";
 import Point from "./Point.jsx";
+import useProjLayout from "./useProjLayout.js";
 
 const W = 1000, H = 1000;
 
@@ -33,8 +34,14 @@ function PredictorsProjection({
                                   onViewPredictors,
                                   store,
                               }) {
-    const points = store.predictionProjection;
-    const pointOrder = store.projWorkerOrder;
+    /**
+     * Instructions on force-directed graph:
+     * 1. Variable "predProj" here recorded the projection location of each point,
+     *    in the format of Array<[number, number]>, each number is in [0, 1]
+     * 2. Use a hook to re-layout the points with force-directed graph.
+     * */
+    const predProj = store.predictionProjection;
+    const {points, onInit} = useProjLayout(predProj, predictorGroups);
     const {lasso, isDrawing, handleMouseDown, handleMouseUp, handleMouseMove} = useLasso();
     const shift = useKeyPressed('Shift');
     const preSelectedPointsIdx = usePointLassoSelection(points, lasso);
@@ -58,6 +65,7 @@ function PredictorsProjection({
     return <Fragment>
         <svg viewBox={`0 0 ${W} ${H}`} width={'100%'} height={'100%'}
              onContextMenu={handleClear}
+             onDoubleClick={onInit}
              onMouseDown={handleMouseDown}
              onMouseMove={handleMouseMove}
              onMouseUp={e => {
@@ -77,12 +85,12 @@ function PredictorsProjection({
                 ))}
             </g>
             <g>
-                {pointOrder.map((pId) => {
+                {points.map((point, pId) => {
                     const opacity = probOpacity(allPredictors[pId].probability);
                     return <Point key={pId} pId={pId}
-                                  x={points[pId][0] * W} y={points[pId][1] * H}
+                                  x={point[0] * W} y={point[1] * H}
                                   traj={allPredictors[pId].trajectory}
-                                  r={points[pId][2] * W / 20}
+                                  r={point[2] * W / 20}
                                   tags={store.workerTags[pId]}
                                   opacity={opacity}
                                   selected={selectedPredictors.includes(pId)}

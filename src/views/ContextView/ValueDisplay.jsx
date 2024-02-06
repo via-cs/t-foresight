@@ -163,10 +163,7 @@ const config = {
 }
 
 export default function ValueDisplay({valueKey, value}) {
-    if (!valueKey || !config[valueKey] || value === undefined) {
-        console.log(valueKey, value);
-        return null;
-    }
+    if (!valueKey || !config[valueKey] || value === undefined) return null;
     return config[valueKey](value);
 }
 
