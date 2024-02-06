@@ -2,7 +2,17 @@ import {Group, Line, Rect, Text} from "react-konva";
 import newArr from "../../../utils/newArr.js";
 import {useTheme} from "@mui/material/styles";
 
-export default function MapContextCorner({timeStep, x, y, direction, gridSize, space, textSize = [16, 10], onClick}) {
+export default function MapContextCorner({
+                                             timeStep,
+                                             x,
+                                             y,
+                                             direction,
+                                             gridSize,
+                                             space,
+                                             onViewTime,
+                                             textSize = [16, 10],
+                                             onClick
+                                         }) {
     const disStep = gridSize + space;
     const pos = (step) => step * disStep + gridSize / 2 + space;
     const xDir = direction.endsWith('l') ? -1 : 1, yDir = direction.startsWith('t') ? -1 : 1;
@@ -10,7 +20,9 @@ export default function MapContextCorner({timeStep, x, y, direction, gridSize, s
 
     return <Group x={x} y={y} onClick={onClick}>
         {newArr(timeStep, i => (
-            <Group key={i}>
+            <Group key={i}
+                   onMouseEnter={() => onViewTime(i + 1)}
+                   onMouseLeave={() => onViewTime(-1)}>
                 <Line stroke={theme.palette.background.default} strokeWidth={2}
                       points={[
                           pos(i) * xDir, 0,

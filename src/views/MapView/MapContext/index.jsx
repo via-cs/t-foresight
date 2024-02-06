@@ -44,8 +44,18 @@ function MapContext({store, size, mapRenderer, numGrid = -1, timeStep = 5}) {
 
     const shift = useKeyPressed('Shift');
 
-    const handleViewX = (g, t) => store.viewPredictions(Array.from(unionSet([xSel[g][t].predictionIdxes, xComp[g][t].predictionIdxes])));
-    const handleViewY = (g, t) => store.viewPredictions(Array.from(unionSet([ySel[g][t].predictionIdxes, yComp[g][t].predictionIdxes])));
+    const handleViewX = (g, t) => {
+        store.viewPredictions(Array.from(unionSet([xSel[g][t].predictionIdxes, xComp[g][t].predictionIdxes])));
+        store.setViewedTime(t + 1);
+    }
+    const handleViewY = (g, t) => {
+        store.viewPredictions(Array.from(unionSet([ySel[g][t].predictionIdxes, yComp[g][t].predictionIdxes])));
+        store.setViewedTime(t + 1);
+    }
+    const handleClearView = () => {
+        store.viewPredictions([]);
+        store.setViewedTime(-1);
+    }
 
     const handleSelectX = (g, t) => store.selectPredictors(Array.from(unionSet([xSel[g][t].predictionIdxes, xComp[g][t].predictionIdxes])), Number(shift));
     const handleSelectY = (g, t) => store.selectPredictors(Array.from(unionSet([ySel[g][t].predictionIdxes, yComp[g][t].predictionIdxes])), Number(shift));
@@ -64,7 +74,7 @@ function MapContext({store, size, mapRenderer, numGrid = -1, timeStep = 5}) {
                                       comparedPredictions={store.comparedPredictors}
                                       viewedPredictions={store.viewedPredictions}
                                       onEnter={handleViewX}
-                                      onLeave={() => store.viewPredictions([])}
+                                      onLeave={handleClearView}
                                       onClick={handleSelectX}/>}
                 {generalDir.endsWith('l') &&
                     <MapContextMatrix numGrid={numGrid} timeStep={timeStep}
@@ -77,7 +87,7 @@ function MapContext({store, size, mapRenderer, numGrid = -1, timeStep = 5}) {
                                       comparedPredictions={store.comparedPredictors}
                                       viewedPredictions={store.viewedPredictions}
                                       onEnter={handleViewY}
-                                      onLeave={() => store.viewPredictions([])}
+                                      onLeave={handleClearView}
                                       onClick={handleSelectY}/>}
                 {generalDir.endsWith('r') &&
                     <MapContextMatrix numGrid={numGrid} timeStep={timeStep}
@@ -91,7 +101,7 @@ function MapContext({store, size, mapRenderer, numGrid = -1, timeStep = 5}) {
                                       comparedPredictions={store.comparedPredictors}
                                       viewedPredictions={store.viewedPredictions}
                                       onEnter={handleViewY}
-                                      onLeave={() => store.viewPredictions([])}
+                                      onLeave={handleClearView}
                                       onClick={handleSelectY}/>}
                 {generalDir.startsWith('b') &&
                     <MapContextMatrix numGrid={numGrid} timeStep={timeStep}
@@ -105,25 +115,29 @@ function MapContext({store, size, mapRenderer, numGrid = -1, timeStep = 5}) {
                                       comparedPredictions={store.comparedPredictors}
                                       viewedPredictions={store.viewedPredictions}
                                       onEnter={handleViewX}
-                                      onLeave={() => store.viewPredictions([])}
+                                      onLeave={handleClearView}
                                       onClick={handleSelectX}/>}
                 {generalDir === 'tl' &&
                     <MapContextCorner timeStep={timeStep}
+                                      onViewTime={store.setViewedTime}
                                       onClick={toggleGridVariant}
                                       gridSize={gridSize} space={space} direction={'tl'}
                                       x={timeStep * disStep} y={timeStep * disStep}/>}
                 {generalDir === 'tr' &&
                     <MapContextCorner timeStep={timeStep}
+                                      onViewTime={store.setViewedTime}
                                       onClick={toggleGridVariant}
                                       gridSize={gridSize} space={space} direction={'tr'}
                                       x={mapSize} y={timeStep * disStep}/>}
                 {generalDir === 'bl' &&
                     <MapContextCorner timeStep={timeStep}
+                                      onViewTime={store.setViewedTime}
                                       onClick={toggleGridVariant}
                                       gridSize={gridSize} space={space} direction={'bl'}
                                       x={timeStep * disStep} y={mapSize}/>}
                 {generalDir === 'br' &&
                     <MapContextCorner timeStep={timeStep}
+                                      onViewTime={store.setViewedTime}
                                       onClick={toggleGridVariant}
                                       gridSize={gridSize} space={space} direction={'br'}
                                       x={mapSize}

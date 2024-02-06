@@ -13,7 +13,8 @@ function ArrowGroup({
                         scaleBalance,
                         onMouseEnter,
                         onMouseLeave,
-                        labelStyle = 'dot'
+                        labelStyle = 'dot',
+                        viewedTime = -1,
                     }) {
     return <Group listening={listening}>
         {trajectories.map((traj, tId) => (
@@ -24,6 +25,7 @@ function ArrowGroup({
                   scaleBalance={scaleBalance}
                   color={color}
                   labelStyle={labelStyle}
+                  viewedLabel={viewedTime}
                   onMouseEnter={onMouseEnter}
                   onMouseLeave={onMouseLeave}
                   timeRange={[0, 150]}/>
@@ -35,8 +37,14 @@ function PredictedTrajectoryLayer({store, mapSize, scaleBalance}) {
     const getPredictionTraj = i => store.predictions[i];
     const theme = useTheme();
 
-    const handleMouseEnter = useCallback((id) => store.viewPrediction(id), []);
-    const handleMouseLeave = useCallback(() => store.viewPrediction(-1), []);
+    const handleMouseEnter = useCallback((id, t) => {
+        store.viewPrediction(id);
+        store.setViewedTime(t);
+    }, []);
+    const handleMouseLeave = useCallback(() => {
+        store.viewPrediction(-1)
+        store.setViewedTime(-1);
+    }, []);
 
     return (
         <Layer>
@@ -46,6 +54,7 @@ function PredictedTrajectoryLayer({store, mapSize, scaleBalance}) {
                         trajectories={store.selectedPredictors.map(getPredictionTraj)}
                         onMouseEnter={handleMouseEnter}
                         onMouseLeave={handleMouseLeave}
+                        viewedTime={store.viewedTime}
                         timeRange={[0, 150]}/>
             <ArrowGroup scaleBalance={scaleBalance}
                         color={selectionColor[1]}
@@ -53,13 +62,15 @@ function PredictedTrajectoryLayer({store, mapSize, scaleBalance}) {
                         trajectories={store.comparedPredictors.map(getPredictionTraj)}
                         onMouseEnter={handleMouseEnter}
                         onMouseLeave={handleMouseLeave}
-                        timeRange={[0, 150]}/>
+                        timeRange={[0, 150]}
+                        viewedTime={store.viewedTime}/>
             <ArrowGroup scaleBalance={scaleBalance}
                         color={theme.palette.secondary.main}
                         mapSize={mapSize}
                         labelStyle={'time'}
                         listening={false}
                         trajectories={store.viewedPredictions.map(getPredictionTraj)}
+                        viewedTime={store.viewedTime}
                         timeRange={[0, 150]}/>
         </Layer>
     );

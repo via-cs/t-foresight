@@ -76,6 +76,9 @@ class Store {
         else if (this.selectedPredictors.length !== 0 && this.comparedPredictors.length !== 0) this.setContextSort('highDiffFirst');
         else this.setContextSort('highAttFirst');
     }
+
+    viewedTime = -1;
+    setViewedTime = t => this.viewedTime = t;
     //endregion
 
     //region game context
