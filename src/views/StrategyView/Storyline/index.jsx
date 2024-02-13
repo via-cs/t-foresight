@@ -3,7 +3,7 @@ import {useRef} from "react";
 import {Group, Layer, Path, Rect, Stage, Text} from "react-konva";
 import {styled, useTheme} from "@mui/material/styles";
 import useStorylineLayout from "./useLayout.js";
-import useStorylineLines from "./useLines.js";
+import useStorylineVisualElements from "./useLines.js";
 import {selectionColor} from "../../../utils/theme.js";
 import {probOpacity} from "../../../utils/encoding.js";
 
@@ -20,7 +20,7 @@ function createPath(line) {
 const config = {
     pt: 30,
     pb: 10,
-    pl: 20,
+    pl: 30,
     pr: 20,
     stageMaxGap: 100,
     stageGapMaxRatio: 0.2,
@@ -42,20 +42,24 @@ function PredictorsStoryline({store, width, height}) {
     const containerRef = useRef(null);
     const data = store.instancesData;
     const layout = useStorylineLayout(data);
-    const lines = useStorylineLines(layout, width, height, config);
+    const {lines, groups, lineGap} = useStorylineVisualElements(layout, width, height, config);
 
     const theme = useTheme();
 
     return <Container ref={containerRef}>
         <Stage width={width} height={height}>
             <Layer>
-                {layout.stages.map((stage, sId) => (
+                {groups.map((g, gId) => (
+                    <Group key={gId}>
+                        <Rect x={g.x - lineGap * 2 / 3} y={g.y} width={g.width + lineGap * 4 / 3} height={g.height}
+                              fill={theme.palette.background.default}
+                              cornerRadius={lineGap / 2}/>
+                    </Group>
+                ))}
+                {layout.stages.map((stage, sId) => stage.instances >= layout.totalInstances * 0.05 && (
                     <Group key={sId}
                            x={config.pl - 5}
                            y={lines[0][sId * 2][1]}>
-                        <Rect width={width - config.pl - config.pr + 10}
-                              height={lines[0][sId * 2 + 1][1] - lines[0][sId * 2][1]}
-                              fill={theme.palette.background.default}/>
                         <Text text={(stage.instances / layout.totalInstances * 100).toFixed(1) + '%'}
                               rotation={-90}
                               x={5 - config.pl} height={config.pl}
@@ -87,7 +91,7 @@ function PredictorsStoryline({store, width, height}) {
                                   : selected ? selectionColor[0]
                                       : compared ? selectionColor[1]
                                           : theme.palette.text.primary}
-                              strokeWidth={(selected || compared || viewed) ? 4 : 2}/>
+                              strokeWidth={(selected || compared || viewed) ? 2 : 2}/>
                     </Group>
                 })}
             </Layer>

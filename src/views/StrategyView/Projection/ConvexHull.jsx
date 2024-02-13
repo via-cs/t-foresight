@@ -43,7 +43,7 @@ export const LassoGroup = styled('path', {
     shouldForwardProp: propName => !['width', 'selectable', 'color'].includes(propName),
 })(({theme, width, selectable, color}) => ({
     stroke: color || theme.palette.secondary.dark,
-    fill: alpha(color || theme.palette.secondary.main, 0.1),
+    fill: color || theme.palette.background.default,
     ...(selectable
         ? {
             strokeWidth: 0,

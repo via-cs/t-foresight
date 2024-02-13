@@ -40,14 +40,14 @@ function Point({
                       onMouseLeave={onMouseLeave}>
                 <path d={arrowPath}
                       strokeWidth={0}
-                      fill={!selected && !compared && !(!isLassoing && viewed) ? fill : undefined}
+                    // fill={!selected && !compared && !(!isLassoing && viewed) ? fill : undefined}
                       transform={`rotate(${deg}) scale(${r},${r})`}/>
                 <circle r={r}
                         fill={fill}/>
-                <circle r={r * 0.1}
-                        fill={theme.palette.secondary.main}
-                        cx={r} cy={0}
-                        transform={`rotate(${deg})`}/>
+                {/*<circle r={r * 0.1}*/}
+                {/*        fill={theme.palette.secondary.main}*/}
+                {/*        cx={r} cy={0}*/}
+                {/*        transform={`rotate(${deg})`}/>*/}
             </VizPoint>
         </Tooltip>
         {isLassoing

@@ -7,8 +7,7 @@ import {forceCollide, forceSimulation} from "d3";
  * @param {number[][]} pg
  * @return {{points: [number, number][], onInit: () => void}}
  */
-export default function useProjLayout(ps, pg) {
-    const rScale = 20;
+export default function useProjLayout(ps, pg, rScale) {
     const [points, setPoints] = useState([]);
     const [moving, setMoving] = useState(false);
     const nodesRef = useRef([]);
@@ -40,8 +39,8 @@ export default function useProjLayout(ps, pg) {
             for (const pid of g) {
                 const p = ps[pid];
                 nodes.push({
-                    x: p[0],
-                    y: p[1],
+                    x: p[0] * 0.8 + 0.1,
+                    y: p[1] * 0.8 + 0.1,
                     r: p[2] / rScale,
                     group: gid,
                     id: pid,

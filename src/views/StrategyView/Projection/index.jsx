@@ -11,7 +11,7 @@ import {probOpacity} from "../../../utils/encoding.js";
 import Point from "./Point.jsx";
 import useProjLayout from "./useProjLayout.js";
 
-const W = 1000, H = 1000;
+const W = 1000, H = 1000, rScale = 25;
 
 /**
  *
@@ -41,7 +41,7 @@ function PredictorsProjection({
      * 2. Use a hook to re-layout the points with force-directed graph.
      * */
     const predProj = store.predictionProjection;
-    const {points, onInit} = useProjLayout(predProj, predictorGroups);
+    const {points, onInit} = useProjLayout(predProj, predictorGroups, rScale);
     const {lasso, isDrawing, handleMouseDown, handleMouseUp, handleMouseMove} = useLasso();
     const shift = useKeyPressed('Shift');
     const preSelectedPointsIdx = usePointLassoSelection(points, lasso);
@@ -90,7 +90,7 @@ function PredictorsProjection({
                     return <Point key={pId} pId={pId}
                                   x={point[0] * W} y={point[1] * H}
                                   traj={allPredictors[pId].trajectory}
-                                  r={point[2] * W / 20}
+                                  r={point[2] * W / rScale}
                                   tags={store.workerTags[pId]}
                                   opacity={opacity}
                                   selected={selectedPredictors.includes(pId)}
