@@ -44,9 +44,9 @@ function LevelBar({level}) {
 function MiniMap({pos}) {
     const x = (pos[0] - MIN_X) / (MAX_X - MIN_X),
         y = (MAX_Y - pos[1]) / (MAX_Y - MIN_Y);
-    return <div style={{position: 'relative', paddingTop: '70%', width: '70%', marginLeft: '15%', height: 0}}>
-        <img style={{width: '100%', height: '100%', position: 'absolute', top: 0, left: 0}} src={'./minimap.jpg'}/>
-        <BlinkPoint style={{top: `${y * 100}%`, left: `${x * 100}%`}}>
+    return <div style={{position: 'relative', paddingTop: '70%', width: '70%', marginLeft: '30%', height: 0}}>
+        <img style={{width: '50%', height: '50%', position: 'absolute', top: 0, left: 0}} src={'./minimap.jpg'}/>
+        <BlinkPoint style={{top: `${y * 50}%`, left: `${x * 50}%`}}>
             <WavePoint style={{animationDelay: '1s'}}/>
             <WavePoint style={{animationDelay: '2s'}}/>
         </BlinkPoint>
@@ -64,8 +64,8 @@ const Wave = keyframes(`
 const BlinkPoint = styled('div')({
     position: 'absolute',
     transform: 'translate(-50%,-50%)',
-    width: 10,
-    height: 10,
+    width: 5,
+    height: 5,
     borderRadius: '50%',
     backgroundColor: 'white',
     border: '1px solid black',
@@ -73,10 +73,10 @@ const BlinkPoint = styled('div')({
 
 const WavePoint = styled('div')({
     position: 'absolute',
-    top: 1.5,
-    left: 1.5,
-    width: 5,
-    height: 5,
+    top: 0.25,
+    left: 0.25,
+    width: 2.5,
+    height: 2.5,
     borderRadius: '50%',
     backgroundColor: 'red',
     animationName: Wave,

@@ -1,6 +1,6 @@
 const defaultRank = ['t0', 'p00', 'p01', 'p02', 'p03', 'p04', 't1', 'p10', 'p11', 'p12', 'p13', 'p14', 'g']
 
-function getHighestAttKeys(cg) {
+export function getHighestAttKeys(cg) {
     const att = [[0, ''], [0, ''], [0, '']];
     Object.keys(cg.attention).forEach(key => {
         const val = cg.attention[key].avg;
@@ -29,6 +29,24 @@ export function getHighestAtt(cg) {
         att[key] = avgs.slice(0, 3);
     })
     return att;
+}
+
+export function getHighestAttIndices(cg) {
+    let attIndices = {};
+    Object.keys(cg.attention).forEach(key => {
+        // Get entries of the current key's object, which are [feature, {avg: value}]
+        const entries = Object.entries(cg.attention[key]);
+
+        // Map to [feature, avg] for easier sorting
+        const featureAvgs = entries.map(([feature, valObj]) => [feature, valObj.avg]);
+
+        // Sort based on the avg values in descending order and get the top 3
+        featureAvgs.sort((a, b) => b[1] - a[1]);
+
+        // Extract the features (keys) of the top 3 avg values
+        attIndices[key] = featureAvgs.slice(0, 3).map(([feature, _]) => feature);
+    });
+    return attIndices;
 }
 
 function getAttVal(cg, keys) {
