@@ -1,5 +1,5 @@
 import {styled} from "@mui/material/styles";
-import {Button, Divider} from "@mui/material";
+import {Button, Divider, Box} from "@mui/material";
 import {useEffect, useRef, useState} from "react";
 import AttentionItem from "./AttentionItem.jsx";
 import {inject, observer} from "mobx-react";
@@ -50,6 +50,12 @@ function ContextGroup({store, colorLabel, groupName, context, attention, compAtt
                        compAtt={sortedContextKeys.slice(0, 3).map(key => attention[key]?.avg)}
         />
         {open && <Divider dir={'horizontal'} sx={{m: 0.5}}/>}
+        {open && (
+            <Box sx={{position: 'relative', my: 1}} style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                <div style={{width: '65%', height: '25px', border: '1px solid grey'}}>Feature</div>
+                <div style={{width: '100%', height: '25px', border: '1px solid grey'}}>Attention</div>
+            </Box>
+            )}
         {sortedContextKeys
             .slice(0, displayCnt)
             .map(key => (
@@ -78,7 +84,7 @@ function ContextGroup({store, colorLabel, groupName, context, attention, compAtt
                         expand();
                     }}>
                 {t('System.ContextView.More')}
-            </Button>
+            </Button> // show more
         }
     </Container>
 }

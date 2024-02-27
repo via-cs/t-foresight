@@ -244,6 +244,27 @@ class Store {
 
     //endregion
 
+    get contextLimitDict() {
+        let labels = store.playerNames[0].concat(store.playerNames[1]);
+        labels.push('Dire');
+        labels.push('Environment');
+        labels.push('Radiant');
+        let limitDict = labels.reduce((acc, label) => {
+            acc[label] = 0;
+            return acc;
+          }, {});
+          
+        this.contextLimit.forEach((c)=> {
+            for (let i = 0; i < labels.length; i++) {
+                if (c.split("|||")[0] === labels[i]){
+                    limitDict[labels[i]] +=1;
+                }
+            }
+        });
+        console.log(limitDict);
+        return limitDict;
+    }
+
     get selectedPlayerTrajectory() {
         // Check if a player is selected
         if (this.focusedPlayer === -1 || !this.gameData) {
