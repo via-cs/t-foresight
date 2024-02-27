@@ -91,7 +91,7 @@ function PredictorsStoryline({store, width, height}) {
                                   : selected ? selectionColor[0]
                                       : compared ? selectionColor[1]
                                           : theme.palette.text.primary}
-                              strokeWidth={(selected || compared || viewed) ? 2 : 2}/>
+                              strokeWidth={(selected || compared || viewed) ? 1 : 1}/>
                     </Group>
                 })}
             </Layer>
