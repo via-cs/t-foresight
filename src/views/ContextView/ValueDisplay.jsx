@@ -44,9 +44,9 @@ function LevelBar({level}) {
 function MiniMap({pos}) {
     const x = (pos[0] - MIN_X) / (MAX_X - MIN_X),
         y = (MAX_Y - pos[1]) / (MAX_Y - MIN_Y);
-    return <div style={{position: 'relative', paddingTop: '70%', width: '70%', marginLeft: '30%', height: 0}}>
-        <img style={{width: '50%', height: '50%', position: 'absolute', top: 0, left: 0}} src={'./minimap.jpg'}/>
-        <BlinkPoint style={{top: `${y * 50}%`, left: `${x * 50}%`}}>
+    return <div style={{position: 'relative', paddingTop: '40%', width: '40%', marginLeft: '30%', height: 0}}>
+        <img style={{width: '100%', height: '100%', position: 'absolute', top: 0, left: 0}} src={'./minimap.jpg'}/>
+        <BlinkPoint style={{top: `${y * 100}%`, left: `${x * 100}%`}}>
             <WavePoint style={{animationDelay: '1s'}}/>
             <WavePoint style={{animationDelay: '2s'}}/>
         </BlinkPoint>
@@ -110,7 +110,7 @@ function HealthBar({value, max, type = 'health'}) {
             position: 'absolute',
             top: 0, left: 0,
             height: '100%', width: `${value / max * 100}%`,
-            backgroundColor: 'black',
+            backgroundColor: theme.palette.primary.light,
             overflow: 'hidden',
         }}>
             <Typography variant={'caption'}

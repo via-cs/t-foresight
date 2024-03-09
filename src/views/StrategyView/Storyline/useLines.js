@@ -92,7 +92,8 @@ export default function useStorylineLines(data, width, height, config) {
         const uniqueGroups = {};
         for (const [i, stage] of data.stages.entries())
             for (const group of stage.groups) {
-                const groupId = group.join('|');
+                const x = lines[group[0]][i * 2][0].toFixed(2);
+                const groupId = `${group.join('|')},${x}`;
                 if (!uniqueGroups[groupId]) uniqueGroups[groupId] = [];
                 uniqueGroups[groupId].push(i);
             }
@@ -104,10 +105,14 @@ export default function useStorylineLines(data, width, height, config) {
             const spannedStages = uniqueGroups[groupId];
             let start = 0, end = 0;
             while (end < spannedStages.length) {
-                while (end + 1 < spannedStages.length && spannedStages[end + 1] - spannedStages[start] === end + 1 - start) end++;
+                let instances = data.stages[spannedStages[start]].instances;
+                while (end + 1 < spannedStages.length && spannedStages[end + 1] - spannedStages[start] === end + 1 - start) {
+                    end++;
+                    instances += data.stages[spannedStages[end]].instances;
+                }
                 const [x, y] = lines[l1][spannedStages[start] * 2];
                 const [x1, y1] = lines[l2][spannedStages[end] * 2 + 1];
-                groups.push({x, y, width: x1 - x, height: y1 - y});
+                groups.push({x, y, width: x1 - x, height: y1 - y, cnt: lineIds.length, instances});
                 start = end = end + 1;
             }
         }

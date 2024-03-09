@@ -916,6 +916,11 @@ browserslist@^4.21.9:
     node-releases "^2.0.13"
     update-browserslist-db "^1.0.13"
 
+bubblesets-js@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.npmjs.org/bubblesets-js/-/bubblesets-js-2.3.2.tgz#56d0bca6a38f9364486b29ce64ef501dc7584147"
+  integrity sha512-TkofIls7vjYlqgLERl817zi53ig6d/MSCh5XnxR7LAiZkL90prirLZP6QjtwMPRiWTXfCxLih1U/mzDqOlWgkw==
+
 call-bind@^1.0.0, call-bind@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmmirror.com/call-bind/-/call-bind-1.0.2.tgz#b1d4e89e688119c3c9a903ad30abb2f6a919be3c"

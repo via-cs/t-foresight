@@ -78,6 +78,6 @@
       "ViewName": "Strategy View",
       "WorkerTag": "Tags of Worker #{{id}}"
     },
-    "SystemName": "RoadSign for DOTA 2"
+    "SystemName": "TLens for DOTA 2"
   }
 }

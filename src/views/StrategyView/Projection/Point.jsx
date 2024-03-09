@@ -4,8 +4,9 @@ import {alpha, Tooltip} from "@mui/material";
 import newArr from "../../../utils/newArr.js";
 import {rot} from "../../../utils/rot.js";
 
-const arrowLength = 1.35;
-const arrowR = Math.acos(1 / arrowLength);
+const arrowLength = 1.45;
+const arrowWidth = 0.4;
+const arrowR = Math.asin(arrowWidth);
 const [x, y] = [Math.cos(arrowR), Math.sin(arrowR)];
 const arrowPath = `M${arrowLength} 0L${x} ${y}A1 1 0 0 0 ${x} ${-y}Z`;
 

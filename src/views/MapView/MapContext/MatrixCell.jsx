@@ -1,5 +1,5 @@
 import {Fragment} from "react";
-import {Arc, Arrow, Circle, Group, Line, Rect} from "react-konva";
+import {Arrow, Line, Rect} from "react-konva";
 import {selectionColor} from "../../../utils/theme.js";
 import {useTheme} from "@mui/material/styles";
 import {rot} from "../../../utils/rot.js";
@@ -52,92 +52,92 @@ function MatrixCell({
                     }) {
     const theme = useTheme();
     const arcRadius = arcRadiusFactory(gridSize / 2);
-    if (variant === 'rect') {
-        const arrowSize = gridSize * 0.4;
-        return <Fragment>
-            <Rect x={-gridSize / 2} y={-gridSize / 2}
-                  width={gridSize} height={gridSize}
-                  stroke={theme.palette.background.default} strokeWidth={2}
-                  fill={alpha('#fff', 0.9)}/>
-            <Line points={cornerTri(gridSize / 2, gridSize * 0.4)}
-                  closed
-                  strokeWidth={0}
-                  opacity={probOpacity(sel.probability)}
-                  fill={selectionColor[0]}/>
-            <Line points={cornerTri(gridSize / 2, gridSize * 0.4)}
-                  closed
-                  strokeWidth={0}
-                  rotation={180}
-                  opacity={probOpacity(comp.probability)}
-                  fill={selectionColor[1]}/>
-            {!viewEnabled &&
-                <Arrow stroke={selectionColor[0]} strokeWidth={1}
-                       fill={selectionColor[0]}
-                       opacity={probOpacity(sel.probability)}
-                       pointerWidth={0.5 * arrowSize}
-                       pointerLength={0.5 * arrowSize}
-                       points={[-arrowSize * 0.2, 0, arrowSize, 0]}
-                       rotation={sel.probability === 0 ? 0 : rot(sel.avgDirection)}/>}
-            {!viewEnabled &&
-                <Arrow stroke={selectionColor[1]} strokeWidth={1}
-                       fill={selectionColor[1]}
-                       opacity={probOpacity(comp.probability)}
-                       pointerWidth={0.5 * arrowSize}
-                       pointerLength={0.5 * arrowSize}
-                       points={[-arrowSize * 0.2, 0, arrowSize, 0]}
-                       rotation={comp.probability === 0 ? 0 : rot(comp.avgDirection)}/>}
-            <Arrow stroke={theme.palette.secondary.main} strokeWidth={1}
-                   fill={theme.palette.secondary.main}
-                   opacity={probOpacity(view.probability)}
+    // if (variant === 'rect') {
+    const arrowSize = gridSize * 0.4;
+    return <Fragment>
+        <Rect x={-gridSize / 2} y={-gridSize / 2}
+              width={gridSize} height={gridSize}
+              stroke={theme.palette.background.default} strokeWidth={2}
+              fill={alpha('#fff', 0.9)}/>
+        <Line points={cornerTri(gridSize / 2, gridSize * 0.4)}
+              closed
+              strokeWidth={0}
+              opacity={probOpacity(sel.probability)}
+              fill={selectionColor[0]}/>
+        <Line points={cornerTri(gridSize / 2, gridSize * 0.4)}
+              closed
+              strokeWidth={0}
+              rotation={180}
+              opacity={probOpacity(comp.probability)}
+              fill={selectionColor[1]}/>
+        {!viewEnabled &&
+            <Arrow stroke={selectionColor[0]} strokeWidth={1}
+                   fill={selectionColor[0]}
+                   opacity={probOpacity(sel.probability)}
                    pointerWidth={0.5 * arrowSize}
                    pointerLength={0.5 * arrowSize}
                    points={[-arrowSize * 0.2, 0, arrowSize, 0]}
-                   rotation={view.probability === 0 ? 0 : rot(view.avgDirection)}/>
-        </Fragment>
-    } else if (variant === 'circle') {
-        const layers = [];
-        if (selEnabled) layers.push('sel');
-        if (compEnabled) layers.push('comp');
-        if (viewEnabled) layers.push('view');
-        const options = {
-            sel: {
-                data: sel,
-                color: alpha(selectionColor[0], probOpacity(sel.probability)),
-            },
-            comp: {
-                data: comp,
-                color: alpha(selectionColor[1], probOpacity(comp.probability)),
-            },
-            view: {
-                data: view,
-                color: alpha(theme.palette.secondary.main, probOpacity(view.probability)),
-            }
-        };
-        const arrowSize = layers.length ? arcRadius[layers.length - 1][0] * 0.9 : 0;
-        return <Fragment>
-            <Circle radius={gridSize / 2}
-                    stroke={theme.palette.background.default} strokeWidth={2}
-                    fill={alpha('#fff', 0.9)}/>
-            {layers.map((layer, lId) => {
-                const {data, color} = options[layer];
-                if (data.probability === 0) return null;
-
-                const [start, angle] = calAngle(data.dirRange);
-                return <Group key={lId}>
-                    <Arc angle={angle}
-                         rotation={start}
-                         innerRadius={arcRadius[lId][0]} outerRadius={arcRadius[lId][1]}
-                         fill={color}/>
-                    {(!viewEnabled || layer === 'view') &&
-                        <Arrow stroke={color} fill={color} strokeWidth={1}
-                               pointerWidth={0.5 * arrowSize}
-                               pointerLength={0.5 * arrowSize}
-                               points={[-arrowSize * 0.2, 0, arrowSize, 0]}
-                               rotation={data.probability === 0 ? 0 : rot(data.avgDirection)}/>}
-                </Group>
-            })}
-        </Fragment>
-    }
+                   rotation={sel.probability === 0 ? 0 : rot(sel.avgDirection)}/>}
+        {!viewEnabled &&
+            <Arrow stroke={selectionColor[1]} strokeWidth={1}
+                   fill={selectionColor[1]}
+                   opacity={probOpacity(comp.probability)}
+                   pointerWidth={0.5 * arrowSize}
+                   pointerLength={0.5 * arrowSize}
+                   points={[-arrowSize * 0.2, 0, arrowSize, 0]}
+                   rotation={comp.probability === 0 ? 0 : rot(comp.avgDirection)}/>}
+        <Arrow stroke={theme.palette.secondary.main} strokeWidth={1}
+               fill={theme.palette.secondary.main}
+               opacity={probOpacity(view.probability)}
+               pointerWidth={0.5 * arrowSize}
+               pointerLength={0.5 * arrowSize}
+               points={[-arrowSize * 0.2, 0, arrowSize, 0]}
+               rotation={view.probability === 0 ? 0 : rot(view.avgDirection)}/>
+    </Fragment>
+    // } else if (variant === 'circle') {
+    //     const layers = [];
+    //     if (selEnabled) layers.push('sel');
+    //     if (compEnabled) layers.push('comp');
+    //     if (viewEnabled) layers.push('view');
+    //     const options = {
+    //         sel: {
+    //             data: sel,
+    //             color: alpha(selectionColor[0], probOpacity(sel.probability)),
+    //         },
+    //         comp: {
+    //             data: comp,
+    //             color: alpha(selectionColor[1], probOpacity(comp.probability)),
+    //         },
+    //         view: {
+    //             data: view,
+    //             color: alpha(theme.palette.secondary.main, probOpacity(view.probability)),
+    //         }
+    //     };
+    //     const arrowSize = layers.length ? arcRadius[layers.length - 1][0] * 0.9 : 0;
+    //     return <Fragment>
+    //         <Circle radius={gridSize / 2}
+    //                 stroke={theme.palette.background.default} strokeWidth={2}
+    //                 fill={alpha('#fff', 0.9)}/>
+    //         {layers.map((layer, lId) => {
+    //             const {data, color} = options[layer];
+    //             if (data.probability === 0) return null;
+    //
+    //             const [start, angle] = calAngle(data.dirRange);
+    //             return <Group key={lId}>
+    //                 <Arc angle={angle}
+    //                      rotation={start}
+    //                      innerRadius={arcRadius[lId][0]} outerRadius={arcRadius[lId][1]}
+    //                      fill={color}/>
+    //                 {(!viewEnabled || layer === 'view') &&
+    //                     <Arrow stroke={color} fill={color} strokeWidth={1}
+    //                            pointerWidth={0.5 * arrowSize}
+    //                            pointerLength={0.5 * arrowSize}
+    //                            points={[-arrowSize * 0.2, 0, arrowSize, 0]}
+    //                            rotation={data.probability === 0 ? 0 : rot(data.avgDirection)}/>}
+    //             </Group>
+    //         })}
+    //     </Fragment>
+    // }
 }
 
 export default MatrixCell;
