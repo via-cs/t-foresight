@@ -47,14 +47,16 @@ function MapRenderer({
             <Layer>
                 <KonvaImage src={store.mapImage} w={size} h={size}/>
             </Layer>
-            {store.selectedPredictors.length !== 0 && <StrategyRenderer mapSize={size}
-                                                                        strat={store.selectedPredictorsAsAStrategy}
-                                                                        onAutoFocus={autoFocus}/>}
+            {store.selectedPredictors.length !== 0 && store.comparedPredictors.length === 0 &&
+                <StrategyRenderer mapSize={size}
+                                  strat={store.selectedPredictorsAsAStrategy}
+                                  onAutoFocus={autoFocus}/>}
             <PredictedTrajectoryLayer mapSize={size}
                                       scaleBalance={scaleBalance}/>
-            {store.focusedPlayer !== -1 && <RealTrajectoryLayer mapSize={size}
-                                                                scaleBalance={scaleBalance}
-                                                                onAutoFocus={autoFocus}/>}
+            {store.focusedPlayer !== -1 &&
+                <RealTrajectoryLayer mapSize={size}
+                                     scaleBalance={scaleBalance}
+                                     onAutoFocus={autoFocus}/>}
             <PlayerLayer mapSize={size} scaleBalance={scaleBalance}/>
         </Stage>
     </Root>

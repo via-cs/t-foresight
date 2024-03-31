@@ -8,7 +8,7 @@ import {selectionColor} from "../../../utils/theme.js";
 import {lighten} from "@mui/material";
 
 function createPath(line) {
-    let path = `M${line[0][0]} ${line[0][1]}`;
+    let path = `M${line[0][0]} ${line[0][1]}`   ;
     for (let s = 1, t = 2; t < line.length; s += 2, t += 2) {
         path += `V${line[s][1]}`;
         path += `C${line[s][0]} ${line[s][1] * 0.7 + line[t][1] * 0.3} ${line[t][0]} ${line[s][1] * 0.3 + line[t][1] * 0.7} ${line[t][0]} ${line[t][1]}`
@@ -26,7 +26,7 @@ const config = {
     stageGapMaxRatio: 0.2,
     lineMaxGap: 10,
     lineGapMaxRatio: 0.2,
-    defaultFontSize: 10,
+    defaultFontSize: 7,
     highlightFontSize: 20,
 }
 
@@ -100,7 +100,7 @@ function PredictorsStoryline({store, width, height}) {
                               stroke={viewed ? theme.palette.secondary.main
                                   : selected ? selectionColor[0]
                                       : compared ? selectionColor[1]
-                                          : theme.palette.text.primary}
+                                          : lighten(theme.palette.text.primary, 0.65)}
                               strokeWidth={(selected || compared || viewed) ? 1 : 1}/>
                     </Group>
                 })}

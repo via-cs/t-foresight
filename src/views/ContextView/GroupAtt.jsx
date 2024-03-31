@@ -84,17 +84,17 @@ function AttentionItem({store, colorLabel, onSelect, label, valueKey, value, att
 
             <Box flex={1} position={'realtive'}>
                 {!isComp && isInclude && top3select && <BarContainer>
-                    <Tooltip title={String(top3sk[0])}>
+                    <Tooltip open arrow placement={'left'} title={String(top3sk[0])}>
                         <Bar style={{
                             width: `${top3select[0] * 100 / 3}%`,
                             opacity: top3select[0],
                         }}/></Tooltip>
-                    <Tooltip title={String(top3sk[1])}>
+                    <Tooltip open arrow placement={'bottom'} title={String(top3sk[1])}>
                         <Bar style={{
                             width: `${top3select[1] * 100 / 3}%`,
                             opacity: top3select[1],
                         }}/></Tooltip>
-                    <Tooltip title={String(top3sk[2])}>
+                    <Tooltip open arrow placement={'right'} title={String(top3sk[2])}>
                         <Bar style={{
                             width: `${top3select[2] * 100 / 3}%`,
                             opacity: top3select[2],
@@ -104,7 +104,7 @@ function AttentionItem({store, colorLabel, onSelect, label, valueKey, value, att
 
                 {String(store.contextSort).slice(-8, -5) === 'iff' && isComp && isInclude && top3comp && top3select &&
                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'flex-start'}}>
-                        <Tooltip title={String(top3sk[0])}>
+                        <Tooltip open arrow placement={'bottom'} title={String(top3sk[0])}>
                             <BarContainer>
                                 {top3select[0] >= top3comp[0] && <><Bar style={{
                                     width: `${(top3comp[0]) * 100}%`,

@@ -3,6 +3,7 @@ import {selectionColor} from "../../../utils/theme.js";
 import {alpha, Tooltip} from "@mui/material";
 import newArr from "../../../utils/newArr.js";
 import {rot} from "../../../utils/rot.js";
+import useKeyPressed from "../../../utils/useKeyPressed.js";
 
 const arrowLength = 1.45;
 const arrowWidth = 0.4;
@@ -28,12 +29,14 @@ function Point({
     const fill = alpha(color, opacity);
     const [dx, dy] = newArr(2, i => traj[traj.length - 1][i] - traj[0][i]);
     const deg = rot([dx, dy]);
+    const shift = useKeyPressed('Shift');
 
     return <g transform={`translate(${x}, ${y})`}>
         <Tooltip title={Array.from(tags).join(', ')}>
             <VizPoint selected={selected}
                       compared={compared}
                       viewed={viewed}
+                      shift={shift}
                       isLassoing={isLassoing}
                       onContextMenu={onContextMenu}
                       onClick={onClick}
@@ -62,8 +65,8 @@ function Point({
 export default Point;
 
 const VizPoint = styled('g', {
-    shouldForwardProp: propName => !['selected', 'isLassoing', 'opacity', 'viewed', 'compared'].includes(propName)
-})(({theme, selected, isLassoing, viewed, compared, opacity}) => ({
+    shouldForwardProp: propName => !['selected', 'isLassoing', 'opacity', 'viewed', 'compared', 'shift'].includes(propName)
+})(({theme, selected, isLassoing, viewed, compared, opacity, shift}) => ({
     ...(isLassoing && {
         pointerEvents: 'none',
     }),
@@ -78,8 +81,8 @@ const VizPoint = styled('g', {
         strokeWidth: 7,
     }),
     ...(!isLassoing && viewed && {
-        stroke: theme.palette.secondary.main,
-        fill: theme.palette.secondary.main,
+        stroke: selectionColor[Number(shift)],
+        fill: selectionColor[Number(shift)],
         strokeWidth: 7,
     }),
 }))

@@ -10,6 +10,7 @@ import WorkerTagsMenu from "./WorkerTagsMenu.jsx";
 import {probOpacity} from "../../../utils/encoding.js";
 import Point from "./Point.jsx";
 import useProjLayout from "./useProjLayout.js";
+import {alpha} from "@mui/material";
 
 const W = 1000, H = 1000, rScale = 25;
 
@@ -106,7 +107,7 @@ function PredictorsProjection({
                 })}
             </g>
             {isDrawing && <LassoGroup d={'M' + lasso.map(p => `${p[0] * W} ${p[1] * H}`).join('L')}
-                                      color={selectionColor[Number(shift)]}
+                                      color={alpha(selectionColor[Number(shift)], 0.2)}
                                       width={W / 200}/>}
         </svg>
         {menuFactory(<WorkerTagsMenu tagSelection={tagSelection.current}/>)}

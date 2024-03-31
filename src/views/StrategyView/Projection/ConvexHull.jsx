@@ -1,7 +1,9 @@
 import {memo, useMemo} from "react";
-import {alpha, Tooltip} from "@mui/material";
+import {alpha, darken, Tooltip, List, ListItem} from "@mui/material";
 import {styled} from "@mui/material/styles";
 import BubbleSets from "bubblesets-js";
+import useKeyPressed from "../../../utils/useKeyPressed.js";
+import {selectionColor} from "../../../utils/theme.js";
 
 const W = 1000, H = 1000;
 const scale = 0.95;
@@ -40,10 +42,16 @@ function useConvexHull(predictorGroup, points) {
 
 function ConvexHull({predictorGroup, points, onViewGroup, onSelectGroup, tags, onContextMenu}) {
     const convexHull = useConvexHull(predictorGroup, points);
-    return <Tooltip title={Array.from(tags).join(', ')}>
+    const shift = useKeyPressed('Shift')
+    return <Tooltip title={<List dense disablePadding arrow>
+        {Object.keys(tags).map(wId => <ListItem key={wId} disableGlutters disablePadding>
+            {+wId + 1}: {tags[wId].join(', ')}
+        </ListItem>)}
+    </List>}>
         <LassoGroup d={convexHull}
                     width={W / 200}
                     selectable
+                    shift={shift}
                     onMouseEnter={() => onViewGroup(predictorGroup)}
                     onMouseLeave={() => onViewGroup([])}
                     onClick={e => onSelectGroup(predictorGroup, e.shiftKey ? 1 : 0)}
@@ -52,9 +60,9 @@ function ConvexHull({predictorGroup, points, onViewGroup, onSelectGroup, tags, o
 }
 
 export const LassoGroup = styled('path', {
-    shouldForwardProp: propName => !['width', 'selectable', 'color'].includes(propName),
-})(({theme, width, selectable, color}) => ({
-    stroke: color || theme.palette.secondary.dark,
+    shouldForwardProp: propName => !['width', 'selectable', 'color', 'shift'].includes(propName),
+})(({theme, width, selectable, color, shift}) => ({
+    stroke: color || darken(selectionColor[Number(shift)], .2),
     fill: color || theme.palette.background.default,
     ...(selectable
         ? {
@@ -62,7 +70,7 @@ export const LassoGroup = styled('path', {
             cursor: 'pointer',
             '&:hover': {
                 strokeWidth: width,
-                fill: alpha(color || theme.palette.secondary.main, 0.2),
+                fill: alpha(color || selectionColor[Number(shift)], 0.2),
             },
         }
         : {

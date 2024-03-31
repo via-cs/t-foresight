@@ -57,7 +57,7 @@ class Store {
     }
 
     workerTags = newArr(20, () => new Set());
-    clusterTags = workers => computed(() => joinSet(workers.map(w => this.workerTags[w]))).get()
+    clusterTags = workers => computed(() => Object.fromEntries(workers.map(wId => [wId, Array.from(this.workerTags[wId])]))).get()
     addTag = (idx, tag) => idx.forEach(i => this.workerTags[i].add(tag));
     removeTag = (idx, tag) => idx.forEach(i => this.workerTags[i].delete(tag));
     setTags = (idx, newTags, oldTags) => {
@@ -253,7 +253,7 @@ class Store {
             acc[label] = 0;
             return acc;
           }, {});
-          
+
         this.contextLimit.forEach((c)=> {
             for (let i = 0; i < labels.length; i++) {
                 if (c.split("|||")[0] === labels[i]){
