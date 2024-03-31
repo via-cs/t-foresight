@@ -1,4 +1,4 @@
-const url = uri => `http://10.76.6.131:8787${uri}`;
+const url = uri => `http://127.0.0.1:5000${uri}`;
 
 const api = {
     /**

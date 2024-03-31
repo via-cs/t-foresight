@@ -1,4 +1,4 @@
-import {Prediction} from "../model/Strategy";
+import {Prediction, PredictorsStoryline} from "../model/Strategy";
 
 export interface PredictionRequest {
     gameName: string,
@@ -11,4 +11,6 @@ export interface PredictionRequest {
 export interface PredictionResponse {
     predictions: Prediction[]
     predGroups: number[][]
+    predProjection: [number, number][]
+    predInstances: PredictorsStoryline
 }
