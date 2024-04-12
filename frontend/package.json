@@ -1,0 +1,46 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint frontend --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@mui/icons-material": "^5.14.13",
+    "@mui/material": "^5.14.13",
+    "bubblesets-js": "^2.3.2",
+    "d3": "^7.8.5",
+    "file-saver": "^2.0.5",
+    "heatmap.js": "^2.0.5",
+    "hull.js": "^1.0.4",
+    "i18next": "^23.5.1",
+    "i18next-fetch-backend": "^5.0.2",
+    "konva": "^9.2.2",
+    "mobx": "^6.10.2",
+    "mobx-react": "^9.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-i18next": "^13.2.2",
+    "react-konva": "^18.2.10",
+    "react-range-slider-input": "^3.0.7",
+    "setimmediate": "^1.0.5",
+    "yieldable-json": "^2.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.3",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "vite": "^4.4.5"
+  }
+}
