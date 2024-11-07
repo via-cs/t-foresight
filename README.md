@@ -1,7 +1,6 @@
 ## T-Foresight
 
 #### This is the repository for submission T-Foresight: Interpret Moving Strategies based on Context-Aware Trajectory Prediction.
-Paper ID: 1203, IEEE VIS 2024
 
 This repository provides the source codes.
 
